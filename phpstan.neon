@@ -1,0 +1,30 @@
+parameters:
+    level: 5
+    paths:
+        - plugins/webgsm-checkout-pro/includes
+        - themes/martfury-child/includes
+    excludePaths:
+        - vendor
+        - tests
+    ignoreErrors:
+        # WordPress/WooCommerce functions that PHPStan doesn't know about
+        - '#Function wp_verify_nonce not found#'
+        - '#Function sanitize_text_field not found#'
+        - '#Function sanitize_email not found#'
+        - '#Function is_email not found#'
+        - '#Function get_user_meta not found#'
+        - '#Function update_user_meta not found#'
+        - '#Function get_post_meta not found#'
+        - '#Function update_post_meta not found#'
+        - '#Function wc_add_notice not found#'
+        - '#Function wc_get_order not found#'
+        - '#Function wp_send_json_error not found#'
+        - '#Function wp_send_json_success not found#'
+        - '#Function wp_remote_post not found#'
+        - '#Function wp_remote_get not found#'
+        - '#Function add_action not found#'
+        - '#Function add_filter not found#'
+        - '#Class WC_Order not found#'
+        - '#Class WP_Error not found#'
+    reportUnmatchedIgnoredErrors: false
+    checkMissingIterableValueType: false

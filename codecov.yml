@@ -1,0 +1,48 @@
+codecov:
+  require_ci_to_pass: yes
+  notify:
+    wait_for_ci: yes
+
+coverage:
+  precision: 2
+  round: down
+  range: "60...90"
+
+  status:
+    project:
+      default:
+        target: 60%
+        threshold: 5%
+        if_ci_failed: error
+
+    patch:
+      default:
+        target: 70%
+        threshold: 10%
+
+comment:
+  layout: "reach,diff,flags,tree,footer"
+  behavior: default
+  require_changes: no
+  require_base: no
+  require_head: yes
+
+flags:
+  php:
+    paths:
+      - plugins/webgsm-checkout-pro/includes/
+      - themes/martfury-child/includes/
+    carryforward: false
+
+  javascript:
+    paths:
+      - plugins/webgsm-checkout-pro/assets/js/
+      - themes/martfury-child/assets/js/
+    carryforward: false
+
+ignore:
+  - "tests/**/*"
+  - "vendor/**/*"
+  - "node_modules/**/*"
+  - "**/*.md"
+  - ".github/**/*"

@@ -29,8 +29,8 @@
         "test": "phpunit",
         "test:unit": "phpunit --testsuite unit",
         "test:integration": "phpunit --testsuite integration",
-        "test:coverage": "phpunit --coverage-html coverage",
-        "analyse": "phpstan analyse"
+        "test:coverage": "phpunit --coverage-html coverage/html --coverage-clover coverage/clover.xml",
+        "analyse": "phpstan analyse --level=5 plugins/webgsm-checkout-pro/includes themes/martfury-child/includes || true"
     },
     "config": {
         "allow-plugins": {

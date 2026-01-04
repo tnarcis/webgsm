@@ -23,7 +23,11 @@ themes/*
 !composer.json
 !package.json
 !phpunit.xml
+!phpstan.neon
+!codecov.yml
 !tests/
+!.github/
+!TESTING.md
 tests/results/
 
 # Dependencies (not committed)
