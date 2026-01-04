@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WebGSM Checkout Pro
  * Description: Checkout personalizat pentru România - PF/PJ, ANAF, adrese salvate
- * Version: 6.0.0
+ * Version: 5.1.0
  * Author: WebGSM
  */
 
