@@ -742,6 +742,68 @@ add_action('woocommerce_thankyou', function() {
     .woocommerce-company-details {
         display: none !important;
     }
+    
+    /* STILIZARE SECȚIUNE DETALII COMANDĂ (sus) */
+    .woocommerce-order-overview {
+        list-style: none !important;
+        padding: 20px !important;
+        margin: 20px 0 !important;
+        background: #fff !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 8px !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+    
+    .woocommerce-order-overview li {
+        padding: 12px 15px !important;
+        background: #f9f9f9 !important;
+        border-radius: 6px !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 5px !important;
+    }
+    
+    .woocommerce-order-overview li strong {
+        font-size: 15px !important;
+        color: #333 !important;
+    }
+    
+    /* Metodă de plată - full width */
+    .woocommerce-order-overview li.woocommerce-order-overview__payment-method {
+        grid-column: 1 / -1 !important;
+    }
+    
+    /* Mobile - o coloană */
+    @media (max-width: 600px) {
+        .woocommerce-order-overview {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+            padding: 15px !important;
+        }
+        
+        .woocommerce-order-overview li {
+            padding: 10px 12px !important;
+        }
+        
+        .woocommerce-order-overview li strong {
+            font-size: 14px !important;
+        }
+    }
+    
+    /* Mesaj confirmare */
+    .woocommerce-thankyou-order-received {
+        background: #e8f5e9 !important;
+        color: #2e7d32 !important;
+        padding: 15px 20px !important;
+        border-radius: 8px !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+    }
     </style>
     <?php
 }, 1);
