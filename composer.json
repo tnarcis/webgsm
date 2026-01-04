@@ -1,0 +1,42 @@
+{
+    "name": "webgsm/checkout-pro",
+    "description": "WebGSM Checkout Pro - WordPress/WooCommerce custom checkout with ANAF integration",
+    "type": "wordpress-plugin",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "yoast/phpunit-polyfills": "^2.0",
+        "mockery/mockery": "^1.6",
+        "brain/monkey": "^2.6",
+        "wp-phpunit/wp-phpunit": "^6.4",
+        "phpstan/phpstan": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "WebGSM\\CheckoutPro\\": "plugins/webgsm-checkout-pro/includes/",
+            "WebGSM\\Theme\\": "themes/martfury-child/includes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WebGSM\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit --testsuite unit",
+        "test:integration": "phpunit --testsuite integration",
+        "test:coverage": "phpunit --coverage-html coverage",
+        "analyse": "phpstan analyse"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

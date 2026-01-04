@@ -1,0 +1,123 @@
+{
+  "success_with_tva": {
+    "correlationId": "abc123-def456",
+    "found": [
+      {
+        "date_generale": {
+          "cui": 31902941,
+          "denumire": "SC WEBGSM SRL",
+          "adresa": "CALEA VICTORIEI NR. 1",
+          "nrRegCom": "J40/1234/2020",
+          "telefon": "0212345678",
+          "fax": "",
+          "codPostal": "010001",
+          "act": "ACT CONSTITUTIV",
+          "stare_inregistrare": "INREGISTRAT din data 01.01.2020",
+          "data_inregistrare": "2020-01-01",
+          "cod_CAEN": "4741",
+          "teren": 0,
+          "teren_UOM": "",
+          "capitol_social": 200,
+          "imp_imputernicire": "",
+          "imp_reprezentant": "",
+          "imp_administrator": ""
+        },
+        "adresa_sediu_social": {
+          "sdenumire_Strada": "Calea Victoriei",
+          "snumar_Strada": "1",
+          "sdetalii_Adresa": "Bl. A, Sc. 1, Ap. 1",
+          "sdenumire_Localitate": "Municipiul București",
+          "scod_Localitate": 179132,
+          "sdenumire_Judet": "BUCURESTI",
+          "scod_Judet": 40,
+          "scod_JudetAuto": "B",
+          "stara": "ROMANIA",
+          "sdetalii_Adresa_FM": "",
+          "scod_Postal": "010001"
+        },
+        "inregistrare_scop_Tva": {
+          "scpTVA": 1,
+          "data_inceput_ScpTVA": "2020-01-15",
+          "data_sfarsit_ScpTVA": "",
+          "data_actualizare_ScpTVA": "2020-01-15",
+          "mesaj_ScpTVA": ""
+        },
+        "inregistrare_RTVAI": {
+          "dataInceputTvaInc": "",
+          "dataSfarsitTvaInc": "",
+          "dataActualizareTvaInc": "",
+          "dataPublicareTvaInc": "",
+          "tipActTvaInc": "",
+          "statusTvaIncasare": false
+        },
+        "stare_inactiv": {
+          "dataInactivare": "",
+          "dataReactivare": "",
+          "dataPublicare": "",
+          "dataRadiere": "",
+          "statusInactivi": false
+        },
+        "inregistrare_SplitTVA": {
+          "dataInceputSplitTVA": "",
+          "dataAnulareSplitTVA": "",
+          "statusSplitTVA": false
+        },
+        "adresa_domiciliu_fiscal": {
+          "ddenumire_Strada": "",
+          "dnumar_Strada": "",
+          "ddetalii_Adresa": "",
+          "ddenumire_Localitate": "",
+          "dcod_Localitate": 0,
+          "ddenumire_Judet": "",
+          "dcod_Judet": 0,
+          "dcod_JudetAuto": "",
+          "dtara": "",
+          "ddetalii_Adresa_FM": "",
+          "dcod_Postal": ""
+        }
+      }
+    ],
+    "notFound": []
+  },
+  "success_without_tva": {
+    "correlationId": "xyz789-uvw012",
+    "found": [
+      {
+        "date_generale": {
+          "cui": 1234567,
+          "denumire": "PFA ION POPESCU",
+          "nrRegCom": "F40/567/2020"
+        },
+        "adresa_sediu_social": {
+          "sdenumire_Strada": "Strada Mihai Eminescu",
+          "snumar_Strada": "10",
+          "sdetalii_Adresa": "",
+          "sdenumire_Localitate": "Cluj-Napoca",
+          "sdenumire_Judet": "CLUJ"
+        },
+        "inregistrare_scop_Tva": {
+          "scpTVA": 0
+        }
+      }
+    ],
+    "notFound": []
+  },
+  "not_found": {
+    "correlationId": "notfound123",
+    "found": [],
+    "notFound": [
+      {
+        "cui": 99999999,
+        "data": "2024-01-04"
+      }
+    ]
+  },
+  "error_invalid_cui": {
+    "errorText": "CUI invalid",
+    "error": "VALIDATION_ERROR"
+  },
+  "error_timeout": {
+    "errorText": "Timeout la conectare cu ANAF",
+    "error": "CONNECTION_TIMEOUT"
+  }
+}

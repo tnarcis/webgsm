@@ -18,3 +18,18 @@ themes/*
 !AI_CONTEXT.md
 !.gitignore
 .DS_Store
+
+# Testing infrastructure
+!composer.json
+!package.json
+!phpunit.xml
+!tests/
+tests/results/
+
+# Dependencies (not committed)
+vendor/
+node_modules/
+
+# Coverage reports
+coverage/
+.phpunit.result.cache

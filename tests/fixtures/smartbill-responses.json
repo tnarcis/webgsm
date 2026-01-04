@@ -1,0 +1,42 @@
+{
+  "success_invoice_created": {
+    "number": "123",
+    "series": "WEB",
+    "url": "https://ws.smartbill.ro/SBORO/api/invoice/pdf?cif=RO31902941&seriesname=WEB&number=123"
+  },
+  "error_invalid_client": {
+    "errorText": "Date client invalide: CIF lipsa",
+    "error": "VALIDATION_ERROR"
+  },
+  "error_duplicate_invoice": {
+    "errorText": "Factura deja există",
+    "error": "DUPLICATE_ERROR"
+  },
+  "error_invalid_credentials": {
+    "errorText": "Autentificare eșuată",
+    "error": "AUTH_ERROR"
+  },
+  "success_pf_invoice": {
+    "number": "124",
+    "series": "WEB",
+    "client": {
+      "name": "Ion Popescu",
+      "vatCode": "",
+      "isTaxPayer": false
+    }
+  },
+  "success_pj_invoice": {
+    "number": "125",
+    "series": "WEB",
+    "client": {
+      "name": "SC TEST SRL",
+      "vatCode": "RO31902941",
+      "regCom": "J40/1234/2020",
+      "isTaxPayer": true
+    }
+  },
+  "error_api_disabled": {
+    "errorText": "API dezactivat (mod test)",
+    "error": "API_DISABLED"
+  }
+}
