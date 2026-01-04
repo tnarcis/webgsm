@@ -1,6 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home2/webgsm/public_html/wp-content
+    - export DEPLOYPATH=/home2/webgsm/public_html/test/wp-content
     - /bin/cp -R plugins/webgsm-checkout-pro $DEPLOYPATH/plugins/
     - /bin/cp -R themes/martfury-child $DEPLOYPATH/themes/
