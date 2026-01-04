@@ -22,7 +22,7 @@
 - Dropdown județe România
 - Validare vizuală câmpuri
 - Thank you page custom
-- HPOS compatibilitate (compatibilitate tema cuwoocommerce )
+- HPOS compatibilitate (compatibilitate tema cuwoocommerce )xxxx
 - Mobile responsive
 
 ### GitHub + Deploy
