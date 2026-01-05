@@ -66,7 +66,6 @@ class WebGSM_Checkout_Pro {
         add_action('woocommerce_before_checkout_form', [$this, 'checkout_start'], 1);
         add_action('woocommerce_after_checkout_form', [$this, 'checkout_end'], 999);
         add_action('init', [$this, 'remove_default_checkout']);
-        add_action('woocommerce_checkout_after_customer_details', [$this, 'render_hidden_inputs']);
         
         // AJAX
         add_action('wp_ajax_webgsm_save_address', [$this, 'ajax_save_address']);
@@ -283,10 +282,21 @@ class WebGSM_Checkout_Pro {
                     <button type="button" class="btn-add" id="add_company_btn">+ Adaugă firmă</button>
                 </div>
                 
-                <!-- Hidden billing inputs moved inside the checkout <form> via render_hidden_inputs() -->
-            </div>
-        </div>
-        <?php
+                <input type="hidden" name="billing_company" id="billing_company" value="">
+                <input type="hidden" name="billing_cui" id="billing_cui" value="">
+                <input type="hidden" name="billing_j" id="billing_j" value="">
+                <input type="hidden" name="billing_iban" id="billing_iban" value="">
+                <input type="hidden" name="billing_bank" id="billing_bank" value="">
+                <input type="hidden" name="billing_cnp" id="billing_cnp" value="">
+                <input type="hidden" name="billing_first_name" id="billing_first_name" value="">
+                <input type="hidden" name="billing_last_name" id="billing_last_name" value="">
+                <input type="hidden" name="billing_address_1" id="billing_address_1" value="">
+                <input type="hidden" name="billing_city" id="billing_city" value="">
+                <input type="hidden" name="billing_state" id="billing_state" value="">
+                <input type="hidden" name="billing_postcode" id="billing_postcode" value="">
+                <input type="hidden" name="billing_phone" id="billing_phone" value="">
+                <input type="hidden" name="billing_email" id="billing_email" value="<?php echo esc_attr(WC()->checkout->get_value('billing_email')); ?>">
+                <input type="hidden" name="billing_country" id="billing_country" value="RO">
             </div>
         </div>
         <?php
@@ -483,28 +493,6 @@ class WebGSM_Checkout_Pro {
         <?php
     }
     
-    // Hidden inputs rendered inside the checkout form (fix for PJ data submission)
-    public function render_hidden_inputs() {
-        if (!is_checkout()) return;
-        // Small hidden field to satisfy JS setter (no name to avoid conflicting with radios)
-        echo '<input type="hidden" id="billing_customer_type" class="input-hidden" value="">';
-        echo '<input type="hidden" name="billing_company" id="billing_company" value="">';
-        echo '<input type="hidden" name="billing_cui" id="billing_cui" value="">';
-        echo '<input type="hidden" name="billing_j" id="billing_j" value="">';
-        echo '<input type="hidden" name="billing_iban" id="billing_iban" value="">';
-        echo '<input type="hidden" name="billing_bank" id="billing_bank" value="">';
-        echo '<input type="hidden" name="billing_cnp" id="billing_cnp" value="">';
-        echo '<input type="hidden" name="billing_first_name" id="billing_first_name" value="">';
-        echo '<input type="hidden" name="billing_last_name" id="billing_last_name" value="">';
-        echo '<input type="hidden" name="billing_address_1" id="billing_address_1" value="">';
-        echo '<input type="hidden" name="billing_city" id="billing_city" value="">';
-        echo '<input type="hidden" name="billing_state" id="billing_state" value="">';
-        echo '<input type="hidden" name="billing_postcode" id="billing_postcode" value="">';
-        echo '<input type="hidden" name="billing_phone" id="billing_phone" value="">';
-        echo '<input type="hidden" name="billing_email" id="billing_email" value="' . esc_attr(WC()->checkout->get_value('billing_email')) . '">';
-        echo '<input type="hidden" name="billing_country" id="billing_country" value="RO">';
-    }
-
     // AJAX Handlers
     public function ajax_save_address() {
         check_ajax_referer('webgsm_nonce', 'nonce');
