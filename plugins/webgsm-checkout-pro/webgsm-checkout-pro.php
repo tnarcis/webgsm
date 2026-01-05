@@ -2,13 +2,13 @@
 /**
  * Plugin Name: WebGSM Checkout Pro
  * Description: Checkout personalizat pentru România - PF/PJ, ANAF, adrese salvate
- * Version: 5.1.0
+ * Version: 5.1.0 uiliam coilung la babbe
  * Author: WebGSM
  */
 
 if (!defined('ABSPATH')) exit;
 
-define('WEBGSM_CHECKOUT_VERSION', '6960.0.0');
+define('WEBGSM_CHECKOUT_VERSION', '5.0.0');
 define('WEBGSM_CHECKOUT_PATH', plugin_dir_path(__FILE__));
 define('WEBGSM_CHECKOUT_URL', plugin_dir_url(__FILE__));
 
