@@ -13,6 +13,8 @@ require_once get_stylesheet_directory() . '/includes/notificari.php';
 require_once get_stylesheet_directory() . '/includes/n8n-webhooks.php';
 require_once get_stylesheet_directory() . '/includes/facturare-pj.php';
 require_once get_stylesheet_directory() . '/includes/my-account-styling.php';
+require_once get_stylesheet_directory() . '/includes/webgsm-myaccount-headers.php'; 
 require_once get_stylesheet_directory() . '/includes/admin-tools.php';
 require_once get_stylesheet_directory() . '/includes/registration-enhanced.php';
 require_once get_stylesheet_directory() . '/includes/webgsm-design-system.php';
+require_once get_stylesheet_directory() . '/includes/webgsm-myaccount.php';
