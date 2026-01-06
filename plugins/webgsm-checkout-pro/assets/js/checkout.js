@@ -25,6 +25,8 @@
         currentCustomerType: 'pf',
         debug: true
     };
+    // Ultimul CUI căutat (pentru a evita duplicatele)
+    var lastANAFcui = ''; 
     
     // =========================================
     // FUNCȚIE DE LOG
@@ -58,6 +60,9 @@
         
         // Populează din carduri la încărcare (fără popup!)
         silentInitFromCards();
+
+        // Sincronizează shipping cu billing dacă "same as billing" e bifat (inițial)
+        $('#same_as_billing').trigger('change');
         
         // Marchează ca inițializat
         WebGSM.initialized = true;
@@ -214,6 +219,37 @@
         log('Date firmă extrase:', data);
         
         injectBillingData(data, 'pj');
+        return true;
+    }
+
+    // =========================================
+    // INJECTARE DATE ADRESĂ (SILENT)
+    // =========================================
+    function injectShippingDataSilent() {
+        var $selected = $('input[name="selected_address"]:checked');
+        if (!$selected.length) {
+            log('Niciun card adresă selectat - nu injectez shipping');
+            return false;
+        }
+
+        var data = extractCardData($selected);
+        log('Date adresă extrase:', data);
+
+        var nameParts = (data.name || '').trim().split(' ');
+        var firstName = nameParts[0] || '';
+        var lastName = nameParts.slice(1).join(' ') || '';
+
+        $('input[name="shipping_first_name"]').val(firstName);
+        $('input[name="shipping_last_name"]').val(lastName);
+        $('input[name="shipping_phone"]').val(data.phone || '');
+        $('input[name="shipping_address_1"]').val(data.address || '');
+        $('input[name="shipping_city"]').val(data.city || '');
+        $('input[name="shipping_state"]').val(getStateCode(data.county || ''));
+        $('input[name="shipping_postcode"]').val(data.postcode || '');
+        $('input[name="shipping_country"]').val('RO');
+
+        log('Shipping date injectate cu succes');
+        $(document.body).trigger('update_checkout');
         return true;
     }
     
@@ -628,16 +664,16 @@
         var data = {
             action: 'webgsm_save_company',
             nonce: webgsm_checkout.nonce,
-            name: $('#company_name').val().trim(),
-            cui: $('#company_cui').val().trim(),
-            reg: $('#company_reg').val().trim(),
+            name: (($('#company_name').val() || '').trim()),
+            cui: (($('#company_cui').val() || '').trim()),
+            reg: (($('#company_reg').val() || '').trim()),
             phone: normalizePhone($('#company_phone').val()),
-            email: $('#company_email').val().trim(),
-            address: $('#company_address').val().trim(),
-            county: $('#company_county').val(), // Acum e select
-            city: $('#company_city').val().trim(),
-            iban: $('#company_iban').val().trim(),
-            bank: $('#company_bank').val().trim()
+            email: (($('#company_email').val() || '').trim()),
+            address: (($('#company_address').val() || '').trim()),
+            county: ($('#company_county').val() || ''), // Acum e select
+            city: (($('#company_city').val() || '').trim()),
+            iban: (($('#company_iban').val() || '').trim()),
+            bank: (($('#company_bank').val() || '').trim())
         };
         
         // Validare locală cu evidențiere vizuală
@@ -799,7 +835,9 @@
         }
         
         $btn.addClass('loading').prop('disabled', true);
-        $status.css({background: '#fff3e0', color: '#e65100'}).text('Se caută...').show();
+        // Mută statusul în partea de sus a popup-ului de firmă pentru vizibilitate
+        $status.prependTo('#company_popup .popup-body');
+        $status.css({display: 'block', background: '#fff3e0', color: '#e65100'}).text('Se caută...').show();
         
         $.post(webgsm_checkout.ajax_url, {
             action: 'webgsm_search_anaf',
@@ -823,10 +861,14 @@
                        .html('✓ ' + d.name + (d.is_tva ? ' (Plătitor TVA)' : ''))
                        .show();
             } else {
+                // Permite retry (sterge lastANAFcui astfel încât următoarea intrare să re-trigger-eze)
+                lastANAFcui = '';
                 $status.css({background: '#ffebee', color: '#c62828'}).text(response.data || 'Negăsit').show();
             }
         }).fail(function() {
             $btn.removeClass('loading').prop('disabled', false);
+            // Permite retry
+            lastANAFcui = '';
             $status.css({background: '#ffebee', color: '#c62828'}).text('Eroare conexiune ANAF').show();
         });
     }
@@ -901,6 +943,33 @@
     function bindEvents() {
         log('Bind evenimente...');
         
+        // ANAF: căutare automată la introducerea CUI (debounce) + feedback + blur fallback
+        var anafTimer = null;
+        $(document).on('input', '#company_cui', function() {
+            clearTimeout(anafTimer);
+            var $status = $('#anaf_status');
+            var $el = $(this);
+            var val = $el.val().replace(/[^0-9]/g, '');
+            if (!val || val.length < 2) { $status.hide(); return; }
+            // afișează feedback căutare pending
+            $status.css({background: '#fff3e0', color: '#e65100'}).text('CUI detectat — căutare automată...').show();
+            anafTimer = setTimeout(function() {
+                if (val && val !== lastANAFcui) {
+                    lastANAFcui = val;
+                    searchANAF();
+                }
+            }, 700);
+        });
+        // fallback: la blur, dacă nu s-a căutat încă, declanșează imediat
+        $(document).on('blur', '#company_cui', function() {
+            var val = $(this).val().replace(/[^0-9]/g, '');
+            if (val && val.length >= 2 && val !== lastANAFcui) {
+                clearTimeout(anafTimer);
+                lastANAFcui = val;
+                searchANAF();
+            }
+        });
+        
         // ==========================================
         // SUBMIT - VALIDARE DOAR AICI!
         // ==========================================
@@ -967,6 +1036,24 @@
         // Metodă 3: Form submit
         $('form.checkout').on('submit', function() {
             log('========== FORM SUBMIT ==========');
+            // Debug log: show values being submitted
+            console.log('[WebGSM] Submit values:', {
+                ship_to_different_address: $('#ship_to_different_address').val(),
+                same_as_billing_checked: $('#same_as_billing').is(':checked'),
+                shipping_first_name: $('input[name="shipping_first_name"]').val(),
+                shipping_address_1: $('input[name="shipping_address_1"]').val(),
+                shipping_city: $('input[name="shipping_city"]').val(),
+                shipping_state: $('input[name="shipping_state"]').val(),
+                shipping_postcode: $('input[name="shipping_postcode"]').val()
+            });
+
+            // Set the ship_to_different_address flag so WooCommerce knows to use shipping fields
+            if (!$('#same_as_billing').is(':checked')) {
+                $('#ship_to_different_address').val('1');
+                injectShippingDataSilent();
+            } else {
+                $('#ship_to_different_address').val('0');
+            }
             removeAllRequiredAttributes();
         });
         
@@ -1006,14 +1093,29 @@
         
         $(document).on('change', 'input[name="selected_address"]', function() {
             log('Card adresă selectat');
+            // Mark that shipping is different
+            $('#ship_to_different_address').val('1');
+            injectShippingDataSilent();
         });
         
         // Same as billing
         $(document).on('change', '#same_as_billing', function() {
             if ($(this).is(':checked')) {
                 $('#shipping_address_fields').hide();
+                // Clear the 'different shipping' flag and copy billing values into shipping to keep them in sync
+                $('#ship_to_different_address').val('0');
+                $('input[name="shipping_first_name"]').val($('input[name="billing_first_name"]').val() || '');
+                $('input[name="shipping_last_name"]').val($('input[name="billing_last_name"]').val() || '');
+                $('input[name="shipping_address_1"]').val($('input[name="billing_address_1"]').val() || '');
+                $('input[name="shipping_city"]').val($('input[name="billing_city"]').val() || '');
+                $('input[name="shipping_state"]').val($('input[name="billing_state"]').val() || '');
+                $('input[name="shipping_postcode"]').val($('input[name="billing_postcode"]').val() || '');
+                $(document.body).trigger('update_checkout');
             } else {
                 $('#shipping_address_fields').show();
+                // Mark that shipping is different and, if user has selected a saved address, inject it into the shipping fields
+                $('#ship_to_different_address').val('1');
+                injectShippingDataSilent();
             }
         });
         
@@ -1091,13 +1193,9 @@
         });
         
         // ==========================================
-        // ANAF
+        // ANAF - buton eliminat, căutare automată la introducerea CUI
         // ==========================================
-        
-        $(document).on('click', '#search_anaf_btn', function(e) {
-            e.preventDefault();
-            searchANAF();
-        });
+
         
         // ==========================================
         // CART

@@ -362,6 +362,18 @@
     border: 1px solid #e0e0e0;
 }
 
+/* ANAF status - poziționat sus în popup-ul de "Adaugă firmă" */
+#company_popup #anaf_status {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+#company_popup .anaf-hint { display: none; }
+
 .webgsm-summary-box .summary-header {
     background: #333;
     color: #fff;
