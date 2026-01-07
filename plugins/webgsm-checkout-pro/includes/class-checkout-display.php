@@ -26,6 +26,9 @@ class WebGSM_Checkout_Display {
         add_filter('manage_woocommerce_page_wc-orders_columns', [$this, 'add_order_column']);
         add_action('manage_shop_order_posts_custom_column', [$this, 'display_order_column'], 10, 2);
         add_action('manage_woocommerce_page_wc-orders_custom_column', [$this, 'display_order_column_hpos'], 10, 2);
+
+        // Afișare shipping în admin (quick preview & order details) - asigură afișare corectă când livrarea e către o adresă diferită de facturare
+        add_action('woocommerce_admin_order_data_after_shipping_address', [$this, 'admin_display_shipping'], 10, 1);
         
         // Ascunde adresa de facturare default pe thank you page pentru PJ
         add_filter('woocommerce_order_get_formatted_billing_address', [$this, 'filter_billing_address'], 10, 3);
@@ -44,31 +47,60 @@ class WebGSM_Checkout_Display {
             $this->display_pf_admin($order);
         }
     }
+
+    /**
+     * Afișează informațiile de livrare în admin (folosit în quick preview și detalii comandă)
+     * Asigură că, atunci când livrarea este către altă adresă, afișăm adresa aleasă (inclusiv firma, pentru PJ)
+     */
+    public function admin_display_shipping($order) {
+        // Respectăm flag-ul _same_as_billing
+        $same = $order->get_meta('_same_as_billing');
+        if ($same === '1') {
+            echo '<div class="webgsm-same-address" style="background:#e8f5e9;color:#2e7d32;padding:8px;border-radius:4px;margin-top:10px;display:inline-block;">✓ La aceeași adresă</div>';
+            return;
+        }
+
+        // Dacă e PJ, afișăm și denumirea firmei (preluată din billing)
+        $customer_type = $order->get_meta('_customer_type');
+        $company = $order->get_billing_company();
+
+        echo '<div style="margin-top:10px;">';
+        // Removed: company box in shipping panel (avoids duplicate PJ box in the shipping column)
+
+        echo '<p style="margin:0 0 6px 0;"><strong>' . esc_html($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name()) . '</strong></p>';
+        echo '<p style="margin:0;font-size:13px;color:#444;">' . esc_html($order->get_shipping_address_1()) . '<br>' . esc_html($order->get_shipping_city() . ', ' . $order->get_shipping_state()) . '</p>';
+
+        $phone = $order->get_meta('_shipping_phone');
+        if ($phone) {
+            echo '<p style="margin:6px 0 0 0;font-size:13px;color:#444;">Tel: ' . esc_html($phone) . '</p>';
+        }
+
+        echo '</div>';
+    }
     
     private function display_pj_admin($order) {
         $cui = $order->get_meta('_billing_cui');
         $j = $order->get_meta('_billing_j');
         $iban = $order->get_meta('_billing_iban');
         $bank = $order->get_meta('_billing_bank');
-        
-        echo '<div style="background:#e3f2fd;padding:12px;margin-top:12px;border-radius:4px;border-left:4px solid #2196f3;">';
-        echo '<p style="margin:0 0 10px 0;"><strong>🏢 Persoană Juridică</strong></p>';
-        echo '<table style="width:100%;border-collapse:collapse;">';
-        
-        if (!empty($cui)) {
-            echo '<tr><td style="padding:4px 8px 4px 0;width:100px;color:#666;">CUI:</td><td style="padding:4px 0;"><strong>' . esc_html($cui) . '</strong></td></tr>';
-        }
-        if (!empty($j)) {
-            echo '<tr><td style="padding:4px 8px 4px 0;color:#666;">Reg.Com:</td><td style="padding:4px 0;">' . esc_html($j) . '</td></tr>';
-        }
-        if (!empty($iban)) {
-            echo '<tr><td style="padding:4px 8px 4px 0;color:#666;">IBAN:</td><td style="padding:4px 0;font-family:monospace;">' . esc_html($iban) . '</td></tr>';
-        }
-        if (!empty($bank)) {
-            echo '<tr><td style="padding:4px 8px 4px 0;color:#666;">Banca:</td><td style="padding:4px 0;">' . esc_html($bank) . '</td></tr>';
-        }
-        
-        echo '</table></div>';
+
+        // Use the same compact green style as PF for visual consistency
+        echo '<div style="background:#e8f5e9;padding:12px;margin-top:12px;border-radius:4px;border-left:4px solid #4caf50;">';
+        echo '<p style="margin:0 0 8px 0;"><strong>🏢 Persoană Juridică</strong></p>';
+
+        // Inline concise info (CUI | Reg.Com)
+        $line = '';
+        if (!empty($cui)) $line .= 'CUI: <strong>' . esc_html($cui) . '</strong>';
+        if (!empty($j)) $line .= ($line ? ' | ' : '') . 'Reg.Com: ' . esc_html($j);
+        if ($line) echo '<p style="margin:0;font-size:13px;color:#444;">' . $line . '</p>';
+
+        // Optional extra info on a smaller secondary line
+        $extra = [];
+        if (!empty($iban)) $extra[] = 'IBAN: ' . esc_html($iban);
+        if (!empty($bank)) $extra[] = 'Banca: ' . esc_html($bank);
+        if (!empty($extra)) echo '<p style="margin:6px 0 0 0;font-size:12px;color:#666;">' . implode(' | ', $extra) . '</p>';
+
+        echo '</div>';
     }
     
     private function display_pf_admin($order) {

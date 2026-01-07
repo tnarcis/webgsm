@@ -202,7 +202,7 @@ class WebGSM_Checkout_Save {
             $_POST['billing_bank'] = sanitize_text_field($company['bank']);
         }
         
-        // Pentru PJ, folosește numele firmei pentru billing name dacă e gol
+        // Pentru PJ, folosește numele persoanei de contact dacă există, altfel folosește numele firmei
         if (!empty($company['name'])) {
             $parts = explode(' ', $company['name'], 2);
             if (empty($_POST['billing_first_name'])) {

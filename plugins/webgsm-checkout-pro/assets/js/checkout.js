@@ -271,7 +271,10 @@
             cui: $card.data('cui') || '',
             reg: $card.data('reg') || '',
             iban: $card.data('iban') || '',
-            bank: $card.data('bank') || ''
+            bank: $card.data('bank') || '',
+            // Contact person fields (for companies)
+            contact_first: $card.data('contact-first') || '',
+            contact_last: $card.data('contact-last') || ''
         };
     }
     
@@ -286,6 +289,12 @@
         var nameParts = (data.name || '').trim().split(' ');
         var firstName = nameParts[0] || '';
         var lastName = nameParts.slice(1).join(' ') || '';
+
+        // If we're injecting a company and contact person fields exist, prefer those for billing name
+        if (type === 'pj' && (data.contact_first || data.contact_last)) {
+            firstName = data.contact_first || firstName;
+            lastName = data.contact_last || (lastName || 'SRL');
+        }
         
         // POPULEAZĂ TOATE inputurile cu același name (rezolvă problema duplicatelor)
         $('input[name="billing_first_name"]').val(firstName);
@@ -664,9 +673,7 @@
         var data = {
             action: 'webgsm_save_company',
             nonce: webgsm_checkout.nonce,
-            name: (($('#company_name').val() || '').trim()),
-            cui: (($('#company_cui').val() || '').trim()),
-            reg: (($('#company_reg').val() || '').trim()),
+            // contact_first/contact_last removed
             phone: normalizePhone($('#company_phone').val()),
             email: (($('#company_email').val() || '').trim()),
             address: (($('#company_address').val() || '').trim()),
@@ -679,6 +686,7 @@
         // Validare locală cu evidențiere vizuală
         var hasError = false;
         
+        // contact_first/contact_last validation removed
         if (!data.name || data.name.length < 3) {
             showFieldError('#company_name', 'Minim 3 caractere');
             hasError = true;
@@ -740,6 +748,8 @@
                 } else {
                     // Guest - injectează direct
                     var companyData = {
+                        contact_first: data.contact_first,
+                        contact_last: data.contact_last,
                         name: data.name,
                         phone: data.phone,
                         email: data.email,
@@ -815,6 +825,45 @@
             index: index
         }, function(response) {
             if (response.success) {
+                log('Delete response success for ' + type + ' index ' + index);
+
+                // If deleting an address from the checkout addresses list, update the UI immediately
+                if (type === 'address') {
+                    var $list = $('.webgsm-addresses-list');
+                    var $item = $list.find('.address-item').filter(function() {
+                        return $(this).find('input[name="selected_address"]').val() == index;
+                    });
+
+                    if ($item.length) {
+                        var wasChecked = $item.find('input[name="selected_address"]').is(':checked');
+                        $item.remove();
+
+                        // Reindex remaining items so their data-index / values match server-side
+                        $list.find('.address-item').each(function(i) {
+                            var $this = $(this);
+                            $this.find('input[name="selected_address"]').val(i);
+                            $this.find('input[name="selected_address"]').attr('value', i);
+                            $this.find('.delete-address').data('index', i).attr('data-index', i);
+                        });
+
+                        // If the deleted item was selected, select the first available address and trigger change
+                        if (wasChecked) {
+                            var $first = $list.find('input[name="selected_address"]').first();
+                            if ($first.length) {
+                                $first.prop('checked', true).trigger('change');
+                            }
+                        }
+
+                        // If the list is now empty, hide it and show add button (server-side markup handles this on reload)
+                        if ($list.find('.address-item').length === 0) {
+                            $list.hide();
+                        }
+
+                        return;
+                    }
+                }
+
+                // Fallback: reload the page for other types or unexpected cases
                 location.reload();
             }
         });

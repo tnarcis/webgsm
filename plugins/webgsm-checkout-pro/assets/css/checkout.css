@@ -451,16 +451,31 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 999999;
+    /* higher than most UI components */
+    z-index: 99999980;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
+/* When modal is open hide the WP admin bar (prevents overlap) */
+body.webgsm-popup-open #wpadminbar { display: none !important; }
+
 .webgsm-popup.active {
     display: flex;
+    /* On small screens keep it top-aligned so header/footer are visible */
     align-items: flex-start;
     justify-content: center;
     padding: 20px;
+}
+
+/* Center the modal vertically on larger screens for better UX */
+@media (min-width: 760px) {
+    .webgsm-popup.active {
+        align-items: center;
+        padding: 40px;
+    }
+    /* Slightly reduce max-height on very large screens so modal doesn't overflow behind top admin bars */
+    .webgsm-popup .popup-content { max-height: calc(100vh - 120px); }
 }
 
 .webgsm-popup .popup-overlay {
@@ -469,21 +484,26 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 999998;
-    background: rgba(0,0,0,0.5);
+    /* Make sure overlay sits above other UI (WP admin bar, theme floating buttons) */
+    z-index: 99999990;
+    background: rgba(0,0,0,0.55);
 }
 
 .webgsm-popup .popup-content {
     position: relative;
     background: #fff;
     width: 100%;
-    max-width: 500px;
+    max-width: 720px; /* slightly wider for better layout */
+    width: calc(100% - 40px);
     border-radius: 8px;
     margin: auto;
-    max-height: calc(100vh - 40px);
+    /* Limit height and hide overflow - the .popup-body will handle scrolling */
+    max-height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
-    z-index: 1000000;
+    /* Ensure content sits above everything */
+    z-index: 100000000;
+    overflow: hidden;
 }
 
 .webgsm-popup .popup-header {
@@ -511,7 +531,21 @@
     overflow-y: auto;
     flex: 1;
     -webkit-overflow-scrolling: touch;
-    max-height: 60vh;
+    /* Keep space for header and sticky footer; allow the body area to scroll */
+    max-height: calc(100vh - 180px);
+}
+
+/* Ensure footer is visible and above content; add subtle shadow to separate */
+.webgsm-popup .popup-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: #fff;
+    box-shadow: 0 -10px 20px rgba(0,0,0,0.06);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 .webgsm-popup .popup-footer {

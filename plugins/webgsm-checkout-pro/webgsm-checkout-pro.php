@@ -260,7 +260,7 @@ class WebGSM_Checkout_Pro {
                     <?php if (!empty($companies)) : foreach ($companies as $i => $c) : ?>
                         <label class="webgsm-radio company-item">
                             <input type="radio" name="selected_company" value="<?php echo $i; ?>"
-                                data-name="<?php echo esc_attr($c['name']); ?>"
+                                                data-name="<?php echo esc_attr($c['name']); ?>"
                                 data-cui="<?php echo esc_attr($c['cui']); ?>"
                                 data-reg="<?php echo esc_attr($c['reg'] ?? ''); ?>"
                                 data-phone="<?php echo esc_attr($c['phone'] ?? ''); ?>"
@@ -268,6 +268,7 @@ class WebGSM_Checkout_Pro {
                                 data-address="<?php echo esc_attr($c['address']); ?>"
                                 data-county="<?php echo esc_attr($c['county'] ?? ''); ?>"
                                 data-city="<?php echo esc_attr($c['city'] ?? ''); ?>"
+                                
                                 data-iban="<?php echo esc_attr($c['iban'] ?? ''); ?>"
                                 data-bank="<?php echo esc_attr($c['bank'] ?? ''); ?>"
                                 <?php if ($i===0) echo 'checked'; ?>>
@@ -444,7 +445,7 @@ class WebGSM_Checkout_Pro {
         ?>
         <div class="webgsm-popup" id="company_popup">
             <div class="popup-overlay"></div>
-            <div class="popup-content" style="max-width:550px;">
+            <div class="popup-content">
                 <div class="popup-header"><h3>Adaugă firmă</h3><button type="button" class="popup-close">×</button></div>
                 <div class="popup-body">
                     <?php if (!is_user_logged_in()): ?>
@@ -458,14 +459,20 @@ class WebGSM_Checkout_Pro {
                             <small class="anaf-hint" style="color:#666;font-size:13px;">Căutare automată după CUI</small>
                         </div>
                     </div>
-                    <div class="form-row"><div class="form-col full"><label>Denumire *</label><input type="text" id="company_name"></div></div>
+                    <div class="form-row">
+                        <div class="form-col full"><label>Denumire *</label><input type="text" id="company_name"></div>
+                    </div>
                     <div class="form-row">
                         <div class="form-col"><label>Nr. Reg. Com. *</label><input type="text" id="company_reg" placeholder="J40/1234/2020"></div>
                         <div class="form-col"><label>Telefon *</label><input type="tel" id="company_phone" placeholder="07xxxxxxxx"></div>
                     </div>
-                    <div class="form-row"><div class="form-col full"><label>Email *</label><input type="email" id="company_email" placeholder="contact@firma.ro"></div></div>
+                    <div class="form-row">
+                        <div class="form-col full"><label>Email *</label><input type="email" id="company_email" placeholder="contact@firma.ro"></div>
+                    </div>
                     <div style="border-top:1px solid #eee;margin:15px 0;padding-top:15px;"><strong>Adresa sediu:</strong></div>
-                    <div class="form-row"><div class="form-col full"><label>Adresă *</label><input type="text" id="company_address"></div></div>
+                    <div class="form-row">
+                        <div class="form-col full"><label>Adresă *</label><input type="text" id="company_address"></div>
+                    </div>
                     <div class="form-row">
                         <div class="form-col"><label>Județ *</label><?php $this->render_county_dropdown('company_county'); ?></div>
                         <div class="form-col"><label>Localitate *</label><input type="text" id="company_city"></div>
@@ -567,6 +574,9 @@ class WebGSM_Checkout_Pro {
             'iban' => sanitize_text_field($_POST['iban'] ?? ''),
             'bank' => sanitize_text_field($_POST['bank'] ?? '')
         ];
+        // Server-side validation: contact fields required
+        // contact_first/contact_last validation removed
+
         if (is_user_logged_in()) {
             $user_id = get_current_user_id();
             $companies = get_user_meta($user_id, 'webgsm_companies', true);
@@ -666,7 +676,9 @@ class WebGSM_Checkout_Pro {
         echo '<h3 style="margin-top:30px;">Firme</h3>';
         if ($companies) {
             echo '<table class="shop_table"><thead><tr><th>Denumire</th><th>CUI</th><th>Adresă</th><th></th></tr></thead><tbody>';
-            foreach ($companies as $i => $c) echo '<tr><td>'.esc_html($c['name']).'</td><td>'.esc_html($c['cui']).'</td><td>'.esc_html($c['address']).'</td><td><a href="#" class="delete-saved-company" data-index="'.$i.'">Șterge</a></td></tr>';
+            foreach ($companies as $i => $c) {
+                echo '<tr><td>'.esc_html($c['name']).'</td><td>'.esc_html($c['cui']).'</td><td>'.esc_html($c['address']).'</td><td><a href="#" class="delete-saved-company" data-index="'.$i.'">Șterge</a></td></tr>';
+            }
             echo '</tbody></table>';
         } else echo '<p>Nu ai firme.</p>';
         
