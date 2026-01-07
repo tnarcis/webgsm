@@ -59,25 +59,29 @@ add_action('wp_footer', function() {
     if (!is_account_page()) return;
     ?>
     <style id="webgsm-menu-headers">
-    /* Headere de grup */
+    /* Headere de grup - compact, fără spații suplimentare */
     .woocommerce-MyAccount-navigation li.menu-group-header {
-        padding: 18px 20px 8px 20px !important;
-        background: #fafafa !important;
-        border: none !important;
+        padding: 6px 12px !important;
+        background: #f8f9fa !important;
+        border-top: 0 !important;
+        border-bottom: 1px solid #e8eaed !important;
         pointer-events: none !important;
-        margin-top: 10px !important;
+        margin: 0 !important;
+        line-height: 1.3 !important;
+        min-height: 0 !important;
     }
     
     .woocommerce-MyAccount-navigation li.menu-group-header:first-child {
-        margin-top: 0 !important;
+        margin: 0 !important;
+        border-top: 0 !important;
     }
     
     .woocommerce-MyAccount-navigation li.menu-group-header span {
         font-size: 11px !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        color: #9ca3af !important;
+        letter-spacing: 0.3px !important;
+        color: #8a8f9c !important;
     }
     
     /* Items cu indentare */

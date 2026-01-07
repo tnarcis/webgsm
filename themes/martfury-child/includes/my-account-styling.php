@@ -67,7 +67,28 @@ add_action('wp_head', function() {
     .woocommerce-MyAccount-navigation ul li {
         margin: 0;
         border-bottom: 1px solid #e8eaed;
-        padding: 0;
+        padding: 0 !important;
+        min-height: 0;
+        line-height: 1.3;
+    }
+
+    /* Headerele de grup (li fără link) - fallback pe tag-uri interne */
+    .woocommerce-MyAccount-navigation ul li > span,
+    .woocommerce-MyAccount-navigation ul li > strong,
+    .woocommerce-MyAccount-navigation ul li.section-title,
+    .woocommerce-MyAccount-navigation ul li.title,
+    .woocommerce-MyAccount-navigation ul li:not(:has(a)) {
+        display: block;
+        padding: 6px 12px !important;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        color: #8a8f9c;
+        text-transform: uppercase;
+        background: #f8f9fa;
+        border-top: 1px solid #e8eaed;
+        border-bottom: 1px solid #e8eaed;
+        min-height: auto;
     }
     
     .woocommerce-MyAccount-navigation ul li:last-child {
@@ -84,7 +105,7 @@ add_action('wp_head', function() {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 11px;
+        padding: 8px 12px !important;
         text-decoration: none;
         color: #2c3e50;
         font-size: 11px;
