@@ -51,6 +51,7 @@ add_action('wp_head', function() {
         margin-bottom: 25px;
         padding: 0;
         max-width: 280px;
+        border: 1px solid #e8eaed; /* linii continue pe laterale */
     }
     
     .woocommerce-MyAccount-navigation ul {
@@ -65,7 +66,7 @@ add_action('wp_head', function() {
     
     .woocommerce-MyAccount-navigation ul li {
         margin: 0;
-        border-bottom: 1px solid #f5f5f5;
+        border-bottom: 1px solid #e8eaed;
         padding: 0;
     }
     
@@ -73,13 +74,10 @@ add_action('wp_head', function() {
         border-bottom: none;
     }
     
-    /* Separatori intre grupuri */
-    .woocommerce-MyAccount-navigation ul li:nth-child(4) {
-        border-bottom: 3px solid #e8eaed;
-    }
-    
+    /* Separatori intre grupuri - subțiri, fără spațiu vizual suplimentar */
+    .woocommerce-MyAccount-navigation ul li:nth-child(4),
     .woocommerce-MyAccount-navigation ul li:nth-child(6) {
-        border-bottom: 3px solid #e8eaed;
+        border-bottom: 1px solid #e8eaed;
     }
     
     .woocommerce-MyAccount-navigation ul li a {
@@ -155,7 +153,6 @@ add_action('wp_head', function() {
         .woocommerce-MyAccount-navigation ul li a::before {
             font-size: 16px;
         }
-    }
     }
     .woocommerce-MyAccount-navigation-link--customer-logout a:hover {
         color: #c62828 !important;
@@ -922,6 +919,37 @@ add_filter('woocommerce_order_date_format', function() {
 .webgsm-radio .delete-person:hover {
     background: #ffe0e0;
     color: #d32f2f;
+}
+
+/* =============================================
+   BUTOANE ADAUGĂ - COMPACT ȘI STILIZAT
+   ============================================= */
+.btn-add-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.btn-add-item:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.btn-add-item:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(59, 130, 246, 0.2);
 }
 
 /* Mobile responsive */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WebGSM My Account - Meniu restructurat (fără a strica endpoint-uri existente)
  * @version 1.1
@@ -48,118 +49,588 @@ add_filter('woocommerce_account_menu_items', function($items) {
     return $sorted;
 }, 99);
 
+
 // ==========================================
-// CSS - DOAR ICONIȚE LINE ART
+// Endpoint: adrese-salvate - fără secțiune suplimentară jos
 // ==========================================
-add_action('wp_head', function() {
+// (Secțiunea de jos a fost eliminată la cererea utilizatorului)
+
+
+// ===============================
+// AJAX Stergere Adresa Salvata
+// ===============================
+// Încarc nonce-ul cu wp_localize_script pe pagina My Account
+add_action('wp_enqueue_scripts', function() {
+    if (!is_account_page()) return;
+    wp_enqueue_script('jquery');
+    $nonce = wp_create_nonce('webgsm_nonce');
+    wp_localize_script('jquery', 'webgsm_myaccount', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => $nonce
+    ]);
+}, 10);
+
+// JavaScript pentru butonul de ștergere - handler complet
+add_action('wp_footer', function() {
     if (!is_account_page()) return;
     ?>
-    <style id="webgsm-myaccount-icons">
-    /* Reset iconițe vechi (emoji) */
-    .woocommerce-MyAccount-navigation ul li a::before {
-        content: none !important;
-    }
-    
-    /* Iconițe Line Art - SVG */
-    .woocommerce-MyAccount-navigation ul li a {
-        position: relative;
-        padding-left: 44px !important;
-    }
-    
-    .woocommerce-MyAccount-navigation ul li a::after {
-        content: '';
-        position: absolute;
-        left: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 18px;
-        height: 18px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.6;
-    }
-    
-    .woocommerce-MyAccount-navigation ul li a:hover::after,
-    .woocommerce-MyAccount-navigation ul li.is-active a::after {
-        opacity: 1;
-    }
-    
-    /* Dashboard */
-    .woocommerce-MyAccount-navigation-link--dashboard a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'/%3E%3C/svg%3E");
-    }
-    
-    /* Comenzi */
-    .woocommerce-MyAccount-navigation-link--orders a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z'/%3E%3C/svg%3E");
-    }
-    
-    /* Retururi */
-    .woocommerce-MyAccount-navigation-link--retururi a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3'/%3E%3C/svg%3E");
-    }
-    
-    /* Garanție */
-    .woocommerce-MyAccount-navigation-link--garantie a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z'/%3E%3C/svg%3E");
-    }
-    
-    /* Descărcări */
-    .woocommerce-MyAccount-navigation-link--downloads a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3'/%3E%3C/svg%3E");
-    }
-    
-    /* Adresă / edit-address */
-    .woocommerce-MyAccount-navigation-link--edit-address a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 10.5a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z'/%3E%3C/svg%3E");
-    }
-    
-    /* Adrese salvate */
-    .woocommerce-MyAccount-navigation-link--adrese-salvate a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z'/%3E%3C/svg%3E");
-    }
-    
-    /* Date facturare */
-    .woocommerce-MyAccount-navigation-link--date-facturare a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z'/%3E%3C/svg%3E");
-    }
-    
-    /* Setări cont */
-    .woocommerce-MyAccount-navigation-link--edit-account a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E");
-    }
-    
-    /* Logout */
-    .woocommerce-MyAccount-navigation-link--customer-logout a::after {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75'/%3E%3C/svg%3E");
-    }
-    
-    /* Hover - albastru */
-    .woocommerce-MyAccount-navigation ul li a:hover::after,
-    .woocommerce-MyAccount-navigation ul li.is-active a::after {
-        filter: brightness(0) saturate(100%) invert(37%) sepia(74%) saturate(1555%) hue-rotate(200deg) brightness(91%) contrast(92%);
-    }
-    /* SEPARATOARE MENIU */
-.woocommerce-MyAccount-navigation-link--orders {
-    margin-top: 5px !important;
-    border-top: 1px solid #eee !important;
-}
-
-.woocommerce-MyAccount-navigation-link--edit-address {
-    margin-top: 5px !important;
-    border-top: 1px solid #eee !important;
-}
-
-.woocommerce-MyAccount-navigation-link--edit-account {
-    margin-top: 5px !important;
-    border-top: 1px solid #eee !important;
-}
-
-.woocommerce-MyAccount-navigation-link--customer-logout {
-    margin-top: 5px !important;
-    border-top: 1px solid #eee !important;
-}
-    </style>
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        console.log('[WebGSM] Delete handlers initialized');
+        
+        // Adaugă butoane "Adaugă" deasupra fiecărei secțiuni
+        function addActionButtons() {
+            console.log('[WebGSM] Adding action buttons...');
+            
+            // Buton pentru Adrese livrare
+            var addressesSection = $('.webgsm-addresses-list, table:contains("Adrese")').first();
+            console.log('[WebGSM] Addresses section found:', addressesSection.length);
+            if (addressesSection.length && !$('#btn-add-address').length) {
+                var addressBtn = '<button type="button" id="btn-add-address" class="btn-add-item" style="margin-bottom:15px;">📍 Adaugă adresă livrare</button>';
+                addressesSection.before(addressBtn);
+                console.log('[WebGSM] Address button added');
+            }
+            
+            // Buton pentru Firme
+            var companiesSection = $('.companies-list, table:contains("Firme")').first();
+            console.log('[WebGSM] Companies section found:', companiesSection.length);
+            if (companiesSection.length && !$('#btn-add-company').length) {
+                var companyBtn = '<button type="button" id="btn-add-company" class="btn-add-item" style="margin-bottom:15px;">🏢 Adaugă companie</button>';
+                companiesSection.before(companyBtn);
+                console.log('[WebGSM] Company button added');
+            }
+            
+            // Buton pentru Persoane fizice
+            var personsSection = $('.persons-list, table:contains("Persoane")').first();
+            console.log('[WebGSM] Persons section found:', personsSection.length);
+            if (personsSection.length && !$('#btn-add-person').length) {
+                var personBtn = '<button type="button" id="btn-add-person" class="btn-add-item" style="margin-bottom:15px;">👤 Adaugă persoană fizică</button>';
+                personsSection.before(personBtn);
+                console.log('[WebGSM] Person button added');
+            }
+            
+            // Dacă nu găsește niciunul, încearcă să le adauge după heading-uri
+            if (!$('#btn-add-address').length) {
+                $('h3:contains("Adrese"), h4:contains("Adrese")').first().after('<button type="button" id="btn-add-address" class="btn-add-item" style="margin:15px 0;">📍 Adaugă adresă livrare</button>');
+            }
+            if (!$('#btn-add-company').length) {
+                $('h3:contains("Firme"), h4:contains("Firme"), h3:contains("Compan"), h4:contains("Compan")').first().after('<button type="button" id="btn-add-company" class="btn-add-item" style="margin:15px 0;">🏢 Adaugă companie</button>');
+            }
+            if (!$('#btn-add-person').length) {
+                $('h3:contains("Persoan"), h4:contains("Persoan"), h3:contains("PF"), h4:contains("PF")').first().after('<button type="button" id="btn-add-person" class="btn-add-item" style="margin:15px 0;">👤 Adaugă persoană fizică</button>');
+            }
+        }
+        
+        // Adaugă butoanele la încărcare și după un delay pentru DOM dinamic
+        setTimeout(addActionButtons, 100);
+        setTimeout(addActionButtons, 500);
+        
+        // Handler pentru deschidere modale
+        $(document).on('click', '#btn-add-address', function(e) {
+            e.preventDefault();
+            console.log('[WebGSM] Opening address modal');
+            $('#edit_address_index').val(''); // Reset index pentru adăugare nouă
+            $('#modal_title').text('Adaugă adresă livrare');
+            $('#address_modal_saved').fadeIn(200);
+        });
+        
+        $(document).on('click', '#btn-add-company', function(e) {
+            e.preventDefault();
+            console.log('[WebGSM] Opening company modal');
+            $('#edit_company_index').val(''); // Reset index pentru adăugare nouă
+            $('#company_modal_title').text('Adaugă companie');
+            $('#company_modal_saved').fadeIn(200);
+        });
+        
+        $(document).on('click', '#btn-add-person', function(e) {
+            e.preventDefault();
+            console.log('[WebGSM] Opening person modal');
+            $('#edit_person_index').val(''); // Reset index pentru adăugare nouă
+            $('#person_modal_title').text('Adaugă persoană fizică');
+            $('#person_modal_saved').fadeIn(200);
+        });
+        
+        // Căutare automată ANAF când utilizatorul introduce CUI
+        var anafTimeout;
+        $(document).on('input', '#company_cui_modal', function() {
+            clearTimeout(anafTimeout);
+            var $input = $(this);
+            var cui = $input.val().trim().replace(/^RO/i, '');
+            
+            // Resetează status
+            $('#anaf_status_modal').hide();
+            
+            // Caută doar dacă are minim 6 cifre
+            if (cui.length >= 6) {
+                $('#anaf_status_modal').show().html('🔍 Se caută automat...').css({background: '#eff6ff', color: '#1e40af', border: '1px solid #bfdbfe'});
+                
+                anafTimeout = setTimeout(function() {
+                    $.ajax({
+                        url: (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.ajax_url : ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'cauta_cui_anaf',
+                            cui: cui
+                        },
+                        success: function(response) {
+                            if (response.success && response.data) {
+                                var data = response.data;
+                                $('#company_name_modal').val(data.denumire || '');
+                                $('#company_reg_modal').val(data.nrRegCom || '');
+                                $('#company_address_modal').val(data.adresa || '');
+                                $('#company_city_modal').val(data.localitate || '');
+                                
+                                // Setează județul dacă există în lista de opțiuni
+                                if (data.judet) {
+                                    $('#company_county_modal option').each(function() {
+                                        if ($(this).text().indexOf(data.judet) > -1) {
+                                            $('#company_county_modal').val($(this).val());
+                                            return false;
+                                        }
+                                    });
+                                }
+                                
+                                $('#anaf_status_modal').html('✓ Date completate automat').css({background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0'});
+                                setTimeout(function() { $('#anaf_status_modal').fadeOut(); }, 2500);
+                            } else {
+                                $('#anaf_status_modal').html('✗ CUI negăsit în ANAF').css({background: '#fef2f2', color: '#991b1b', border: '1px solid #fecaca'});
+                                setTimeout(function() { $('#anaf_status_modal').fadeOut(); }, 3000);
+                            }
+                        },
+                        error: function() {
+                            $('#anaf_status_modal').html('✗ Eroare la verificare').css({background: '#fef2f2', color: '#991b1b', border: '1px solid #fecaca'});
+                            setTimeout(function() { $('#anaf_status_modal').fadeOut(); }, 3000);
+                        }
+                    });
+                }, 800); // Delay de 800ms după ce utilizatorul termină de scris
+            }
+        });
+        
+        // Handler pentru închidere modale
+        $(document).on('click', '.popup-close, .modal-close-btn, .modal-cancel-btn, .popup-overlay', function(e) {
+            $(this).closest('.webgsm-popup').fadeOut(200);
+        });
+        
+        // Handler pentru salvare adresă
+        $(document).on('click', '#save_address_modal_btn', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            
+            var data = {
+                action: 'webgsm_save_address',
+                nonce: (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.nonce : webgsm_checkout.nonce,
+                index: $('#edit_address_index').val(),
+                label: $('#modal_label').val(),
+                name: $('#modal_name').val(),
+                phone: $('#modal_phone').val(),
+                address: $('#modal_address').val(),
+                city: $('#modal_city').val(),
+                county: $('#modal_county').val(),
+                postcode: $('#modal_postcode').val()
+            };
+            
+            $btn.prop('disabled', true).text('Se salvează...');
+            
+            $.ajax({
+                url: (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.ajax_url : webgsm_checkout.ajax_url,
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    if (response.success) {
+                        alert('Adresa salvată cu succes!');
+                        location.reload();
+                    } else {
+                        alert('Eroare: ' + (response.data || 'Nu s-a putut salva'));
+                        $btn.prop('disabled', false).text('Salveaza');
+                    }
+                },
+                error: function() {
+                    alert('Eroare la comunicare cu serverul');
+                    $btn.prop('disabled', false).text('Salveaza');
+                }
+            });
+        });
+        
+        // Handler pentru salvare companie
+        $(document).on('click', '#save_company_modal_btn', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            
+            var data = {
+                action: 'webgsm_save_company',
+                nonce: (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.nonce : webgsm_checkout.nonce,
+                index: $('#edit_company_index').val(),
+                cui: $('#company_cui_modal').val(),
+                name: $('#company_name_modal').val(),
+                reg: $('#company_reg_modal').val(),
+                phone: $('#company_phone_modal').val(),
+                email: $('#company_email_modal').val(),
+                address: $('#company_address_modal').val(),
+                county: $('#company_county_modal').val(),
+                city: $('#company_city_modal').val()
+            };
+            
+            $btn.prop('disabled', true).text('Se salvează...');
+            
+            $.ajax({
+                url: (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.ajax_url : webgsm_checkout.ajax_url,
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    if (response.success) {
+                        alert('Compania salvată cu succes!');
+                        location.reload();
+                    } else {
+                        alert('Eroare: ' + (response.data || 'Nu s-a putut salva'));
+                        $btn.prop('disabled', false).text('Salveaza');
+                    }
+                },
+                error: function() {
+                    alert('Eroare la comunicare cu serverul');
+                    $btn.prop('disabled', false).text('Salveaza');
+                }
+            });
+        });
+        
+        // Handler pentru salvare persoană
+        $(document).on('click', '#save_person_modal_btn', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            
+            var data = {
+                action: 'webgsm_save_person',
+                nonce: (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.nonce : webgsm_checkout.nonce,
+                index: $('#edit_person_index').val(),
+                name: $('#person_name_modal').val(),
+                cnp: $('#person_cnp_modal').val(),
+                phone: $('#person_phone_modal').val(),
+                email: $('#person_email_modal').val(),
+                address: $('#person_address_modal').val(),
+                county: $('#person_county_modal').val(),
+                city: $('#person_city_modal').val(),
+                postcode: $('#person_postcode_modal').val()
+            };
+            
+            $btn.prop('disabled', true).text('Se salvează...');
+            
+            $.ajax({
+                url: (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.ajax_url : webgsm_checkout.ajax_url,
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    if (response.success) {
+                        alert('Persoana salvată cu succes!');
+                        location.reload();
+                    } else {
+                        alert('Eroare: ' + (response.data || 'Nu s-a putut salva'));
+                        $btn.prop('disabled', false).text('Salveaza');
+                    }
+                },
+                error: function() {
+                    alert('Eroare la comunicare cu serverul');
+                    $btn.prop('disabled', false).text('Salveaza');
+                }
+            });
+        });
+        
+        // Funcție generică pentru ștergere
+        function deleteItem($btn, action, confirmMsg, itemType) {
+            var index = $btn.data('index');
+            
+            console.log('[WebGSM] Delete ' + itemType + ', index:', index);
+            console.log('[WebGSM] Button element:', $btn[0]);
+            console.log('[WebGSM] Button HTML:', $btn[0].outerHTML);
+            
+            if (index === undefined || index === null) {
+                console.error('[WebGSM] No index found on button');
+                alert('Eroare: butonul nu are index valid. Verifică că butonul are atributul data-index.');
+                return false;
+            }
+            
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+            
+            // Determină nonce și ajax_url
+            var nonce = '';
+            var ajax_url = '';
+            
+            if (typeof webgsm_checkout !== 'undefined') {
+                nonce = webgsm_checkout.nonce;
+                ajax_url = webgsm_checkout.ajax_url;
+            } else if (typeof webgsm_myaccount !== 'undefined') {
+                nonce = webgsm_myaccount.nonce;
+                ajax_url = webgsm_myaccount.ajax_url;
+            }
+            
+            if (!nonce || !ajax_url) {
+                alert('Eroare: configurație AJAX lipsă');
+                console.error('[WebGSM] Missing nonce or ajax_url');
+                return false;
+            }
+            
+            $btn.prop('disabled', true).css('opacity', '0.5');
+            
+            $.ajax({
+                url: ajax_url,
+                type: 'POST',
+                data: {
+                    action: action,
+                    index: index,
+                    nonce: nonce
+                },
+                success: function(response) {
+                    console.log('[WebGSM] Response:', response);
+                    if (response.success) {
+                        var $row = $btn.closest('tr');
+                        if ($row.length) {
+                            $row.fadeOut(300, function() { $(this).remove(); });
+                        } else {
+                            $btn.closest('.webgsm-radio, .address-item, .company-item, .person-item').fadeOut(300, function() { $(this).remove(); });
+                        }
+                    } else {
+                        alert('Eroare: ' + (response.data || 'Operațiune eșuată'));
+                        $btn.prop('disabled', false).css('opacity', '1');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('[WebGSM] AJAX error:', status, error);
+                    alert('Eroare la comunicarea cu serverul');
+                    $btn.prop('disabled', false).css('opacity', '1');
+                }
+            });
+        }
+        
+        // Handler universal pentru toate butoanele de ștergere
+        $(document).on('click', '.delete-address, .delete-saved-address, .delete-company, .delete-saved-company, .delete-person, .delete-saved-person, button[class*="delete"], a[class*="delete"]', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var $btn = $(this);
+            var btnClass = $btn.attr('class');
+            var action = 'webgsm_delete_address';
+            var confirmMsg = 'Sigur vrei să ștergi acest element?';
+            var itemType = 'item';
+            
+            console.log('[WebGSM] Button class:', btnClass);
+            
+            // Detectează tipul bazat pe clasă sau context
+            if (btnClass && (btnClass.indexOf('delete-company') > -1 || btnClass.indexOf('delete-saved-company') > -1)) {
+                action = 'webgsm_delete_company';
+                confirmMsg = 'Sigur vrei să ștergi această firmă?';
+                itemType = 'company';
+            } else if (btnClass && (btnClass.indexOf('delete-person') > -1 || btnClass.indexOf('delete-saved-person') > -1)) {
+                action = 'webgsm_delete_person';
+                confirmMsg = 'Sigur vrei să ștergi această persoană?';
+                itemType = 'person';
+            } else if ($btn.closest('.company-item').length || $btn.closest('.companies-list').length) {
+                action = 'webgsm_delete_company';
+                confirmMsg = 'Sigur vrei să ștergi această firmă?';
+                itemType = 'company';
+            } else if ($btn.closest('.person-item').length || $btn.closest('.persons-list').length) {
+                action = 'webgsm_delete_person';
+                confirmMsg = 'Sigur vrei să ștergi această persoană?';
+                itemType = 'person';
+            } else if (btnClass && (btnClass.indexOf('delete-address') > -1 || btnClass.indexOf('delete-saved-address') > -1)) {
+                action = 'webgsm_delete_address';
+                confirmMsg = 'Sigur vrei să ștergi această adresă?';
+                itemType = 'address';
+            }
+            
+            console.log('[WebGSM] Detected type:', itemType, 'action:', action);
+            deleteItem($btn, action, confirmMsg, itemType);
+            return false;
+        });
+    });
+    </script>
     <?php
-}, 99);
+}, 999);
+
+// AJAX handlers pentru ștergere
+add_action('wp_ajax_webgsm_delete_address', function() {
+    check_ajax_referer('webgsm_nonce', 'nonce');
+    if (!is_user_logged_in()) wp_send_json_error('Neautorizat');
+    
+    $user_id = get_current_user_id();
+    $index = isset($_POST['index']) ? intval($_POST['index']) : -1;
+    $addresses = get_user_meta($user_id, 'webgsm_addresses', true);
+    
+    if (!is_array($addresses)) $addresses = [];
+    if ($index < 0 || $index >= count($addresses)) wp_send_json_error('Index invalid');
+    
+    array_splice($addresses, $index, 1);
+    update_user_meta($user_id, 'webgsm_addresses', $addresses);
+    
+    wp_send_json_success(['message' => 'Adresa ștearsă cu succes', 'addresses' => $addresses]);
+}, 5);
+
+add_action('wp_ajax_webgsm_delete_company', function() {
+    error_log('[WebGSM] Delete company handler called');
+    error_log('[WebGSM] POST data: ' . print_r($_POST, true));
+    
+    check_ajax_referer('webgsm_nonce', 'nonce');
+    if (!is_user_logged_in()) {
+        error_log('[WebGSM] User not logged in');
+        wp_send_json_error('Neautorizat');
+    }
+    
+    $user_id = get_current_user_id();
+    $index = isset($_POST['index']) ? intval($_POST['index']) : -1;
+    error_log('[WebGSM] Delete company - User ID: ' . $user_id . ', Index: ' . $index);
+    
+    $companies = get_user_meta($user_id, 'webgsm_companies', true);
+    error_log('[WebGSM] Companies count: ' . (is_array($companies) ? count($companies) : 0));
+    error_log('[WebGSM] Companies data: ' . print_r($companies, true));
+    
+    if (!is_array($companies)) $companies = [];
+    if ($index < 0 || $index >= count($companies)) {
+        error_log('[WebGSM] Invalid index - index: ' . $index . ', count: ' . count($companies));
+        wp_send_json_error('Index invalid - primit: ' . $index . ', total: ' . count($companies));
+    }
+    
+    array_splice($companies, $index, 1);
+    update_user_meta($user_id, 'webgsm_companies', $companies);
+    error_log('[WebGSM] Company deleted successfully, remaining: ' . count($companies));
+    
+    wp_send_json_success(['message' => 'Firma ștearsă cu succes', 'companies' => $companies]);
+}, 5);
+
+add_action('wp_ajax_webgsm_delete_person', function() {
+    error_log('[WebGSM] Delete person handler called');
+    check_ajax_referer('webgsm_nonce', 'nonce');
+    if (!is_user_logged_in()) {
+        error_log('[WebGSM] User not logged in');
+        wp_send_json_error('Neautorizat');
+    }
+    
+    $user_id = get_current_user_id();
+    $index = isset($_POST['index']) ? intval($_POST['index']) : -1;
+    error_log('[WebGSM] Delete person index: ' . $index);
+    $persons = get_user_meta($user_id, 'webgsm_persons', true);
+    
+    if (!is_array($persons)) $persons = [];
+    if ($index < 0 || $index >= count($persons)) {
+        error_log('[WebGSM] Invalid person index');
+        wp_send_json_error('Index invalid');
+    }
+    
+    array_splice($persons, $index, 1);
+    update_user_meta($user_id, 'webgsm_persons', $persons);
+    error_log('[WebGSM] Person deleted successfully');
+    
+    wp_send_json_success(['message' => 'Persoana ștearsă cu succes', 'persons' => $persons]);
+}, 5);
+
+// AJAX handlers pentru salvare (adăugare/editare)
+add_action('wp_ajax_webgsm_save_address', function() {
+    check_ajax_referer('webgsm_nonce', 'nonce');
+    if (!is_user_logged_in()) wp_send_json_error('Neautorizat');
+    
+    $user_id = get_current_user_id();
+    $addresses = get_user_meta($user_id, 'webgsm_addresses', true);
+    if (!is_array($addresses)) $addresses = [];
+    
+    $address = [
+        'label' => sanitize_text_field($_POST['label'] ?? ''),
+        'name' => sanitize_text_field($_POST['name'] ?? ''),
+        'phone' => sanitize_text_field($_POST['phone'] ?? ''),
+        'address' => sanitize_text_field($_POST['address'] ?? ''),
+        'city' => sanitize_text_field($_POST['city'] ?? ''),
+        'county' => sanitize_text_field($_POST['county'] ?? ''),
+        'postcode' => sanitize_text_field($_POST['postcode'] ?? '')
+    ];
+    
+    // Validare câmpuri obligatorii
+    if (empty($address['name']) || empty($address['phone']) || empty($address['address']) || empty($address['city'])) {
+        wp_send_json_error('Câmpurile marcate cu * sunt obligatorii');
+    }
+    
+    $index = isset($_POST['index']) && $_POST['index'] !== '' ? intval($_POST['index']) : -1;
+    
+    if ($index >= 0 && $index < count($addresses)) {
+        // Editare
+        $addresses[$index] = $address;
+    } else {
+        // Adăugare nouă
+        $addresses[] = $address;
+    }
+    
+    update_user_meta($user_id, 'webgsm_addresses', $addresses);
+    wp_send_json_success(['message' => 'Adresa salvată cu succes', 'addresses' => $addresses]);
+}, 5);
+
+add_action('wp_ajax_webgsm_save_company', function() {
+    check_ajax_referer('webgsm_nonce', 'nonce');
+    if (!is_user_logged_in()) wp_send_json_error('Neautorizat');
+    
+    $user_id = get_current_user_id();
+    $companies = get_user_meta($user_id, 'webgsm_companies', true);
+    if (!is_array($companies)) $companies = [];
+    
+    $company = [
+        'cui' => sanitize_text_field($_POST['cui'] ?? ''),
+        'name' => sanitize_text_field($_POST['name'] ?? ''),
+        'reg' => sanitize_text_field($_POST['reg'] ?? ''),
+        'phone' => sanitize_text_field($_POST['phone'] ?? ''),
+        'email' => sanitize_email($_POST['email'] ?? ''),
+        'address' => sanitize_text_field($_POST['address'] ?? ''),
+        'county' => sanitize_text_field($_POST['county'] ?? ''),
+        'city' => sanitize_text_field($_POST['city'] ?? '')
+    ];
+    
+    // Validare câmpuri obligatorii
+    if (empty($company['cui']) || empty($company['name']) || empty($company['reg']) || empty($company['phone']) || empty($company['email'])) {
+        wp_send_json_error('Câmpurile marcate cu * sunt obligatorii');
+    }
+    
+    $index = isset($_POST['index']) && $_POST['index'] !== '' ? intval($_POST['index']) : -1;
+    
+    if ($index >= 0 && $index < count($companies)) {
+        // Editare
+        $companies[$index] = $company;
+    } else {
+        // Adăugare nouă
+        $companies[] = $company;
+    }
+    
+    update_user_meta($user_id, 'webgsm_companies', $companies);
+    wp_send_json_success(['message' => 'Compania salvată cu succes', 'companies' => $companies]);
+}, 5);
+
+add_action('wp_ajax_webgsm_save_person', function() {
+    check_ajax_referer('webgsm_nonce', 'nonce');
+    if (!is_user_logged_in()) wp_send_json_error('Neautorizat');
+    
+    $user_id = get_current_user_id();
+    $persons = get_user_meta($user_id, 'webgsm_persons', true);
+    if (!is_array($persons)) $persons = [];
+    
+    $person = [
+        'name' => sanitize_text_field($_POST['name'] ?? ''),
+        'cnp' => sanitize_text_field($_POST['cnp'] ?? ''),
+        'phone' => sanitize_text_field($_POST['phone'] ?? ''),
+        'email' => sanitize_email($_POST['email'] ?? ''),
+        'address' => sanitize_text_field($_POST['address'] ?? ''),
+        'county' => sanitize_text_field($_POST['county'] ?? ''),
+        'city' => sanitize_text_field($_POST['city'] ?? ''),
+        'postcode' => sanitize_text_field($_POST['postcode'] ?? '')
+    ];
+    
+    // Validare câmpuri obligatorii
+    if (empty($person['name']) || empty($person['phone']) || empty($person['email']) || empty($person['address'])) {
+        wp_send_json_error('Câmpurile marcate cu * sunt obligatorii');
+    }
+    
+    $index = isset($_POST['index']) && $_POST['index'] !== '' ? intval($_POST['index']) : -1;
+    
+    if ($index >= 0 && $index < count($persons)) {
+        // Editare
+        $persons[$index] = $person;
+    } else {
+        // Adăugare nouă
+        $persons[] = $person;
+    }
+    
+    update_user_meta($user_id, 'webgsm_persons', $persons);
+    wp_send_json_success(['message' => 'Persoana salvată cu succes', 'persons' => $persons]);
+}, 5);

@@ -80,9 +80,10 @@ add_action('woocommerce_account_adrese-salvate_endpoint', function() {
                 <div class="form-row">
                     <div class="form-col"><label>CUI *</label><input type="text" id="company_cui_modal" placeholder="12345678"></div>
                     <div class="form-col" style="display:flex;align-items:flex-end;">
-                        <small class="anaf-hint" style="color:#666;font-size:13px;">Cautare automata dupa CUI</small>
+                        <small class="anaf-hint" style="color:#3b82f6;font-size:12px;font-weight:500;">🔍 Autocompletare automată din ANAF</small>
                     </div>
                 </div>
+                <div id="anaf_status_modal" style="display:none;padding:8px 12px;border-radius:6px;margin:10px 0;font-size:13px;"></div>
                 <div class="form-row"><div class="form-col full"><label>Denumire *</label><input type="text" id="company_name_modal"></div></div>
                 <div class="form-row">
                     <div class="form-col"><label>Nr. Reg. Com. *</label><input type="text" id="company_reg_modal" placeholder="J40/1234/2020"></div>
@@ -97,7 +98,6 @@ add_action('woocommerce_account_adrese-salvate_endpoint', function() {
                     </div>
                     <div class="form-col"><label>Localitate *</label><input type="text" id="company_city_modal"></div>
                 </div>
-                <div id="anaf_status_modal" style="display:none;padding:10px;border-radius:4px;margin-top:10px;"></div>
             </div>
             <div class="popup-footer">
                 <button type="button" class="btn-secondary modal-cancel-btn">Anuleaza</button>
