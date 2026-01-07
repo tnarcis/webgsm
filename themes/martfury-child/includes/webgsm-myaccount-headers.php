@@ -19,16 +19,17 @@ add_filter('woocommerce_account_menu_items', function($items) {
     // Elimină items nedorite
     unset($items['downloads']); // Descărcări
     unset($items['edit-address']); // Adresă default WooCommerce
+    unset($items['date-facturare']); // Date Facturare - inutil
     
     // Redenumește items
     if (isset($items['dashboard'])) $items['dashboard'] = 'Panou control';
     if (isset($items['orders'])) $items['orders'] = 'Comenzi';
     if (isset($items['retururi'])) $items['retururi'] = 'Retururi';
-    if (isset($items['garantie'])) $items['garantie'] = 'Garanție';
-    if (isset($items['adrese-salvate'])) $items['adrese-salvate'] = 'Adrese & Firme';
+    if (isset($items['garantie'])) $items['garantie'] = 'Garantie';
+    if (isset($items['adrese-salvate'])) $items['adrese-salvate'] = 'Adrese';
     if (isset($items['date-facturare'])) $items['date-facturare'] = 'Date Facturare';
     if (isset($items['edit-account'])) $items['edit-account'] = 'Detalii cont';
-    if (isset($items['customer-logout'])) $items['customer-logout'] = 'Ieșire din cont';
+    if (isset($items['customer-logout'])) $items['customer-logout'] = 'Iesire din cont';
     
     // Reordonează
     $order = [
@@ -37,7 +38,6 @@ add_filter('woocommerce_account_menu_items', function($items) {
         'retururi',
         'garantie',
         'adrese-salvate',
-        'date-facturare',
         'edit-account',
         'customer-logout'
     ];

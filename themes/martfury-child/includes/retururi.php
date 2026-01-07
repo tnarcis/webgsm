@@ -407,7 +407,7 @@ add_action('woocommerce_account_retururi_endpoint', function() {
                 'nou' => '<span style="color:orange;">Nou</span>',
                 'aprobat' => '<span style="color:green;">Aprobat</span>',
                 'respins' => '<span style="color:red;">Respins</span>',
-                'finalizat' => '<span style="color:blue;">Finalizat</span>'
+                'finalizat' => '<span style="color:#2ecc71;">Finalizat</span>'
             );
             
             echo '<tr>';

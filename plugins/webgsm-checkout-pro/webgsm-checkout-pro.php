@@ -86,6 +86,10 @@ class WebGSM_Checkout_Pro {
         add_action('init', [$this, 'add_endpoints']);
         add_action('wp_head', [$this, 'cart_page_css']);
         add_action('woocommerce_thankyou', [$this, 'custom_thankyou_content'], 999);
+        // Output hidden billing/shipping inputs inside the checkout <form> so they get included in POST
+        add_action('woocommerce_checkout_before_customer_details', [$this, 'render_hidden_form_fields']);
+        // Apply our shipping fields on order creation if provided by our form (run late so WooCommerce core doesn't overwrite)
+        add_action('woocommerce_checkout_create_order', [$this, 'apply_custom_shipping_fields'], 999, 2);
     }
     
     public function start_session() {
@@ -93,7 +97,7 @@ class WebGSM_Checkout_Pro {
     }
     
     public function enqueue_assets() {
-        if (!is_checkout()) return;
+        if (!is_checkout() && !is_account_page()) return;
         wp_enqueue_style('webgsm-checkout', WEBGSM_CHECKOUT_URL . 'assets/css/checkout.css', [], WEBGSM_CHECKOUT_VERSION);
         wp_enqueue_script('webgsm-checkout', WEBGSM_CHECKOUT_URL . 'assets/js/checkout.js', ['jquery'], WEBGSM_CHECKOUT_VERSION, true);
         wp_localize_script('webgsm-checkout', 'webgsm_checkout', [
@@ -282,21 +286,7 @@ class WebGSM_Checkout_Pro {
                     <button type="button" class="btn-add" id="add_company_btn">+ Adaugă firmă</button>
                 </div>
                 
-                <input type="hidden" name="billing_company" id="billing_company" value="">
-                <input type="hidden" name="billing_cui" id="billing_cui" value="">
-                <input type="hidden" name="billing_j" id="billing_j" value="">
-                <input type="hidden" name="billing_iban" id="billing_iban" value="">
-                <input type="hidden" name="billing_bank" id="billing_bank" value="">
-                <input type="hidden" name="billing_cnp" id="billing_cnp" value="">
-                <input type="hidden" name="billing_first_name" id="billing_first_name" value="">
-                <input type="hidden" name="billing_last_name" id="billing_last_name" value="">
-                <input type="hidden" name="billing_address_1" id="billing_address_1" value="">
-                <input type="hidden" name="billing_city" id="billing_city" value="">
-                <input type="hidden" name="billing_state" id="billing_state" value="">
-                <input type="hidden" name="billing_postcode" id="billing_postcode" value="">
-                <input type="hidden" name="billing_phone" id="billing_phone" value="">
-                <input type="hidden" name="billing_email" id="billing_email" value="<?php echo esc_attr(WC()->checkout->get_value('billing_email')); ?>">
-                <input type="hidden" name="billing_country" id="billing_country" value="RO">
+
             </div>
         </div>
         <?php
@@ -322,23 +312,25 @@ class WebGSM_Checkout_Pro {
                     <?php foreach ($addresses as $i => $a) : ?>
                         <label class="webgsm-radio address-item">
                             <input type="radio" name="selected_address" value="<?php echo $i; ?>"
-                                data-name="<?php echo esc_attr($a['name']); ?>"
-                                data-phone="<?php echo esc_attr($a['phone']); ?>"
-                                data-address="<?php echo esc_attr($a['address']); ?>"
-                                data-city="<?php echo esc_attr($a['city']); ?>"
-                                data-county="<?php echo esc_attr($a['county']); ?>"
+                                data-name="<?php echo esc_attr($a['name'] ?? ''); ?>"
+                                data-phone="<?php echo esc_attr($a['phone'] ?? ''); ?>"
+                                data-address="<?php echo esc_attr($a['address'] ?? ''); ?>"
+                                data-city="<?php echo esc_attr($a['city'] ?? ''); ?>"
+                                data-county="<?php echo esc_attr($a['county'] ?? ''); ?>"
                                 data-postcode="<?php echo esc_attr($a['postcode'] ?? ''); ?>"
                                 <?php if ($i===0) echo 'checked'; ?>>
                             <span class="radio-mark"></span>
                             <span class="radio-label">
-                                <strong><?php echo esc_html($a['label'] ?? $a['name']); ?></strong>
-                                <small><?php echo esc_html($a['address'].', '.$a['city']); ?></small>
+                                <strong><?php echo esc_html($a['label'] ?? ($a['name'] ?? '')); ?></strong>
+                                <small><?php echo esc_html( ($a['address'] ?? '') . ( (!empty($a['address'] ?? '')) && (!empty($a['city'] ?? '')) ? ', ' : '' ) . ($a['city'] ?? '') ); ?></small>
                             </span>
                             <button type="button" class="delete-address" data-index="<?php echo $i; ?>">×</button>
                         </label>
                     <?php endforeach; ?>
                     </div>
                     <button type="button" class="btn-add" id="add_address_btn">+ Adaugă adresă</button>
+
+
                 <?php else : ?>
                     <div class="webgsm-guest-form">
                         <div class="form-row">
@@ -363,6 +355,39 @@ class WebGSM_Checkout_Pro {
     private function render_notes_section() {
         echo '<div class="webgsm-section"><div class="webgsm-section-header">Observații</div>';
         echo '<div class="webgsm-section-body"><textarea name="order_comments" placeholder="Note pentru livrare..."></textarea></div></div>';
+    }
+
+    /**
+     * Render hidden billing & shipping inputs inside the real checkout <form> so they're submitted.
+     */
+    public function render_hidden_form_fields() {
+        // Billing hidden fields (populated from our UI)
+        echo '<input type="hidden" name="billing_company" id="billing_company" value="">';
+        echo '<input type="hidden" name="billing_cui" id="billing_cui" value="">';
+        echo '<input type="hidden" name="billing_j" id="billing_j" value="">';
+        echo '<input type="hidden" name="billing_iban" id="billing_iban" value="">';
+        echo '<input type="hidden" name="billing_bank" id="billing_bank" value="">';
+        echo '<input type="hidden" name="billing_cnp" id="billing_cnp" value="">';
+        echo '<input type="hidden" name="billing_first_name" id="billing_first_name" value="">';
+        echo '<input type="hidden" name="billing_last_name" id="billing_last_name" value="">';
+        echo '<input type="hidden" name="billing_address_1" id="billing_address_1" value="">';
+        echo '<input type="hidden" name="billing_city" id="billing_city" value="">';
+        echo '<input type="hidden" name="billing_state" id="billing_state" value="">';
+        echo '<input type="hidden" name="billing_postcode" id="billing_postcode" value="">';
+        echo '<input type="hidden" name="billing_phone" id="billing_phone" value="">';
+        echo '<input type="hidden" name="billing_email" id="billing_email" value="'.esc_attr(WC()->checkout->get_value('billing_email')).'">';
+        echo '<input type="hidden" name="billing_country" id="billing_country" value="RO">';
+
+        // Shipping hidden fields (these are used when user chooses a saved address or unchecks same_as_billing)
+        echo '<input type="hidden" name="ship_to_different_address" id="ship_to_different_address" value="0">';
+        echo '<input type="hidden" name="shipping_first_name" id="shipping_first_name" value="">';
+        echo '<input type="hidden" name="shipping_last_name" id="shipping_last_name" value="">';
+        echo '<input type="hidden" name="shipping_phone" id="shipping_phone" value="">';
+        echo '<input type="hidden" name="shipping_address_1" id="shipping_address_1" value="">';
+        echo '<input type="hidden" name="shipping_city" id="shipping_city" value="">';
+        echo '<input type="hidden" name="shipping_state" id="shipping_state" value="">';
+        echo '<input type="hidden" name="shipping_postcode" id="shipping_postcode" value="">';
+        echo '<input type="hidden" name="shipping_country" id="shipping_country" value="RO">';
     }
     
     private function render_summary_section() {
@@ -430,7 +455,7 @@ class WebGSM_Checkout_Pro {
                     <div class="form-row">
                         <div class="form-col"><label>CUI *</label><input type="text" id="company_cui" placeholder="12345678"></div>
                         <div class="form-col" style="display:flex;align-items:flex-end;">
-                            <button type="button" class="btn-anaf" id="search_anaf_btn">🔍 ANAF</button>
+                            <small class="anaf-hint" style="color:#666;font-size:13px;">Căutare automată după CUI</small>
                         </div>
                     </div>
                     <div class="form-row"><div class="form-col full"><label>Denumire *</label><input type="text" id="company_name"></div></div>
@@ -522,6 +547,8 @@ class WebGSM_Checkout_Pro {
         $addresses = get_user_meta($user_id, 'webgsm_addresses', true);
         if (is_array($addresses) && isset($addresses[$idx])) {
             array_splice($addresses, $idx, 1);
+            // Reindex to ensure sequential indices
+            $addresses = array_values($addresses);
             update_user_meta($user_id, 'webgsm_addresses', $addresses);
             wp_send_json_success();
         }
@@ -563,6 +590,8 @@ class WebGSM_Checkout_Pro {
         $companies = get_user_meta($user_id, 'webgsm_companies', true);
         if (is_array($companies) && isset($companies[$idx])) {
             array_splice($companies, $idx, 1);
+            // Reindex to ensure sequential indices
+            $companies = array_values($companies);
             update_user_meta($user_id, 'webgsm_companies', $companies);
             wp_send_json_success();
         }
@@ -602,6 +631,8 @@ class WebGSM_Checkout_Pro {
         $persons = get_user_meta($user_id, 'webgsm_persons', true);
         if (is_array($persons) && isset($persons[$idx])) {
             array_splice($persons, $idx, 1);
+            // Reindex to ensure sequential indices
+            $persons = array_values($persons);
             update_user_meta($user_id, 'webgsm_persons', $persons);
             wp_send_json_success();
         }
@@ -624,26 +655,91 @@ class WebGSM_Checkout_Pro {
         $companies = get_user_meta($user_id, 'webgsm_companies', true) ?: [];
         $persons = get_user_meta($user_id, 'webgsm_persons', true) ?: [];
         
+        // Reindex arrays to ensure sequential indices (0, 1, 2...)
+        $addresses = array_values($addresses);
+        $companies = array_values($companies);
+        $persons = array_values($persons);
+        
         echo '<h3>Adrese livrare</h3>';
         if ($addresses) {
-            echo '<table class="shop_table"><thead><tr><th>Etichetă</th><th>Adresă</th><th>Tel</th><th></th></tr></thead><tbody>';
-            foreach ($addresses as $i => $a) echo '<tr><td>'.esc_html($a['label'] ?? 'Adresa '.($i+1)).'</td><td>'.esc_html($a['address'].', '.$a['city']).'</td><td>'.esc_html($a['phone']).'</td><td><a href="#" class="delete-saved-address" data-index="'.$i.'">Șterge</a></td></tr>';
+            echo '<table class="shop_table"><thead><tr><th>Etichetă</th><th>Adresă</th><th>Tel</th><th>Acțiuni</th></tr></thead><tbody>';
+            foreach ($addresses as $i => $a) {
+                $label = $a['label'] ?? 'Adresa '.($i+1);
+                $addr = ($a['address'] ?? '');
+                $city = ($a['city'] ?? '');
+                $addr_display = $addr . ( ($addr !== '' && $city !== '') ? ', ' : '' ) . $city;
+                echo '<tr><td>'.esc_html($label).'</td><td>'.esc_html($addr_display).'</td><td>'.esc_html($a['phone'] ?? '').'</td><td><a href="#" class="edit-saved-address" data-index="'.$i.'">Editează</a> | <a href="#" class="delete-saved-address" data-index="'.$i.'">Șterge</a></td></tr>';
+            }
             echo '</tbody></table>';
         } else echo '<p>Nu ai adrese.</p>';
         
+        echo '<button type="button" class="btn-add-small" id="add_new_address_btn">+ Adauga adresa</button>'; 
+
+        
         echo '<h3 style="margin-top:30px;">Firme</h3>';
         if ($companies) {
-            echo '<table class="shop_table"><thead><tr><th>Denumire</th><th>CUI</th><th>Adresă</th><th></th></tr></thead><tbody>';
-            foreach ($companies as $i => $c) echo '<tr><td>'.esc_html($c['name']).'</td><td>'.esc_html($c['cui']).'</td><td>'.esc_html($c['address']).'</td><td><a href="#" class="delete-saved-company" data-index="'.$i.'">Șterge</a></td></tr>';
+            echo '<table class="shop_table"><thead><tr><th>Denumire</th><th>CUI</th><th>Adresă</th><th>Acțiuni</th></tr></thead><tbody>';
+            foreach ($companies as $i => $c) {
+                echo '<tr><td>'.esc_html($c['name']).'</td><td>'.esc_html($c['cui']).'</td><td>'.esc_html($c['address']).'</td><td><a href="#" class="edit-saved-company" data-index="'.$i.'">Editează</a> | <a href="#" class="delete-saved-company" data-index="'.$i.'">Șterge</a></td></tr>';
+            }
             echo '</tbody></table>';
         } else echo '<p>Nu ai firme.</p>';
         
+        echo '<button type="button" class="btn-add-small" id="add_new_company_btn">+ Adauga firma</button>';
+        
         echo '<h3 style="margin-top:30px;">Persoane fizice</h3>';
         if ($persons) {
-            echo '<table class="shop_table"><thead><tr><th>Nume</th><th>Tel</th><th>Email</th><th></th></tr></thead><tbody>';
-            foreach ($persons as $i => $p) echo '<tr><td>'.esc_html($p['name']).'</td><td>'.esc_html($p['phone']).'</td><td>'.esc_html($p['email']).'</td><td><a href="#" class="delete-saved-person" data-index="'.$i.'">Șterge</a></td></tr>';
+            echo '<table class="shop_table"><thead><tr><th>Nume</th><th>Tel</th><th>Email</th><th>Acțiuni</th></tr></thead><tbody>';
+            foreach ($persons as $i => $p) {
+                echo '<tr><td>'.esc_html($p['name']).'</td><td>'.esc_html($p['phone']).'</td><td>'.esc_html($p['email']).'</td><td><a href="#" class="edit-saved-person" data-index="'.$i.'">Editează</a> | <a href="#" class="delete-saved-person" data-index="'.$i.'">Șterge</a></td></tr>';
+            }
             echo '</tbody></table>';
         } else echo '<p>Nu ai persoane.</p>';
+        
+        echo '<button type="button" class="btn-add-small" id="add_new_person_btn">+ Adauga persoana</button>';
+    }
+    
+    /**
+     * Apply shipping fields from our custom checkout into the WC_Order object.
+     * Ensures server-side the shipping address selected/filled in the form is used.
+     */
+    public function apply_custom_shipping_fields( $order, $data ) {
+        // $_POST is expected to contain our hidden fields
+        $ship_flag = isset($_POST['ship_to_different_address']) ? sanitize_text_field($_POST['ship_to_different_address']) : '0';
+
+        if ($ship_flag === '1') {
+            $shipping_first = isset($_POST['shipping_first_name']) ? sanitize_text_field($_POST['shipping_first_name']) : '';
+            $shipping_last = isset($_POST['shipping_last_name']) ? sanitize_text_field($_POST['shipping_last_name']) : '';
+            $shipping_address_1 = isset($_POST['shipping_address_1']) ? sanitize_text_field($_POST['shipping_address_1']) : '';
+            $shipping_city = isset($_POST['shipping_city']) ? sanitize_text_field($_POST['shipping_city']) : '';
+            $shipping_state = isset($_POST['shipping_state']) ? sanitize_text_field($_POST['shipping_state']) : '';
+            $shipping_postcode = isset($_POST['shipping_postcode']) ? sanitize_text_field($_POST['shipping_postcode']) : '';
+            $shipping_country = isset($_POST['shipping_country']) ? sanitize_text_field($_POST['shipping_country']) : 'RO';
+            $shipping_phone = isset($_POST['shipping_phone']) ? sanitize_text_field($_POST['shipping_phone']) : '';
+
+            // Debugging: log posted shipping values so we can verify what's received server-side
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('[WebGSM] apply_custom_shipping_fields: order_id=' . (is_object($order) && method_exists($order, 'get_id') ? $order->get_id() : '') . ' ship_flag=' . $ship_flag . ' shipping_first=' . $shipping_first . ' shipping_last=' . $shipping_last . ' shipping_address=' . $shipping_address_1 . ' shipping_city=' . $shipping_city . ' shipping_state=' . $shipping_state . ' shipping_postcode=' . $shipping_postcode);
+            }
+
+            // WC_Order methods
+            if (is_callable([$order, 'set_shipping_first_name'])) $order->set_shipping_first_name($shipping_first);
+            if (is_callable([$order, 'set_shipping_last_name'])) $order->set_shipping_last_name($shipping_last);
+            if (is_callable([$order, 'set_shipping_address_1'])) $order->set_shipping_address_1($shipping_address_1);
+            if (is_callable([$order, 'set_shipping_city'])) $order->set_shipping_city($shipping_city);
+            if (is_callable([$order, 'set_shipping_state'])) $order->set_shipping_state($shipping_state);
+            if (is_callable([$order, 'set_shipping_postcode'])) $order->set_shipping_postcode($shipping_postcode);
+            if (is_callable([$order, 'set_shipping_country'])) $order->set_shipping_country($shipping_country);
+
+            // Store shipping phone as order meta (not all WC versions have a setter)
+            if (!empty($shipping_phone)) $order->update_meta_data('_shipping_phone', $shipping_phone);
+
+            $order->update_meta_data('_same_as_billing', '0');
+        } else {
+            $order->update_meta_data('_same_as_billing', '1');
+        }
+
+        $order->save();
     }
     
     public function cart_page_css() {
