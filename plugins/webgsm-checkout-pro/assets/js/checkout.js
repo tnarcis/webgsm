@@ -820,6 +820,24 @@
         });
     }
     
+    function setDefaultAddress(addressIndex) {
+        $.post(webgsm_checkout.ajax_url, {
+            action: 'webgsm_set_default_address',
+            nonce: webgsm_checkout.nonce,
+            address_index: addressIndex
+        }, function(response) {
+            if (response.success) {
+                // Elimină clasa active de la toate bullet-urile
+                $('.webgsm-default-bullet').removeClass('active');
+                // Adaugă clasa active la bullet-ul selectat
+                $('.webgsm-default-bullet[data-address-index="' + addressIndex + '"]').addClass('active');
+                log('Default address set to index: ' + addressIndex);
+            } else {
+                alert('Eroare la setarea adresei implicite');
+            }
+        });
+    }
+    
     // =========================================
     // ANAF SEARCH
     // =========================================

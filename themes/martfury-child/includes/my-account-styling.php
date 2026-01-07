@@ -18,60 +18,110 @@ add_action('wp_head', function() {
         padding: 15px;
     }
     
+    /* Mobile responsive - containerul principal */
+    @media (max-width: 1024px) {
+        .woocommerce-account .woocommerce {
+            max-width: 100%;
+            padding: 12px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .woocommerce-account .woocommerce {
+            max-width: 100%;
+            padding: 10px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .woocommerce-account .woocommerce {
+            max-width: 100%;
+            padding: 8px;
+        }
+    }
+    
     /* =============================================
-       MENIU NAVIGARE - COMPACT
+       MENIU NAVIGARE - COLOANE GRUPATE ELEGANTE
        ============================================= */
     .woocommerce-MyAccount-navigation {
         background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         overflow: hidden;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
+        padding: 0;
+        max-width: 280px;
     }
     
     .woocommerce-MyAccount-navigation ul {
         list-style: none;
         margin: 0;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
     }
     
     .woocommerce-MyAccount-navigation ul li {
         margin: 0;
         border-bottom: 1px solid #f5f5f5;
+        padding: 0;
     }
     
     .woocommerce-MyAccount-navigation ul li:last-child {
         border-bottom: none;
     }
     
+    /* Separatori intre grupuri */
+    .woocommerce-MyAccount-navigation ul li:nth-child(4) {
+        border-bottom: 3px solid #e8eaed;
+    }
+    
+    .woocommerce-MyAccount-navigation ul li:nth-child(6) {
+        border-bottom: 3px solid #e8eaed;
+    }
+    
     .woocommerce-MyAccount-navigation ul li a {
         display: flex;
         align-items: center;
-        padding: 11px 16px;
-        color: #666;
+        gap: 8px;
+        padding: 8px 11px;
         text-decoration: none;
-        font-size: 13px;
+        color: #2c3e50;
+        font-size: 11px;
         font-weight: 500;
-        transition: all 0.15s ease;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        font-family: 'Segoe UI', 'Helvetica Neue', -apple-system, sans-serif;
+        letter-spacing: 0.2px;
+        border-left: 4px solid transparent;
     }
     
     .woocommerce-MyAccount-navigation ul li a:hover {
-    color: #444;
-}
-
-.woocommerce-MyAccount-navigation ul li.is-active a {
-    color: #333;
-    font-weight: 600;
-}
+        color: #3498db;
+        background: rgba(52, 152, 219, 0.06);
+        border-left-color: #3498db;
+        padding-left: 13px;
+    }
+    
+    .woocommerce-MyAccount-navigation ul li.is-active a {
+        color: #3498db;
+        background: rgba(52, 152, 219, 0.1);
+        border-left-color: #3498db;
+        font-weight: 600;
+        padding-left: 13px;
+    }
     
     
     /* Iconițe pentru meniu */
     .woocommerce-MyAccount-navigation ul li a::before {
         font-size: 16px;
-        margin-right: 10px;
-        width: 20px;
+        width: 18px;
         text-align: center;
-        opacity: 0.8;
+        opacity: 0.95;
+        line-height: 1;
+        display: inline-block;
     }
     
     .woocommerce-MyAccount-navigation-link--dashboard a::before { content: '🏠'; }
@@ -79,18 +129,68 @@ add_action('wp_head', function() {
     .woocommerce-MyAccount-navigation-link--retururi a::before { content: '↩️'; }
     .woocommerce-MyAccount-navigation-link--garantie a::before { content: '🛡️'; }
     .woocommerce-MyAccount-navigation-link--facturi a::before { content: '📄'; }
-    .woocommerce-MyAccount-navigation-link--date-facturare a::before { content: '🏢'; }
-    .woocommerce-MyAccount-navigation-link--downloads a::before { content: '⬇️'; }
+    .woocommerce-MyAccount-navigation-link--date-facturare a::before { content: '💳'; }
+    .woocommerce-MyAccount-navigation-link--adrese-salvate a::before { content: '📍'; }
     .woocommerce-MyAccount-navigation-link--edit-address a::before { content: '📍'; }
     .woocommerce-MyAccount-navigation-link--edit-account a::before { content: '👤'; }
     .woocommerce-MyAccount-navigation-link--customer-logout a::before { content: '🚪'; }
     
     .woocommerce-MyAccount-navigation-link--customer-logout a {
-        color: #999;
+        color: #e53935 !important;
+        border-left-color: transparent;
     }
     .woocommerce-MyAccount-navigation-link--customer-logout a:hover {
-        color: #e53935;
-        background: #fff5f5;
+        color: #c62828 !important;
+        background: rgba(229, 57, 53, 0.1) !important;
+        border-left-color: #e53935 !important;
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .woocommerce-MyAccount-navigation ul li a {
+            padding: 9px 12px;
+            font-size: 11px;
+        }
+        
+        .woocommerce-MyAccount-navigation ul li a::before {
+            font-size: 16px;
+        }
+    }
+    }
+    .woocommerce-MyAccount-navigation-link--customer-logout a:hover {
+        color: #c62828 !important;
+        background: rgba(229, 57, 53, 0.08) !important;
+    }
+    
+    /* Mobile responsive tabs */
+    @media (max-width: 768px) {
+        .woocommerce-MyAccount-navigation {
+            gap: 0;
+            padding-bottom: 0;
+        }
+        
+        .woocommerce-MyAccount-navigation ul {
+            gap: 0;
+        }
+        
+        .woocommerce-MyAccount-navigation ul li {
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .woocommerce-MyAccount-navigation ul li a {
+            padding: 10px 12px;
+            font-size: 11px;
+            flex-direction: column;
+            text-align: center;
+            gap: 4px;
+        }
+        
+        .woocommerce-MyAccount-navigation ul li a::before {
+            margin-right: 0;
+            margin-bottom: 0;
+            font-size: 18px;
+        }
     }
     
     /* =============================================
@@ -104,52 +204,110 @@ add_action('wp_head', function() {
     }
     
     .woocommerce-MyAccount-content h3 {
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-        margin: 0 0 18px 0;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #eee;
+        font-size: 22px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0 0 24px 0;
+        padding-bottom: 16px;
+        border-bottom: 3px solid #2ecc71;
+        font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+        letter-spacing: 0.3px;
+        text-transform: capitalize;
+    }
+    
+    /* Stilizare pentru h2 sectiuni - "Achizitiile mele", "Date salvate", "Setari" */
+    .woocommerce-MyAccount-content h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 30px 0 20px 0;
+        padding-bottom: 14px;
+        border-bottom: 3px solid #e74c3c;
+        font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+        letter-spacing: 0.4px;
+    }
+    
+    .woocommerce-MyAccount-content h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #34495e;
+        margin: 18px 0 12px 0;
+        font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+        letter-spacing: 0.2px;
     }
     
     /* =============================================
        TABEL COMENZI - COMPACT
        ============================================= */
+    .woocommerce-MyAccount-content table,
     .woocommerce-orders-table {
         width: 100%;
         border-collapse: collapse;
-        margin: 15px 0;
+        margin: 20px 0;
         font-size: 13px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
     }
     
+    .woocommerce-MyAccount-content table thead,
     .woocommerce-orders-table thead {
-        background: #fafafa;
+        background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
     }
     
+    .woocommerce-MyAccount-content table th,
     .woocommerce-orders-table th {
-        padding: 10px 12px;
+        padding: 14px 16px;
         text-align: left;
-        font-weight: 600;
-        color: #888;
-        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        font-size: 12px;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-bottom: 1px solid #eee;
+        letter-spacing: 0.8px;
+        border-bottom: none;
+        border-right: none;
+        font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
     }
     
+    .woocommerce-MyAccount-content table td,
     .woocommerce-orders-table td {
-        padding: 12px;
-        border-bottom: 1px solid #f5f5f5;
+        padding: 13px 16px;
+        border-bottom: 1px solid #2ecc71;
+        border-right: none;
         vertical-align: middle;
         color: #555;
+        font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
     }
     
+    .woocommerce-MyAccount-content table tbody tr,
+    .woocommerce-orders-table tbody tr {
+        transition: all 0.2s ease;
+    }
+    
+    .woocommerce-MyAccount-content table tbody tr:hover,
     .woocommerce-orders-table tbody tr:hover {
-        background: #fcfcfc;
+        background: rgba(46, 204, 113, 0.06);
+        box-shadow: inset 0 0 0 1px rgba(46, 204, 113, 0.15);
     }
     
+    .woocommerce-MyAccount-content table tbody tr:last-child td,
     .woocommerce-orders-table tbody tr:last-child td {
         border-bottom: none;
+    }
+    
+    /* Footer gradient pentru tabel */
+    .woocommerce-orders-table tfoot,
+    .woocommerce-orders-table tbody:last-child tr:last-child td {
+        background: linear-gradient(180deg, #f8f9fa 0%, #e8eaed 100%);
+        border-top: 1px solid #d0d0d0;
+    }
+    
+    .woocommerce-orders-table tfoot th,
+    .woocommerce-orders-table tfoot td {
+        padding: 12px 16px;
+        font-weight: 600;
+        color: #2c3e50;
+        border-right: none;
     }
     
     /* =============================================
@@ -648,6 +806,219 @@ add_filter('woocommerce_order_date_format', function() {
 .woocommerce-orders-table th {
     padding: 8px !important;
 }
+
+/* =============================================
+   RESPONSIVE - ADRESE & FIRME - TELEFON
+   ============================================= */
+
+/* Container pentru liste */
+.webgsm-addresses-list,
+.companies-list,
+.persons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Itemuri radio (adrese, firme, persoane) */
+.webgsm-radio.address-item,
+.webgsm-radio.company-item,
+.webgsm-radio.person-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.webgsm-radio.address-item:hover,
+.webgsm-radio.company-item:hover,
+.webgsm-radio.person-item:hover {
+    border-color: #d0d0d0;
+    background: #f9f9f9;
+}
+
+/* Radio input */
+.webgsm-radio input[type="radio"] {
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+/* Bullet pentru default */
+.addr-bullet,
+.company-bullet,
+.person-bullet {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e8e8e8;
+    transition: all 0.2s ease;
+}
+
+.addr-bullet.active,
+.company-bullet.active,
+.person-bullet.active {
+    background: #2ecc71;
+}
+
+/* Label - text container */
+.radio-label {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.radio-label strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.radio-label small {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.radio-label small.webgsm-detail-secondary {
+    display: block;
+}
+
+/* Delete button */
+.webgsm-radio .delete-address,
+.webgsm-radio .delete-company,
+.webgsm-radio .delete-person {
+    flex-shrink: 0;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #999;
+    padding: 0;
+}
+
+.webgsm-radio .delete-address:hover,
+.webgsm-radio .delete-company:hover,
+.webgsm-radio .delete-person:hover {
+    background: #ffe0e0;
+    color: #d32f2f;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .webgsm-addresses-list,
+    .companies-list,
+    .persons-list {
+        gap: 8px;
+    }
+    
+    .webgsm-radio.address-item,
+    .webgsm-radio.company-item,
+    .webgsm-radio.person-item {
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .radio-label strong {
+        font-size: 12px;
+    }
+    
+    .radio-label small {
+        font-size: 10px;
+    }
+    
+    .radio-label small.webgsm-detail-secondary {
+        display: none !important;
+    }
+    
+    /* Tabel responsive */
+    .woocommerce-orders-table {
+        font-size: 12px;
+    }
+    
+    .woocommerce-orders-table td,
+    .woocommerce-orders-table th {
+        padding: 6px 8px !important;
+        white-space: normal;
+        word-break: break-word;
+    }
+    
+    .woocommerce-orders-table td {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: table-cell;
+    }
+}
+
+@media (max-width: 480px) {
+    .webgsm-radio.address-item,
+    .webgsm-radio.company-item,
+    .webgsm-radio.person-item {
+        padding: 8px;
+        gap: 6px;
+    }
+    
+    .radio-label {
+        gap: 2px;
+    }
+    
+    .radio-label strong {
+        font-size: 11px;
+        max-width: 120px;
+    }
+    
+    .radio-label small {
+        font-size: 9px;
+        max-width: 120px;
+    }
+    
+    .radio-label small.webgsm-detail-secondary {
+        display: none !important;
+    }
+    
+    .webgsm-radio .delete-address,
+    .webgsm-radio .delete-company,
+    .webgsm-radio .delete-person {
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
+    }
+    
+    /* Tabel responsive telefon */
+    .woocommerce-orders-table {
+        font-size: 10px;
+    }
+    
+    .woocommerce-orders-table td,
+    .woocommerce-orders-table th {
+        padding: 4px 6px !important;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
     </style>
     <?php
 });
@@ -685,5 +1056,82 @@ add_action('wp_footer', function() {
         }
     });
     </script>
+    
+    <style>
+    /* Stilizare compactă pentru formularele de retur și garanție */
+    .retur-form,
+    .garantie-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .retur-form .form-row,
+    .garantie-form .form-row {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 12px !important;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .retur-form .form-row label,
+    .garantie-form .form-row label {
+        display: block !important;
+        margin-bottom: 6px !important;
+        font-weight: 500 !important;
+        color: #666 !important;
+        font-size: 13px !important;
+        width: 100%;
+    }
+    
+    .retur-form select,
+    .garantie-form select,
+    .retur-form textarea,
+    .garantie-form textarea,
+    .retur-form input,
+    .garantie-form input {
+        padding: 6px 8px !important;
+        font-size: 13px !important;
+        line-height: 1.3 !important;
+        min-height: auto !important;
+        height: auto !important;
+        width: 100% !important;
+    }
+    
+    .retur-form select,
+    .garantie-form select {
+        height: 32px !important;
+    }
+    
+    .retur-form button[type="submit"],
+    .garantie-form button[type="submit"],
+    .retur-form .button[type="submit"],
+    .garantie-form .button[type="submit"] {
+        width: auto !important;
+        max-width: 200px !important;
+        display: inline-block !important;
+        padding: 6px 16px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        border-radius: 20px !important;
+        background: #2196f3 !important;
+        color: #fff !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        margin-top: 4px !important;
+    }
+    
+    .retur-form button[type="submit"]:hover,
+    .garantie-form button[type="submit"]:hover,
+    .retur-form .button[type="submit"]:hover,
+    .garantie-form .button[type="submit"]:hover {
+        background: #1976d2 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3) !important;
+    }
+    </style>
+    
     <?php
 });

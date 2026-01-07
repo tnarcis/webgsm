@@ -1,8 +1,20 @@
 <?php
-// Încarcă stilurile temei părinte
+// Înarcă stilurile temei părinte
 add_action('wp_enqueue_scripts', function() {
     wp_enqueue_style('martfury-parent', get_template_directory_uri() . '/style.css');
 });
+
+// Remove eleganticons preload - loaded via CSS instead
+add_action('wp_head', function() {
+    echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var preloadLinks = document.querySelectorAll("link[rel=preload][href*=eleganticons]");
+            preloadLinks.forEach(function(link) {
+                link.remove();
+            });
+        });
+    </script>';
+}, 1);
 
 // Încarcă modulele
 require_once get_stylesheet_directory() . '/includes/retururi.php';
@@ -18,3 +30,4 @@ require_once get_stylesheet_directory() . '/includes/admin-tools.php';
 require_once get_stylesheet_directory() . '/includes/registration-enhanced.php';
 require_once get_stylesheet_directory() . '/includes/webgsm-design-system.php';
 require_once get_stylesheet_directory() . '/includes/webgsm-myaccount.php';
+require_once get_stylesheet_directory() . '/includes/webgsm-myaccount-modals.php';

@@ -6,7 +6,7 @@
 ---
 
 ## Ultima actualizare
-- **Data:** 4 Ianuarie 2025
+- **Data:** 5 Ianuarie 2025
 - **Programator:** Narcis
 
 ---
@@ -22,8 +22,28 @@
 - Dropdown județe România
 - Validare vizuală câmpuri
 - Thank you page custom
-- HPOS compatibilitate (compatibilitate tema cuwoocommerce )xxxx
+- HPOS compatibilitate
 - Mobile responsive
+
+### My Account - Adrese Salvate (COMPLETED)
+- ✅ Tabel adrese cu coloane: Etichetă, Adresă, Tel
+- ✅ Buton "Editează" pentru fiecare adresă
+- ✅ Buton "Șterge" pentru fiecare adresă
+- ✅ Buton "+ Adaugă adresă" pt adrese noi
+- ✅ Popup modal UNIFICAT pt add/edit cu aceleași câmpuri:
+  - Etichetă (opțional, dar cu placeholder)
+  - Nume * (obligatoriu)
+  - Telefon * (obligatoriu)
+  - Adresă * (obligatoriu, full-width)
+  - Localitate * (obligatoriu)
+  - Județ * (dropdown cu toate județele)
+  - Cod poștal (opțional)
+- ✅ AJAX handlers:
+  - ajax_add_address() - adaugă adresă nouă
+  - ajax_save_edited_address() - salvează adresă existentă
+  - ajax_get_address_for_edit() - încarcă date pentru editare
+- ✅ Stilizare unificată (btn-primary, btn-secondary, popup styling)
+- ✅ JavaScript handlers pt add/edit/delete cu validare
 
 ### GitHub + Deploy
 - Repo: github.com/tnarcis/webgsm
@@ -56,6 +76,15 @@ themes/martfury-child/        ← Child theme + module
 ---
 
 ## 📝 Jurnal
+
+### 5 Ian 2025 - Narcis
+- ✅ Implementat popup modal unificat pentru add/edit adrese salvate
+- ✅ Adăugat buton "+ Adaugă adresă" pe pagina Adrese Salvate
+- ✅ Creată funcție ajax_add_address() pentru adăugare adrese noi
+- ✅ Formularul folosit la checkout și My Account sunt acum identice
+- ✅ Toate câmpurile: etichetă, nume, telefon, adresă, localitate, județ, cod poștal
+- ✅ Validare de client și server implementată
+- ✅ Tests: add, edit, delete adrese - workflow complet
 
 ### 4 Ian 2025 - Narcis
 - Finalizat checkout PF/PJ
