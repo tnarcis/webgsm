@@ -1068,6 +1068,19 @@
             // Set the ship_to_different_address flag so WooCommerce knows to use shipping fields
             if (!$('#same_as_billing').is(':checked')) {
                 $('#ship_to_different_address').val('1');
+
+                // Copy visible shipping inputs (which lack name attributes) into the hidden named inputs
+                // so values typed by the user are included in the POST request.
+                $('input[name="shipping_first_name"]').val($('#shipping_first_name').val() || $('input[name="shipping_first_name"]').val());
+                $('input[name="shipping_last_name"]').val($('#shipping_last_name').val() || $('input[name="shipping_last_name"]').val());
+                $('input[name="shipping_phone"]').val($('#shipping_phone').val() || $('input[name="shipping_phone"]').val());
+                $('input[name="shipping_address_1"]').val($('#shipping_address_1').val() || $('input[name="shipping_address_1"]').val());
+                $('input[name="shipping_city"]').val($('#shipping_city').val() || $('input[name="shipping_city"]').val());
+                $('input[name="shipping_state"]').val($('#shipping_state').val() || $('input[name="shipping_state"]').val());
+                $('input[name="shipping_postcode"]').val($('#shipping_postcode').val() || $('input[name="shipping_postcode"]').val());
+                $('input[name="shipping_country"]').val($('#shipping_country').val() || $('input[name="shipping_country"]').val());
+
+                // If a saved address was selected, inject it too (injectShippingDataSilent will overwrite where appropriate)
                 injectShippingDataSilent();
             } else {
                 $('#ship_to_different_address').val('0');
