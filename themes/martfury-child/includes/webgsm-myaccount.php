@@ -76,78 +76,219 @@ add_action('wp_footer', function() {
     ?>
     <script type="text/javascript">
     jQuery(document).ready(function($) {
-        console.log('[WebGSM] Delete handlers initialized');
+        console.log('[WebGSM] Card handlers initialized');
         
-        // Adaugă butoane "Adaugă" deasupra fiecărei secțiuni
-        function addActionButtons() {
-            console.log('[WebGSM] Adding action buttons...');
-            
-            // Buton pentru Adrese livrare
-            var addressesSection = $('.webgsm-addresses-list, table:contains("Adrese")').first();
-            console.log('[WebGSM] Addresses section found:', addressesSection.length);
-            if (addressesSection.length && !$('#btn-add-address').length) {
-                var addressBtn = '<button type="button" id="btn-add-address" class="btn-add-item" style="margin-bottom:15px;">📍 Adaugă adresă livrare</button>';
-                addressesSection.before(addressBtn);
-                console.log('[WebGSM] Address button added');
-            }
-            
-            // Buton pentru Firme
-            var companiesSection = $('.companies-list, table:contains("Firme")').first();
-            console.log('[WebGSM] Companies section found:', companiesSection.length);
-            if (companiesSection.length && !$('#btn-add-company').length) {
-                var companyBtn = '<button type="button" id="btn-add-company" class="btn-add-item" style="margin-bottom:15px;">🏢 Adaugă companie</button>';
-                companiesSection.before(companyBtn);
-                console.log('[WebGSM] Company button added');
-            }
-            
-            // Buton pentru Persoane fizice
-            var personsSection = $('.persons-list, table:contains("Persoane")').first();
-            console.log('[WebGSM] Persons section found:', personsSection.length);
-            if (personsSection.length && !$('#btn-add-person').length) {
-                var personBtn = '<button type="button" id="btn-add-person" class="btn-add-item" style="margin-bottom:15px;">👤 Adaugă persoană fizică</button>';
-                personsSection.before(personBtn);
-                console.log('[WebGSM] Person button added');
-            }
-            
-            // Dacă nu găsește niciunul, încearcă să le adauge după heading-uri
-            if (!$('#btn-add-address').length) {
-                $('h3:contains("Adrese"), h4:contains("Adrese")').first().after('<button type="button" id="btn-add-address" class="btn-add-item" style="margin:15px 0;">📍 Adaugă adresă livrare</button>');
-            }
-            if (!$('#btn-add-company').length) {
-                $('h3:contains("Firme"), h4:contains("Firme"), h3:contains("Compan"), h4:contains("Compan")').first().after('<button type="button" id="btn-add-company" class="btn-add-item" style="margin:15px 0;">🏢 Adaugă companie</button>');
-            }
-            if (!$('#btn-add-person').length) {
-                $('h3:contains("Persoan"), h4:contains("Persoan"), h3:contains("PF"), h4:contains("PF")').first().after('<button type="button" id="btn-add-person" class="btn-add-item" style="margin:15px 0;">👤 Adaugă persoană fizică</button>');
-            }
-        }
+        // =========================================
+        // DESCHIDE POPUP PENTRU ADĂUGARE
+        // =========================================
         
-        // Adaugă butoanele la încărcare și după un delay pentru DOM dinamic
-        setTimeout(addActionButtons, 100);
-        setTimeout(addActionButtons, 500);
-        
-        // Handler pentru deschidere modale
-        $(document).on('click', '#btn-add-address', function(e) {
+        // Adrese - buton + și buton empty state
+        $(document).on('click', '#btn-add-address, #btn-add-address-empty', function(e) {
             e.preventDefault();
-            console.log('[WebGSM] Opening address modal');
-            $('#edit_address_index').val(''); // Reset index pentru adăugare nouă
+            console.log('[WebGSM] Opening address modal for ADD');
+            
+            // Reset form
+            $('#edit_address_index').val('');
             $('#modal_title').text('Adaugă adresă livrare');
+            $('#modal_label').val('');
+            $('#modal_name').val('');
+            $('#modal_phone').val('');
+            $('#modal_address').val('');
+            $('#modal_city').val('');
+            $('#modal_county').val('');
+            $('#modal_postcode').val('');
+            
             $('#address_modal_saved').fadeIn(200);
         });
         
-        $(document).on('click', '#btn-add-company', function(e) {
+        // Firme - buton + și buton empty state
+        $(document).on('click', '#btn-add-company, #btn-add-company-empty', function(e) {
             e.preventDefault();
-            console.log('[WebGSM] Opening company modal');
-            $('#edit_company_index').val(''); // Reset index pentru adăugare nouă
-            $('#company_modal_title').text('Adaugă companie');
+            console.log('[WebGSM] Opening company modal for ADD');
+            
+            // Reset form
+            $('#edit_company_index').val('');
+            $('#company_modal_title').text('Adaugă firmă');
+            $('#company_cui_modal').val('');
+            $('#company_name_modal').val('');
+            $('#company_reg_modal').val('');
+            $('#company_phone_modal').val('');
+            $('#company_email_modal').val('');
+            $('#company_address_modal').val('');
+            $('#company_city_modal').val('');
+            $('#company_county_modal').val('');
+            $('#anaf_status_modal').hide();
+            
             $('#company_modal_saved').fadeIn(200);
         });
         
-        $(document).on('click', '#btn-add-person', function(e) {
+        // Persoane - buton + și buton empty state
+        $(document).on('click', '#btn-add-person, #btn-add-person-empty', function(e) {
             e.preventDefault();
-            console.log('[WebGSM] Opening person modal');
-            $('#edit_person_index').val(''); // Reset index pentru adăugare nouă
+            console.log('[WebGSM] Opening person modal for ADD');
+            
+            // Reset form
+            $('#edit_person_index').val('');
             $('#person_modal_title').text('Adaugă persoană fizică');
+            $('#person_name_modal').val('');
+            $('#person_cnp_modal').val('');
+            $('#person_phone_modal').val('');
+            $('#person_email_modal').val('');
+            $('#person_address_modal').val('');
+            $('#person_city_modal').val('');
+            $('#person_county_modal').val('');
+            $('#person_postcode_modal').val('');
+            
             $('#person_modal_saved').fadeIn(200);
+        });
+        
+        // =========================================
+        // DESCHIDE POPUP PENTRU EDITARE
+        // =========================================
+        
+        $(document).on('click', '.btn-edit-item', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var $btn = $(this);
+            var type = $btn.data('type');
+            var index = $btn.data('index');
+            
+            console.log('[WebGSM] Edit clicked - Type:', type, 'Index:', index);
+            
+            // Disable button temporar
+            $btn.prop('disabled', true).text('Se încarcă...');
+            
+            var ajaxUrl = (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.ajax_url : '/wp-admin/admin-ajax.php';
+            var nonce = (typeof webgsm_myaccount !== 'undefined') ? webgsm_myaccount.nonce : '';
+            
+            $.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'webgsm_get_' + type + '_for_edit',
+                    nonce: nonce,
+                    index: index
+                },
+                success: function(response) {
+                    console.log('[WebGSM] Edit response:', response);
+                    
+                    if (response.success && response.data) {
+                        var data = response.data;
+                        
+                        if (type === 'address') {
+                            $('#edit_address_index').val(index);
+                            $('#modal_title').text('Editează adresa');
+                            $('#modal_label').val(data.label || '');
+                            $('#modal_name').val(data.name || '');
+                            $('#modal_phone').val(data.phone || '');
+                            $('#modal_address').val(data.address || '');
+                            $('#modal_city').val(data.city || '');
+                            $('#modal_county').val(data.county || '');
+                            $('#modal_postcode').val(data.postcode || '');
+                            $('#address_modal_saved').fadeIn(200);
+                            
+                        } else if (type === 'company') {
+                            $('#edit_company_index').val(index);
+                            $('#company_modal_title').text('Editează firma');
+                            $('#company_cui_modal').val(data.cui || '');
+                            $('#company_name_modal').val(data.name || '');
+                            $('#company_reg_modal').val(data.reg || '');
+                            $('#company_phone_modal').val(data.phone || '');
+                            $('#company_email_modal').val(data.email || '');
+                            $('#company_address_modal').val(data.address || '');
+                            $('#company_city_modal').val(data.city || '');
+                            $('#company_county_modal').val(data.county || '');
+                            $('#company_modal_saved').fadeIn(200);
+                            
+                        } else if (type === 'person') {
+                            $('#edit_person_index').val(index);
+                            $('#person_modal_title').text('Editează persoana');
+                            $('#person_name_modal').val(data.name || '');
+                            $('#person_cnp_modal').val(data.cnp || '');
+                            $('#person_phone_modal').val(data.phone || '');
+                            $('#person_email_modal').val(data.email || '');
+                            $('#person_address_modal').val(data.address || '');
+                            $('#person_city_modal').val(data.city || '');
+                            $('#person_county_modal').val(data.county || '');
+                            $('#person_postcode_modal').val(data.postcode || '');
+                            $('#person_modal_saved').fadeIn(200);
+                        }
+                    } else {
+                        alert('Eroare la încărcarea datelor: ' + (response.data || 'Necunoscută'));
+                    }
+                    
+                    // Restore button
+                    $btn.html('✏️ Editează').prop('disabled', false);
+                },
+                error: function(xhr, status, error) {
+                    console.error('[WebGSM] Edit AJAX error:', error);
+                    alert('Eroare de conexiune: ' + error);
+                    $btn.text('Editează').prop('disabled', false);
+                }
+            });
+        });
+        
+        // =========================================
+        // ȘTERGERE
+        // =========================================
+        
+        $(document).on('click', '.btn-delete-item', function(e) {
+            e.preventDefault();
+            var type = $(this).data('type');
+            var index = $(this).data('index');
+            var $card = $(this).closest('.data-card');
+            
+            var typeLabels = {
+                'address': 'adresa',
+                'company': 'firma', 
+                'person': 'persoana'
+            };
+            
+            if (!confirm('Sigur vrei să ștergi această ' + typeLabels[type] + '?')) {
+                return;
+            }
+            
+            console.log('[WebGSM] Delete - Type:', type, 'Index:', index);
+            
+            $.ajax({
+                url: webgsm_myaccount.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'webgsm_delete_' + type,
+                    nonce: webgsm_myaccount.nonce,
+                    index: index
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Animație de ștergere și reload
+                        $card.fadeOut(300, function() {
+                            location.reload();
+                        });
+                    } else {
+                        alert(response.data || 'Eroare la ștergere.');
+                    }
+                },
+                error: function() {
+                    alert('Eroare de conexiune.');
+                }
+            });
+        });
+        
+        // =========================================
+        // ÎNCHIDE POPUP-URI
+        // =========================================
+        
+        $(document).on('click', '.modal-close-btn, .modal-cancel-btn, .popup-overlay', function(e) {
+            e.preventDefault();
+            $('.webgsm-popup').fadeOut(200);
+        });
+        
+        // ESC pentru închidere
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape') {
+                $('.webgsm-popup').fadeOut(200);
+            }
         });
         
         // Căutare automată ANAF când utilizatorul introduce CUI
@@ -400,47 +541,6 @@ add_action('wp_footer', function() {
                 }
             });
         }
-        
-        // Handler universal pentru toate butoanele de ștergere
-        $(document).on('click', '.delete-address, .delete-saved-address, .delete-company, .delete-saved-company, .delete-person, .delete-saved-person, button[class*="delete"], a[class*="delete"]', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            var $btn = $(this);
-            var btnClass = $btn.attr('class');
-            var action = 'webgsm_delete_address';
-            var confirmMsg = 'Sigur vrei să ștergi acest element?';
-            var itemType = 'item';
-            
-            console.log('[WebGSM] Button class:', btnClass);
-            
-            // Detectează tipul bazat pe clasă sau context
-            if (btnClass && (btnClass.indexOf('delete-company') > -1 || btnClass.indexOf('delete-saved-company') > -1)) {
-                action = 'webgsm_delete_company';
-                confirmMsg = 'Sigur vrei să ștergi această firmă?';
-                itemType = 'company';
-            } else if (btnClass && (btnClass.indexOf('delete-person') > -1 || btnClass.indexOf('delete-saved-person') > -1)) {
-                action = 'webgsm_delete_person';
-                confirmMsg = 'Sigur vrei să ștergi această persoană?';
-                itemType = 'person';
-            } else if ($btn.closest('.company-item').length || $btn.closest('.companies-list').length) {
-                action = 'webgsm_delete_company';
-                confirmMsg = 'Sigur vrei să ștergi această firmă?';
-                itemType = 'company';
-            } else if ($btn.closest('.person-item').length || $btn.closest('.persons-list').length) {
-                action = 'webgsm_delete_person';
-                confirmMsg = 'Sigur vrei să ștergi această persoană?';
-                itemType = 'person';
-            } else if (btnClass && (btnClass.indexOf('delete-address') > -1 || btnClass.indexOf('delete-saved-address') > -1)) {
-                action = 'webgsm_delete_address';
-                confirmMsg = 'Sigur vrei să ștergi această adresă?';
-                itemType = 'address';
-            }
-            
-            console.log('[WebGSM] Detected type:', itemType, 'action:', action);
-            deleteItem($btn, action, confirmMsg, itemType);
-            return false;
-        });
     });
     </script>
     <?php

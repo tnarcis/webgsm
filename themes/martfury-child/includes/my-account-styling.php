@@ -9,6 +9,52 @@ add_action('wp_head', function() {
     ?>
     <style>
     /* =============================================
+       SVG ICONS STYLING
+       ============================================= */
+    svg.section-icon,
+    svg.icon-small,
+    svg.icon-action,
+    svg.icon-plus-small,
+    svg.plus-icon {
+        display: inline-block;
+        vertical-align: middle;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    
+    svg.section-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+    }
+    
+    svg.icon-small {
+        width: 12px;
+        height: 12px;
+        margin-right: 4px;
+    }
+    
+    svg.icon-action {
+        width: 12px;
+        height: 12px;
+        margin-right: 3px;
+    }
+    
+    svg.icon-plus-small {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+    }
+    
+    svg.plus-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    /* =============================================
        MY ACCOUNT - DESIGN COMPACT & SUBTIL
        ============================================= */
     
@@ -133,26 +179,77 @@ add_action('wp_head', function() {
     }
     
     
-    /* Iconițe pentru meniu */
+    /* =============================================
+       ICONIȚE MENIU - SVG LINE ART
+       ============================================= */
     .woocommerce-MyAccount-navigation ul li a::before {
-        font-size: 16px;
-        width: 18px;
-        text-align: center;
-        opacity: 0.95;
-        line-height: 1;
+        content: '';
         display: inline-block;
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+        background-color: #64748b;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        transition: background-color 0.25s ease;
+        flex-shrink: 0;
     }
-    
-    .woocommerce-MyAccount-navigation-link--dashboard a::before { content: '🏠'; }
-    .woocommerce-MyAccount-navigation-link--orders a::before { content: '📦'; }
-    .woocommerce-MyAccount-navigation-link--retururi a::before { content: '↩️'; }
-    .woocommerce-MyAccount-navigation-link--garantie a::before { content: '🛡️'; }
-    .woocommerce-MyAccount-navigation-link--facturi a::before { content: '📄'; }
-    .woocommerce-MyAccount-navigation-link--date-facturare a::before { content: '💳'; }
-    .woocommerce-MyAccount-navigation-link--adrese-salvate a::before { content: '📍'; }
-    .woocommerce-MyAccount-navigation-link--edit-address a::before { content: '📍'; }
-    .woocommerce-MyAccount-navigation-link--edit-account a::before { content: '👤'; }
-    .woocommerce-MyAccount-navigation-link--customer-logout a::before { content: '🚪'; }
+
+    .woocommerce-MyAccount-navigation ul li a:hover::before,
+    .woocommerce-MyAccount-navigation ul li.is-active a::before {
+        background-color: #2563eb;
+    }
+
+    /* Dashboard - Home */
+    .woocommerce-MyAccount-navigation-link--dashboard a::before {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m2.25 12 8.954-8.955a1.126 1.126 0 0 1 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m2.25 12 8.954-8.955a1.126 1.126 0 0 1 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'/%3E%3C/svg%3E");
+    }
+
+    /* Comenzi - Shopping Bag */
+    .woocommerce-MyAccount-navigation-link--orders a::before {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z'/%3E%3C/svg%3E");
+    }
+
+    /* Retururi - Arrow Uturn Left */
+    .woocommerce-MyAccount-navigation-link--retururi a::before {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E");
+    }
+
+    /* Garanție - Shield Check */
+    .woocommerce-MyAccount-navigation-link--garantie a::before {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z'/%3E%3C/svg%3E");
+    }
+
+    /* Adrese Salvate - Map Pin */
+    .woocommerce-MyAccount-navigation-link--adrese-salvate a::before {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z'/%3E%3C/svg%3E");
+    }
+
+    /* Detalii cont - User */
+    .woocommerce-MyAccount-navigation-link--edit-account a::before {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'/%3E%3C/svg%3E");
+    }
+
+    /* Ieșire din cont - Arrow Right On Rectangle */
+    .woocommerce-MyAccount-navigation-link--customer-logout a::before {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9'/%3E%3C/svg%3E");
+        background-color: #e53935;
+    }
+
+    .woocommerce-MyAccount-navigation-link--customer-logout a:hover::before {
+        background-color: #c62828;
+    }
     
     .woocommerce-MyAccount-navigation-link--customer-logout a {
         color: #e53935 !important;
@@ -1068,6 +1165,80 @@ add_filter('woocommerce_order_date_format', function() {
         white-space: nowrap;
     }
 }
+
+    /* =============================================
+       TABELE GARANȚII/RETURURI - SCROLL ORIZONTAL MOBILE
+       ============================================= */
+    
+    /* Wrapper pentru scroll orizontal */
+    .woocommerce-MyAccount-content .woocommerce-orders-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    @media (max-width: 768px) {
+        /* Container tabel cu scroll */
+        .woocommerce-MyAccount-content .woocommerce-orders-table {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -10px;
+            padding: 0 10px;
+            max-width: calc(100% + 20px);
+        }
+        
+        /* Tabelul intern - lățime minimă pentru a forța scroll */
+        .woocommerce-MyAccount-content .woocommerce-orders-table tbody,
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead {
+            display: table;
+            width: 100%;
+            min-width: 500px;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table tr {
+            display: table-row;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table th,
+        .woocommerce-MyAccount-content .woocommerce-orders-table td {
+            display: table-cell;
+            white-space: nowrap;
+            padding: 8px 10px !important;
+        }
+        
+        /* Indicator vizual că se poate scroll */
+        .woocommerce-MyAccount-content .woocommerce-orders-table::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8));
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .woocommerce-MyAccount-content:has(.woocommerce-orders-table) {
+            position: relative;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .woocommerce-MyAccount-content .woocommerce-orders-table tbody,
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead {
+            min-width: 450px;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table th,
+        .woocommerce-MyAccount-content .woocommerce-orders-table td {
+            padding: 6px 8px !important;
+            font-size: 11px !important;
+        }
+    }
     </style>
     <?php
 });
@@ -1179,6 +1350,329 @@ add_action('wp_footer', function() {
         background: #1976d2 !important;
         transform: translateY(-1px) !important;
         box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3) !important;
+    }
+
+    /* =============================================
+       PAGINA ADRESE SALVATE - DESIGN MODERN CARDURI
+       ============================================= */
+    
+    .webgsm-saved-data-page {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    /* Secțiune container */
+    .webgsm-data-section {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+    }
+    
+    /* Header secțiune cu titlu + buton + */
+    .webgsm-data-section .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .webgsm-data-section .section-header h3 {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    /* SVG Icon para titlu */
+    .section-header h3::before {
+        content: '';
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    
+    /* Buton + rotund */
+    .btn-add-new {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #2563eb;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+        padding: 0;
+    }
+    
+    .btn-add-new:hover {
+        background: #1d4ed8;
+        transform: scale(1.08);
+        box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
+    }
+    
+    .btn-add-new .plus-icon {
+        color: #fff;
+        width: 20px;
+        height: 20px;
+        line-height: 1;
+    }
+    
+    /* Conținut secțiune */
+    .webgsm-data-section .section-content {
+        padding: 18px;
+    }
+    
+    /* Grid carduri */
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+    }
+    
+    /* Card individual */
+    .data-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+    }
+    
+    .data-card:hover {
+        border-color: #2563eb;
+        box-shadow: 0 3px 10px rgba(37, 99, 235, 0.12);
+    }
+    
+    /* Card header */
+    .data-card .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .data-card .card-label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #1e293b;
+    }
+    
+    .data-card .card-badge {
+        font-size: 10px;
+        background: #e0e7ff;
+        color: #3730a3;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-weight: 500;
+    }
+    
+    /* Card body */
+    .data-card .card-body {
+        padding: 12px 14px;
+    }
+    
+    .data-card .card-name {
+        font-weight: 600;
+        font-size: 13px;
+        color: #1e293b;
+        margin: 0 0 6px 0;
+    }
+    
+    .data-card .card-detail {
+        font-size: 12px;
+        color: #64748b;
+        margin: 0 0 3px 0;
+        line-height: 1.4;
+    }
+    
+    .data-card .card-phone,
+    .data-card .card-email {
+        font-size: 11px;
+        color: #475569;
+        margin: 4px 0 0 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    /* Card actions */
+    .data-card .card-actions {
+        display: flex;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .data-card .card-actions button {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+    }
+    
+    .data-card .btn-edit-item {
+        color: #2563eb;
+        border-right: 1px solid #e5e7eb;
+    }
+    
+    .data-card .btn-edit-item:hover {
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
+    
+    .data-card .btn-delete-item {
+        color: #dc2626;
+    }
+    
+    .data-card .btn-delete-item:hover {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+    
+    /* SVG icons în butoane */
+    .data-card .btn-edit-item::before,
+    .data-card .btn-delete-item::before {
+        content: '';
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 36px 18px;
+        color: #64748b;
+    }
+    
+    .empty-state p {
+        margin: 0 0 14px 0;
+        font-size: 13px;
+    }
+    
+    .btn-add-first {
+        background: #f1f5f9;
+        border: 2px dashed #cbd5e1;
+        border-radius: 5px;
+        padding: 6px 16px;
+        font-size: 11px;
+        font-weight: 500;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .btn-add-first:hover {
+        background: #e0e7ff;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .btn-add-first svg {
+        width: 14px;
+        height: 14px;
+    }
+    
+    /* =============================================
+       RESPONSIVE - MOBILE
+       ============================================= */
+    @media (max-width: 768px) {
+        .webgsm-saved-data-page {
+            gap: 18px;
+        }
+        
+        .webgsm-data-section .section-header {
+            padding: 12px 14px;
+        }
+        
+        .webgsm-data-section .section-header h3 {
+            font-size: 12px !important;
+        }
+        
+        .btn-add-new {
+            width: 26px;
+            height: 26px;
+        }
+        
+        .btn-add-new .plus-icon {
+            font-size: 18px;
+        }
+        
+        .webgsm-data-section .section-content {
+            padding: 14px;
+        }
+        
+        .cards-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .data-card .card-header {
+            padding: 9px 12px;
+        }
+        
+        .data-card .card-body {
+            padding: 10px 12px;
+        }
+        
+        .data-card .card-actions button {
+            padding: 7px;
+            font-size: 10px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .webgsm-data-section .section-header h3 {
+            font-size: 11px !important;
+        }
+        
+        .data-card .card-label {
+            font-size: 12px;
+        }
+        
+        .data-card .card-badge {
+            font-size: 9px;
+            padding: 2px 5px;
+        }
+        
+        .data-card .card-name {
+            font-size: 12px;
+        }
+        
+        .data-card .card-detail {
+            font-size: 11px;
+        }
+        
+        .empty-state {
+            padding: 28px 14px;
+        }
     }
     </style>
     

@@ -6,7 +6,7 @@
 ---
 
 ## Ultima actualizare
-- **Data:** 5 Ianuarie 2025
+- **Data:** 9 ianuarie 2025
 - **Programator:** Narcis
 
 ---
@@ -77,6 +77,17 @@ themes/martfury-child/        ← Child theme + module
 
 ## 📝 Jurnal
 
+### 9 Ian 2025 - Narcis
+- ✅ Înlocuit emoji cu SVG line art inline în pagina Adrese Salvate
+- ✅ Adăugat 10 SVG icons profesioniști (location, building, user, phone, email, edit, delete, plus)
+- ✅ CSS styling compact pentru SVG icons (16px, 12px, 14px dimensiuni variabile)
+- ✅ Restructurat HTML cu SVG inline în funcția addresses_page_content()
+- ✅ Optimizat CSS pentru card design (gap 24px, buttons 28px, headers 13px, card 260px)
+- ✅ SVG icons cu stroke-width 1.5 pentru aspect minimalist elegant
+- ✅ Responsive design actualizat (768px și 480px breakpoints)
+- ✅ CSS .card-phone și .card-email cu flexbox pentru aliniere iconuri
+- ✅ Fără erori PHP/CSS în fișierele modificate
+
 ### 5 Ian 2025 - Narcis
 - ✅ Implementat popup modal unificat pentru add/edit adrese salvate
 - ✅ Adăugat buton "+ Adaugă adresă" pe pagina Adrese Salvate
@@ -90,14 +101,6 @@ themes/martfury-child/        ← Child theme + module
 - Finalizat checkout PF/PJ
 - Setup GitHub + deploy Hostico
 - Adăugat programator 2
-
-
-
-DE FACUT : 
-📘 BLUEPRINT COMPLET – webgsm-checkout-pro + Contul Meu
-1. Probleme identificate în webgsm-checkout-pro
-A. Probleme funcționale
-Funcția de salvare PJ nu funcționează la adăugarea unei firme noi
 Butonul „lupă ANAF” trebuie redenumit în ceva mai intuitiv (ex: „Autocompletare”)
 După adăugarea unei firme sau închiderea popup‑ului, selecția revine automat pe „Persoană Fizică” în loc să rămână pe „Persoană Juridică”
 

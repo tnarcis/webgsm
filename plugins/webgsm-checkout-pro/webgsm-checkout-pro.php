@@ -70,12 +70,15 @@ class WebGSM_Checkout_Pro {
         // AJAX
         add_action('wp_ajax_webgsm_save_address', [$this, 'ajax_save_address']);
         add_action('wp_ajax_webgsm_delete_address', [$this, 'ajax_delete_address']);
+        add_action('wp_ajax_webgsm_get_address_for_edit', [$this, 'ajax_get_address_for_edit']);
         add_action('wp_ajax_webgsm_save_company', [$this, 'ajax_save_company']);
         add_action('wp_ajax_nopriv_webgsm_save_company', [$this, 'ajax_save_company']);
         add_action('wp_ajax_webgsm_delete_company', [$this, 'ajax_delete_company']);
+        add_action('wp_ajax_webgsm_get_company_for_edit', [$this, 'ajax_get_company_for_edit']);
         add_action('wp_ajax_webgsm_save_person', [$this, 'ajax_save_person']);
         add_action('wp_ajax_nopriv_webgsm_save_person', [$this, 'ajax_save_person']);
         add_action('wp_ajax_webgsm_delete_person', [$this, 'ajax_delete_person']);
+        add_action('wp_ajax_webgsm_get_person_for_edit', [$this, 'ajax_get_person_for_edit']);
         add_action('wp_ajax_webgsm_update_cart_item', [$this, 'ajax_update_cart_item']);
         add_action('wp_ajax_nopriv_webgsm_update_cart_item', [$this, 'ajax_update_cart_item']);
         add_action('wp_ajax_webgsm_remove_cart_item', [$this, 'ajax_remove_cart_item']);
@@ -643,6 +646,48 @@ class WebGSM_Checkout_Pro {
         wp_send_json_error('Not found');
     }
     
+    public function ajax_get_address_for_edit() {
+        check_ajax_referer('webgsm_nonce', 'nonce');
+        if (!is_user_logged_in()) wp_send_json_error('Not logged in');
+        
+        $user_id = get_current_user_id();
+        $idx = intval($_POST['index']);
+        $addresses = get_user_meta($user_id, 'webgsm_addresses', true);
+        
+        if (is_array($addresses) && isset($addresses[$idx])) {
+            wp_send_json_success($addresses[$idx]);
+        }
+        wp_send_json_error('Not found');
+    }
+    
+    public function ajax_get_company_for_edit() {
+        check_ajax_referer('webgsm_nonce', 'nonce');
+        if (!is_user_logged_in()) wp_send_json_error('Not logged in');
+        
+        $user_id = get_current_user_id();
+        $idx = intval($_POST['index']);
+        $companies = get_user_meta($user_id, 'webgsm_companies', true);
+        
+        if (is_array($companies) && isset($companies[$idx])) {
+            wp_send_json_success($companies[$idx]);
+        }
+        wp_send_json_error('Not found');
+    }
+    
+    public function ajax_get_person_for_edit() {
+        check_ajax_referer('webgsm_nonce', 'nonce');
+        if (!is_user_logged_in()) wp_send_json_error('Not logged in');
+        
+        $user_id = get_current_user_id();
+        $idx = intval($_POST['index']);
+        $persons = get_user_meta($user_id, 'webgsm_persons', true);
+        
+        if (is_array($persons) && isset($persons[$idx])) {
+            wp_send_json_success($persons[$idx]);
+        }
+        wp_send_json_error('Not found');
+    }
+    
     public function ajax_update_cart_item() {
         WC()->cart->set_quantity(sanitize_text_field($_POST['key']), intval($_POST['qty']));
         wp_send_json_success(['subtotal' => WC()->cart->get_cart_subtotal(), 'total' => WC()->cart->get_total()]);
@@ -654,40 +699,161 @@ class WebGSM_Checkout_Pro {
     }
     
     public function addresses_page_content() {
+        if (!is_user_logged_in()) {
+            echo '<p>Trebuie să fii autentificat pentru a vedea această pagină.</p>';
+            return;
+        }
+        
         $user_id = get_current_user_id();
         $addresses = get_user_meta($user_id, 'webgsm_addresses', true) ?: [];
         $companies = get_user_meta($user_id, 'webgsm_companies', true) ?: [];
         $persons = get_user_meta($user_id, 'webgsm_persons', true) ?: [];
         
-        echo '<h3>Adrese livrare</h3>';
-        if ($addresses) {
-            echo '<table class="shop_table"><thead><tr><th>Etichetă</th><th>Adresă</th><th>Tel</th><th></th></tr></thead><tbody>';
-            foreach ($addresses as $i => $a) {
-                $label = $a['label'] ?? 'Adresa '.($i+1);
-                $addr = ($a['address'] ?? '');
-                $city = ($a['city'] ?? '');
-                $addr_display = $addr . ( ($addr !== '' && $city !== '') ? ', ' : '' ) . $city;
-                echo '<tr><td>'.esc_html($label).'</td><td>'.esc_html($addr_display).'</td><td>'.esc_html($a['phone'] ?? '').'</td><td><a href="#" class="delete-saved-address" data-index="'.$i.'">Șterge</a></td></tr>';
-            }
-            echo '</tbody></table>';
-        } else echo '<p>Nu ai adrese.</p>'; 
-
+        // SVG Icons
+        $icon_location = '<svg class="section-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>';
         
-        echo '<h3 style="margin-top:30px;">Firme</h3>';
-        if ($companies) {
-            echo '<table class="shop_table"><thead><tr><th>Denumire</th><th>CUI</th><th>Adresă</th><th></th></tr></thead><tbody>';
-            foreach ($companies as $i => $c) {
-                echo '<tr><td>'.esc_html($c['name']).'</td><td>'.esc_html($c['cui']).'</td><td>'.esc_html($c['address']).'</td><td><a href="#" class="delete-saved-company" data-index="'.$i.'">Șterge</a></td></tr>';
-            }
-            echo '</tbody></table>';
-        } else echo '<p>Nu ai firme.</p>';
+        $icon_building = '<svg class="section-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/></svg>';
         
-        echo '<h3 style="margin-top:30px;">Persoane fizice</h3>';
-        if ($persons) {
-            echo '<table class="shop_table"><thead><tr><th>Nume</th><th>Tel</th><th>Email</th><th></th></tr></thead><tbody>';
-            foreach ($persons as $i => $p) echo '<tr><td>'.esc_html($p['name']).'</td><td>'.esc_html($p['phone']).'</td><td>'.esc_html($p['email']).'</td><td><a href="#" class="delete-saved-person" data-index="'.$i.'">Șterge</a></td></tr>';
-            echo '</tbody></table>';
-        } else echo '<p>Nu ai persoane.</p>';
+        $icon_user = '<svg class="section-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>';
+        
+        $icon_plus = '<svg class="plus-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>';
+        
+        $icon_phone = '<svg class="icon-small" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>';
+        
+        $icon_email = '<svg class="icon-small" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>';
+        
+        $icon_edit = '<svg class="icon-action" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>';
+        
+        $icon_delete = '<svg class="icon-action" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>';
+        
+        $icon_plus_small = '<svg class="icon-plus-small" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>';
+        
+        ?>
+        <div class="webgsm-saved-data-page">
+            
+            <!-- SECȚIUNEA ADRESE LIVRARE -->
+            <div class="webgsm-data-section">
+                <div class="section-header">
+                    <h3><?php echo $icon_location; ?> Adrese livrare</h3>
+                    <button type="button" class="btn-add-new" id="btn-add-address" title="Adaugă adresă">
+                        <?php echo $icon_plus; ?>
+                    </button>
+                </div>
+                <div class="section-content">
+                    <?php if (!empty($addresses)): ?>
+                        <div class="cards-grid">
+                            <?php foreach ($addresses as $i => $a): 
+                                $label = !empty($a['label']) ? $a['label'] : 'Adresa '.($i+1);
+                            ?>
+                            <div class="data-card" data-type="address" data-index="<?php echo $i; ?>">
+                                <div class="card-header">
+                                    <span class="card-label"><?php echo esc_html($label); ?></span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-name"><?php echo esc_html($a['name'] ?? ''); ?></p>
+                                    <p class="card-detail"><?php echo esc_html($a['address'] ?? ''); ?></p>
+                                    <p class="card-detail"><?php echo esc_html(($a['city'] ?? '') . ', ' . ($a['county'] ?? '')); ?></p>
+                                    <p class="card-phone"><?php echo $icon_phone; ?> <?php echo esc_html($a['phone'] ?? ''); ?></p>
+                                </div>
+                                <div class="card-actions">
+                                    <button type="button" class="btn-edit-item" data-type="address" data-index="<?php echo $i; ?>"><?php echo $icon_edit; ?> Editează</button>
+                                    <button type="button" class="btn-delete-item" data-type="address" data-index="<?php echo $i; ?>"><?php echo $icon_delete; ?> Șterge</button>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="empty-state">
+                            <p>Nu ai adrese salvate.</p>
+                            <button type="button" class="btn-add-first" id="btn-add-address-empty"><?php echo $icon_plus_small; ?> Adaugă prima adresă</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <!-- SECȚIUNEA FIRME -->
+            <div class="webgsm-data-section">
+                <div class="section-header">
+                    <h3><?php echo $icon_building; ?> Firme (PJ)</h3>
+                    <button type="button" class="btn-add-new" id="btn-add-company" title="Adaugă firmă">
+                        <?php echo $icon_plus; ?>
+                    </button>
+                </div>
+                <div class="section-content">
+                    <?php if (!empty($companies)): ?>
+                        <div class="cards-grid">
+                            <?php foreach ($companies as $i => $c): ?>
+                            <div class="data-card" data-type="company" data-index="<?php echo $i; ?>">
+                                <div class="card-header">
+                                    <span class="card-label"><?php echo esc_html($c['name'] ?? 'Firma '.($i+1)); ?></span>
+                                    <span class="card-badge">CUI: <?php echo esc_html($c['cui'] ?? ''); ?></span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-detail">Reg. Com: <?php echo esc_html($c['reg'] ?? '-'); ?></p>
+                                    <p class="card-detail"><?php echo esc_html($c['address'] ?? ''); ?></p>
+                                    <p class="card-detail"><?php echo esc_html(($c['city'] ?? '') . ', ' . ($c['county'] ?? '')); ?></p>
+                                    <p class="card-phone"><?php echo $icon_phone; ?> <?php echo esc_html($c['phone'] ?? ''); ?></p>
+                                    <p class="card-email"><?php echo $icon_email; ?> <?php echo esc_html($c['email'] ?? ''); ?></p>
+                                </div>
+                                <div class="card-actions">
+                                    <button type="button" class="btn-edit-item" data-type="company" data-index="<?php echo $i; ?>"><?php echo $icon_edit; ?> Editează</button>
+                                    <button type="button" class="btn-delete-item" data-type="company" data-index="<?php echo $i; ?>"><?php echo $icon_delete; ?> Șterge</button>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="empty-state">
+                            <p>Nu ai firme salvate.</p>
+                            <button type="button" class="btn-add-first" id="btn-add-company-empty"><?php echo $icon_plus_small; ?> Adaugă prima firmă</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <!-- SECȚIUNEA PERSOANE FIZICE -->
+            <div class="webgsm-data-section">
+                <div class="section-header">
+                    <h3><?php echo $icon_user; ?> Persoane fizice (PF)</h3>
+                    <button type="button" class="btn-add-new" id="btn-add-person" title="Adaugă persoană">
+                        <?php echo $icon_plus; ?>
+                    </button>
+                </div>
+                <div class="section-content">
+                    <?php if (!empty($persons)): ?>
+                        <div class="cards-grid">
+                            <?php foreach ($persons as $i => $p): ?>
+                            <div class="data-card" data-type="person" data-index="<?php echo $i; ?>">
+                                <div class="card-header">
+                                    <span class="card-label"><?php echo esc_html($p['name'] ?? 'Persoana '.($i+1)); ?></span>
+                                </div>
+                                <div class="card-body">
+                                    <?php if (!empty($p['cnp'])): ?>
+                                    <p class="card-detail">CNP: <?php echo esc_html($p['cnp']); ?></p>
+                                    <?php endif; ?>
+                                    <p class="card-detail"><?php echo esc_html($p['address'] ?? ''); ?></p>
+                                    <p class="card-detail"><?php echo esc_html(($p['city'] ?? '') . ', ' . ($p['county'] ?? '')); ?></p>
+                                    <p class="card-phone"><?php echo $icon_phone; ?> <?php echo esc_html($p['phone'] ?? ''); ?></p>
+                                    <p class="card-email"><?php echo $icon_email; ?> <?php echo esc_html($p['email'] ?? ''); ?></p>
+                                </div>
+                                <div class="card-actions">
+                                    <button type="button" class="btn-edit-item" data-type="person" data-index="<?php echo $i; ?>"><?php echo $icon_edit; ?> Editează</button>
+                                    <button type="button" class="btn-delete-item" data-type="person" data-index="<?php echo $i; ?>"><?php echo $icon_delete; ?> Șterge</button>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="empty-state">
+                            <p>Nu ai persoane salvate.</p>
+                            <button type="button" class="btn-add-first" id="btn-add-person-empty"><?php echo $icon_plus_small; ?> Adaugă prima persoană</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+        </div>
+        <?php
     }
     
     /**
