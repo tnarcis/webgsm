@@ -98,6 +98,7 @@ add_action('wp_footer', function() {
             $('#modal_county').val('');
             $('#modal_postcode').val('');
             
+            // Show modal - positioned absolutely within section
             $('#address_modal_saved').fadeIn(200);
         });
         
@@ -119,6 +120,7 @@ add_action('wp_footer', function() {
             $('#company_county_modal').val('');
             $('#anaf_status_modal').hide();
             
+            // Show modal - positioned absolutely within section
             $('#company_modal_saved').fadeIn(200);
         });
         
@@ -139,6 +141,7 @@ add_action('wp_footer', function() {
             $('#person_county_modal').val('');
             $('#person_postcode_modal').val('');
             
+            // Show modal - positioned absolutely within section
             $('#person_modal_saved').fadeIn(200);
         });
         

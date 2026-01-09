@@ -1,11 +1,16 @@
 <?php
 /**
  * WebGSM My Account - Popup Modals pentru Adrese, Firme, Persoane
- * Renderizate DOAR pe My Account page endpoint: adrese-salvate
- * @version 1.0
+ * DEPRECATED: Modalurile au fost mutate INSIDE secțiuni în addresses_page_content()
+ * @version 2.0 - DISABLED
  */
 if (!defined('ABSPATH')) exit;
 
+// DEPRECATED: Modalurile sunt acum renderizate direct în fiecare secțiune
+// pentru a permite poziționare absolută relativă la secțiune
+// Vezi: webgsm-checkout-pro.php -> addresses_page_content()
+
+/*
 // Render popupurile și flag-ul doar pe My Account page cu endpoint-ul "adrese-salvate"
 add_action('woocommerce_account_adrese-salvate_endpoint', function() {
     // Set flag for JavaScript - popupurile sunt pe pagina
@@ -144,3 +149,4 @@ add_action('woocommerce_account_adrese-salvate_endpoint', function() {
     ';
     
 }, 1);
+*/

@@ -443,16 +443,16 @@
 
 .webgsm-summary-box .terms-note a { color: #2196f3; }
 
-/* Popup */
+/* Popup - now positioned absolutely within parent section */
 .webgsm-popup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    /* higher than most UI components */
-    z-index: 99999980;
+    /* higher than section content */
+    z-index: 1000;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -479,13 +479,13 @@ body.webgsm-popup-open #wpadminbar { display: none !important; }
 }
 
 .webgsm-popup .popup-overlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    /* Make sure overlay sits above other UI (WP admin bar, theme floating buttons) */
-    z-index: 99999990;
+    /* Overlay sits within section container */
+    z-index: 999;
     background: rgba(0,0,0,0.55);
 }
 
@@ -496,13 +496,13 @@ body.webgsm-popup-open #wpadminbar { display: none !important; }
     max-width: 720px; /* slightly wider for better layout */
     width: calc(100% - 40px);
     border-radius: 8px;
-    margin: auto;
+    margin: 20px auto;
     /* Limit height and hide overflow - the .popup-body will handle scrolling */
-    max-height: calc(100vh - 80px);
+    max-height: 80vh;
     display: flex;
     flex-direction: column;
-    /* Ensure content sits above everything */
-    z-index: 100000000;
+    /* Ensure content sits above overlay */
+    z-index: 1001;
     overflow: hidden;
 }
 

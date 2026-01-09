@@ -50,8 +50,10 @@ add_action('wp_head', function() {
     }
     
     svg.plus-icon {
-        width: 20px;
-        height: 20px;
+        width: 16px !important;
+        height: 16px !important;
+        display: inline-block !important;
+        flex-shrink: 0;
     }
     
     /* =============================================
@@ -1368,6 +1370,9 @@ add_action('wp_footer', function() {
         border-radius: 10px;
         border: 1px solid #e5e7eb;
         overflow: hidden;
+        position: relative;
+        /* Required for absolute positioned modals */
+        min-height: 300px;
     }
     
     /* Header secțiune cu titlu + buton + */
@@ -1404,9 +1409,9 @@ add_action('wp_footer', function() {
     
     /* Buton + rotund */
     .btn-add-new {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
+        width: 36px;
+        height: 20px;
+        border-radius: 5px;
         background: #2563eb;
         border: none;
         cursor: pointer;
@@ -1420,15 +1425,19 @@ add_action('wp_footer', function() {
     
     .btn-add-new:hover {
         background: #1d4ed8;
-        transform: scale(1.08);
+        transform: scale(1.06);
         box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
     }
     
     .btn-add-new .plus-icon {
         color: #fff;
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
         line-height: 1;
+        flex-shrink: 0;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: inline-block !important;
     }
     
     /* Conținut secțiune */
@@ -1617,12 +1626,13 @@ add_action('wp_footer', function() {
         }
         
         .btn-add-new {
-            width: 26px;
-            height: 26px;
+            width: 32px;
+            height: 18px;
         }
         
         .btn-add-new .plus-icon {
-            font-size: 18px;
+            width: 14px;
+            height: 14px;
         }
         
         .webgsm-data-section .section-content {
