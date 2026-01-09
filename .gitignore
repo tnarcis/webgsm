@@ -14,7 +14,7 @@ themes/*
 !themes/martfury-child/
 
 # Documentatie
-!PROJECT_STATUS.md
-!AI_CONTEXT.md
-!.gitignore
+PROJECT_STATUS.md
+AI_CONTEXT.md
+.gitignore
 .DS_Store
