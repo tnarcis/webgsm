@@ -98,8 +98,8 @@ add_action('wp_footer', function() {
             $('#modal_county').val('');
             $('#modal_postcode').val('');
             
-            // Show modal - positioned absolutely within section
-            $('#address_modal_saved').fadeIn(200);
+            // Show modal centrat
+            $('#address_modal_saved').css('display', 'flex').hide().fadeIn(200);
         });
         
         // Firme - buton + și buton empty state
@@ -120,8 +120,8 @@ add_action('wp_footer', function() {
             $('#company_county_modal').val('');
             $('#anaf_status_modal').hide();
             
-            // Show modal - positioned absolutely within section
-            $('#company_modal_saved').fadeIn(200);
+            // Show modal centrat
+            $('#company_modal_saved').css('display', 'flex').hide().fadeIn(200);
         });
         
         // Persoane - buton + și buton empty state
@@ -141,8 +141,8 @@ add_action('wp_footer', function() {
             $('#person_county_modal').val('');
             $('#person_postcode_modal').val('');
             
-            // Show modal - positioned absolutely within section
-            $('#person_modal_saved').fadeIn(200);
+            // Show modal centrat
+            $('#person_modal_saved').css('display', 'flex').hide().fadeIn(200);
         });
         
         // =========================================
@@ -189,7 +189,7 @@ add_action('wp_footer', function() {
                             $('#modal_city').val(data.city || '');
                             $('#modal_county').val(data.county || '');
                             $('#modal_postcode').val(data.postcode || '');
-                            $('#address_modal_saved').fadeIn(200);
+                            $('#address_modal_saved').css('display', 'flex').hide().fadeIn(200);
                             
                         } else if (type === 'company') {
                             $('#edit_company_index').val(index);
@@ -202,7 +202,7 @@ add_action('wp_footer', function() {
                             $('#company_address_modal').val(data.address || '');
                             $('#company_city_modal').val(data.city || '');
                             $('#company_county_modal').val(data.county || '');
-                            $('#company_modal_saved').fadeIn(200);
+                            $('#company_modal_saved').css('display', 'flex').hide().fadeIn(200);
                             
                         } else if (type === 'person') {
                             $('#edit_person_index').val(index);
@@ -215,7 +215,7 @@ add_action('wp_footer', function() {
                             $('#person_city_modal').val(data.city || '');
                             $('#person_county_modal').val(data.county || '');
                             $('#person_postcode_modal').val(data.postcode || '');
-                            $('#person_modal_saved').fadeIn(200);
+                            $('#person_modal_saved').css('display', 'flex').hide().fadeIn(200);
                         }
                     } else {
                         alert('Eroare la încărcarea datelor: ' + (response.data || 'Necunoscută'));
@@ -737,3 +737,23 @@ add_action('wp_ajax_webgsm_save_person', function() {
     update_user_meta($user_id, 'webgsm_persons', $persons);
     wp_send_json_success(['message' => 'Persoana salvată cu succes', 'persons' => $persons]);
 }, 5);
+
+// ==========================================
+// STILIZARE ASTERISK ROȘU PENTRU CÂMPURI OBLIGATORII
+// ==========================================
+add_action('wp_footer', function() {
+    if (!is_account_page()) return;
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        // Stilizează toate label-urile cu asterisk
+        $('.webgsm-popup label').each(function() {
+            var text = $(this).html();
+            if (text.indexOf('*') !== -1) {
+                $(this).html(text.replace(/\*/g, '<span style="color: #ef4444; font-weight: 600;">*</span>'));
+            }
+        });
+    });
+    </script>
+    <?php
+}, 999);

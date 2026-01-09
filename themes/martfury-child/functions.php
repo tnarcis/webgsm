@@ -4,6 +4,9 @@ add_action('wp_enqueue_scripts', function() {
     wp_enqueue_style('martfury-parent', get_template_directory_uri() . '/style.css');
 });
 
+// PRIORITATE: Încarcă header-account-menu.php ÎNAINTE de tema părinte
+require_once get_stylesheet_directory() . '/includes/header-account-menu.php';
+
 // Remove eleganticons preload - loaded via CSS instead
 add_action('wp_head', function() {
     echo '<script>

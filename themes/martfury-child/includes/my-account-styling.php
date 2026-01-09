@@ -333,7 +333,8 @@ add_action('wp_head', function() {
     }
     
     /* Stilizare pentru h2 sectiuni - "Achizitiile mele", "Date salvate", "Setari" */
-    .woocommerce-MyAccount-content h2 {
+    /* Exclude h2-urile din woocommerce-customer-details si woocommerce-order-details */
+    .woocommerce-MyAccount-content h2:not(.woocommerce-column__title):not(.woocommerce-order-details__title) {
         font-size: 20px;
         font-weight: 700;
         color: #2c3e50;
@@ -356,7 +357,7 @@ add_action('wp_head', function() {
     /* =============================================
        TABEL COMENZI - COMPACT
        ============================================= */
-    .woocommerce-MyAccount-content table,
+    .woocommerce-MyAccount-content table:not(.woocommerce-table--order-details):not(.shop_table),
     .woocommerce-orders-table {
         width: 100%;
         border-collapse: collapse;
@@ -1169,45 +1170,236 @@ add_filter('woocommerce_order_date_format', function() {
 }
 
     /* =============================================
-       TABELE GARANȚII/RETURURI - SCROLL ORIZONTAL MOBILE
+       TABELE GARANȚII/RETURURI/COMENZI - SCROLL ORIZONTAL MOBILE + FULL WIDTH DESKTOP
        ============================================= */
     
-    /* Wrapper pentru scroll orizontal */
-    .woocommerce-MyAccount-content .woocommerce-orders-table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    @media (max-width: 768px) {
-        /* Container tabel cu scroll */
-        .woocommerce-MyAccount-content .woocommerce-orders-table {
-            display: block;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 0 -10px;
-            padding: 0 10px;
-            max-width: calc(100% + 20px);
+    /* DESKTOP - Tabel la full width pentru TOATE tabelele */
+    @media (min-width: 769px) {
+        .woocommerce-MyAccount-content .woocommerce-orders-table,
+        .woocommerce-MyAccount-content .garantii-table,
+        .woocommerce-MyAccount-content table.shop_table,
+        .woocommerce-MyAccount-content .my_account_orders {
+            display: table !important;
+            width: 100% !important;
+            overflow-x: visible !important;
+            max-width: 100% !important;
         }
         
-        /* Tabelul intern - lățime minimă pentru a forța scroll */
-        .woocommerce-MyAccount-content .woocommerce-orders-table tbody,
-        .woocommerce-MyAccount-content .woocommerce-orders-table thead {
-            display: table;
-            width: 100%;
-            min-width: 500px;
-        }
-        
-        .woocommerce-MyAccount-content .woocommerce-orders-table tr {
-            display: table-row;
+        .woocommerce-MyAccount-content .woocommerce-orders-table table,
+        .woocommerce-MyAccount-content .garantii-table table,
+        .woocommerce-MyAccount-content table.shop_table,
+        .woocommerce-MyAccount-content .my_account_orders table {
+            width: 100% !important;
+            table-layout: auto;
+            max-width: 100% !important;
         }
         
         .woocommerce-MyAccount-content .woocommerce-orders-table th,
-        .woocommerce-MyAccount-content .woocommerce-orders-table td {
-            display: table-cell;
-            white-space: nowrap;
-            padding: 8px 10px !important;
+        .woocommerce-MyAccount-content .woocommerce-orders-table td,
+        .woocommerce-MyAccount-content .garantii-table th,
+        .woocommerce-MyAccount-content .garantii-table td,
+        .woocommerce-MyAccount-content table.shop_table th,
+        .woocommerce-MyAccount-content table.shop_table td,
+        .woocommerce-MyAccount-content .my_account_orders th,
+        .woocommerce-MyAccount-content .my_account_orders td {
+            padding: 12px 15px !important;
+        }
+        
+        /* Coloana Actiuni centrata si fara diacritice - DESKTOP */
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead th:last-child,
+        .woocommerce-MyAccount-content table.shop_table thead th:last-child {
+            text-align: center !important;
+            font-size: 0 !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead th:last-child::before,
+        .woocommerce-MyAccount-content table.shop_table thead th:last-child::before {
+            content: 'Actiuni' !important;
+            font-size: 13px !important;
+            display: block !important;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        /* MOBILE - Container cu scroll */
+        .woocommerce-MyAccount-content {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Tabel fix normal - fără scroll pe el direct */
+        .woocommerce-MyAccount-content .woocommerce-orders-table,
+        .woocommerce-MyAccount-content .garantii-table,
+        .woocommerce-MyAccount-content table.shop_table,
+        .woocommerce-MyAccount-content .my_account_orders {
+            display: table !important;
+            width: 100% !important;
+            margin: 0 !important;
+            table-layout: fixed !important;
+            min-width: 480px !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead,
+        .woocommerce-MyAccount-content .garantii-table thead,
+        .woocommerce-MyAccount-content table.shop_table thead,
+        .woocommerce-MyAccount-content .my_account_orders thead,
+        .woocommerce-MyAccount-content .woocommerce-orders-table tbody,
+        .woocommerce-MyAccount-content .garantii-table tbody,
+        .woocommerce-MyAccount-content table.shop_table tbody,
+        .woocommerce-MyAccount-content .my_account_orders tbody {
+            display: table-row-group !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table tr,
+        .woocommerce-MyAccount-content .garantii-table tr,
+        .woocommerce-MyAccount-content table.shop_table tr,
+        .woocommerce-MyAccount-content .my_account_orders tr {
+            display: table-row !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table th,
+        .woocommerce-MyAccount-content .woocommerce-orders-table td,
+        .woocommerce-MyAccount-content .garantii-table th,
+        .woocommerce-MyAccount-content .garantii-table td,
+        .woocommerce-MyAccount-content table.shop_table th,
+        .woocommerce-MyAccount-content table.shop_table td,
+        .woocommerce-MyAccount-content .my_account_orders th,
+        .woocommerce-MyAccount-content .my_account_orders td {
+            display: table-cell !important;
+            white-space: nowrap !important;
+            padding: 8px 2px !important;
+            font-size: 11px !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Lățimi specifice pentru fiecare coloană - COMPACT și ALINIAT */
+        .woocommerce-MyAccount-content .woocommerce-orders-table th:nth-child(1),
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(1),
+        .woocommerce-MyAccount-content table.shop_table th:nth-child(1),
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(1) {
+            width: 65px !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table th:nth-child(2),
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(2),
+        .woocommerce-MyAccount-content table.shop_table th:nth-child(2),
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(2) {
+            width: 75px !important;
+            padding: 8px 2px !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table th:nth-child(3),
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(3),
+        .woocommerce-MyAccount-content table.shop_table th:nth-child(3),
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(3) {
+            width: 80px !important;
+            padding: 8px 2px !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table th:nth-child(4),
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(4),
+        .woocommerce-MyAccount-content table.shop_table th:nth-child(4),
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(4) {
+            width: 60px !important;
+            padding: 8px 2px !important;
+        }
+        
+        /* Font mai mic pentru coloana Total */
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(4),
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(4) *,
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(4),
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(4) * {
+            font-size: 10px !important;
+        }
+        
+        /* Ascunde textul extra din coloana Total pe mobile - mai multe variante */
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(4) .count,
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(4) .count,
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(4) small,
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(4) small,
+        .woocommerce-MyAccount-content .woocommerce-orders-table .woocommerce-Price-currencySymbol ~ *,
+        .woocommerce-MyAccount-content table.shop_table .woocommerce-Price-currencySymbol ~ * {
+            display: none !important;
+        }
+        
+        /* Ascunde brl, br, span-uri extra după preț */
+        .woocommerce-MyAccount-content .woocommerce-orders-table td.woocommerce-orders-table__cell-order-total br,
+        .woocommerce-MyAccount-content table.shop_table td.order-total br {
+            display: none !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table th:nth-child(5),
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(5),
+        .woocommerce-MyAccount-content table.shop_table th:nth-child(5),
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(5) {
+            width: 105px !important;
+        }
+        
+        /* Header styling */
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead th,
+        .woocommerce-MyAccount-content table.shop_table thead th,
+        .woocommerce-MyAccount-content .my_account_orders thead th {
+            background: #f8f9fa !important;
+            font-size: 10px !important;
+            font-weight: 600 !important;
+            padding: 6px 2px !important;
+        }
+        
+        /* Coloana Actiuni centrata */
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead th:nth-child(5),
+        .woocommerce-MyAccount-content table.shop_table thead th:nth-child(5) {
+            text-align: center !important;
+            font-size: 0 !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table thead th:nth-child(5)::before,
+        .woocommerce-MyAccount-content table.shop_table thead th:nth-child(5)::before {
+            content: 'Actiuni' !important;
+            font-size: 10px !important;
+            display: block !important;
+        }
+        
+        /* Butoane compacte pe mobile - VERTICAL STACK */
+        .woocommerce-MyAccount-content .woocommerce-orders-table td:nth-child(5),
+        .woocommerce-MyAccount-content table.shop_table td:nth-child(5) {
+            padding: 4px 2px !important;
+        }
+        
+        .woocommerce-MyAccount-content .woocommerce-orders-table .button,
+        .woocommerce-MyAccount-content table.shop_table .button {
+            padding: 4px 2px !important;
+            font-size: 9px !important;
+            white-space: normal !important;
+            line-height: 1.2 !important;
+            margin: 2px 0 !important;
+            display: block !important;
+            width: 100% !important;
+            text-align: center !important;
+            min-height: 20px !important;
+        }
+        
+        /* Uniformizează textul din butoane */
+        .woocommerce-MyAccount-content .woocommerce-orders-table .button *,
+        .woocommerce-MyAccount-content table.shop_table .button * {
+            font-size: inherit !important;
+            font-weight: inherit !important;
+        }
+        
+        /* Link factură vizibil și compact */
+        .woocommerce-MyAccount-content .woocommerce-orders-table a[href*="factura"],
+        .woocommerce-MyAccount-content table.shop_table a[href*="factura"],
+        .woocommerce-MyAccount-content .download-invoice {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            padding: 4px 2px !important;
+            font-size: 9px !important;
+            width: 100% !important;
+            margin: 2px 0 !important;
+            text-align: center !important;
+            line-height: 1.2 !important;
+            white-space: normal !important;
+            min-height: 20px !important;
         }
         
         /* Indicator vizual că se poate scroll */
@@ -1241,9 +1433,346 @@ add_filter('woocommerce_order_date_format', function() {
             font-size: 11px !important;
         }
     }
+    
+    /* =============================================
+       PAGINA VIEW ORDER - TABEL PRODUSE COMANDATE
+       ============================================= */
+    
+    /* DESKTOP + MOBILE - Coloana dreapta (Total/Detalii) */
+    .woocommerce-order-details .woocommerce-table--order-details thead th:last-child,
+    .woocommerce-order-details table.shop_table thead th:last-child {
+        text-align: right !important;
+        font-size: 0 !important;
+    }
+    
+    .woocommerce-order-details .woocommerce-table--order-details thead th:last-child::before,
+    .woocommerce-order-details table.shop_table thead th:last-child::before {
+        content: 'Detalii' !important;
+        font-size: 13px !important;
+        display: inline-block !important;
+    }
+    
+    .woocommerce-order-details .woocommerce-table--order-details tbody td:last-child,
+    .woocommerce-order-details table.shop_table tbody td:last-child {
+        text-align: right !important;
+    }
+    
+    /* Footer - Subtotal, Livrare, Total cu background gri */
+    .woocommerce-order-details .woocommerce-table--order-details tfoot tr,
+    .woocommerce-order-details table.shop_table tfoot tr {
+        background: #f8f9fa !important;
+    }
+    
+    .woocommerce-order-details .woocommerce-table--order-details tfoot th {
+        text-align: left !important;
+        font-weight: 600 !important;
+    }
+    
+    .woocommerce-order-details .woocommerce-table--order-details tfoot td {
+        text-align: right !important;
+    }
+    
+    /* Rename "Acțiuni" to "Descarca" în footer */
+    .woocommerce-order-details .woocommerce-table--order-details tfoot .woocommerce-table__product-total,
+    .woocommerce-order-details table.shop_table tfoot th:contains('Acțiuni'),
+    .woocommerce-order-details table.shop_table tfoot th.woocommerce-table__product-total {
+        font-size: 0 !important;
+    }
+    
+    .woocommerce-order-details .woocommerce-table--order-details tfoot .woocommerce-table__product-total::before,
+    .woocommerce-order-details table.shop_table tfoot th.woocommerce-table__product-total::before {
+        content: 'Descarca' !important;
+        font-size: 13px !important;
+        display: inline-block !important;
+    }
+    
+    @media (max-width: 768px) {
+        /* Scroll pe mobile pentru tabel produse comandate */
+        .woocommerce-order-details {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        .woocommerce-order-details table {
+            min-width: 480px !important;
+        }
+        
+        .woocommerce-order-details .woocommerce-table--order-details thead th:last-child::before,
+        .woocommerce-order-details table.shop_table thead th:last-child::before {
+            font-size: 11px !important;
+        }
+        
+        .woocommerce-order-details .woocommerce-table--order-details tfoot .woocommerce-table__product-total::before,
+        .woocommerce-order-details table.shop_table tfoot th.woocommerce-table__product-total::before {
+            font-size: 11px !important;
+        }
+    }
+    
+    /* =============================================
+       LINII VERZI - PAGINA DETALII COMANDA
+       ============================================= */
+    
+    /* Linie verde sub "Detalii comanda" - fara diacritice */
+    .woocommerce-order-details h2.woocommerce-order-details__title {
+        border-bottom: 3px solid #22c55e !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 20px !important;
+        font-size: 0 !important;
+    }
+    
+    .woocommerce-order-details h2.woocommerce-order-details__title::before {
+        content: 'Detalii comanda' !important;
+        font-size: 24px !important;
+        display: block !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Linii verzi sub titlurile de adrese */
+    .woocommerce-customer-details h2.woocommerce-column__title {
+        border-bottom: 3px solid #22c55e !important;
+    }
+    
+    /* Linia verde deasupra sectiunii de adrese */
+    .woocommerce-order-details .woocommerce-customer-details {
+        border-top: 3px solid #22c55e !important;
+        padding-top: 20px !important;
+        margin-top: 30px !important;
+    }
+    
+    /* =============================================
+       DETALII COMANDA - SCROLL ORIZONTAL MOBILE
+       ============================================= */
+    
+    /* Container wrapper pentru scroll */
+    .woocommerce-order-details,
+    .woocommerce-customer-details,
+    .woocommerce-order-overview,
+    .order-details-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    @media (max-width: 768px) {
+        /* Wrapper tabel detalii comanda */
+        .woocommerce-table--order-details,
+        .woocommerce-order-details table,
+        .order_details,
+        table.shop_table.order_details {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Tabelul intern pastreaza latimea */
+        .woocommerce-table--order-details tbody,
+        .woocommerce-table--order-details thead,
+        .woocommerce-order-details table tbody,
+        .woocommerce-order-details table thead,
+        table.shop_table.order_details tbody,
+        table.shop_table.order_details thead {
+            display: table !important;
+            width: 100% !important;
+            min-width: 500px !important;
+        }
+        
+        .woocommerce-table--order-details tr,
+        .woocommerce-order-details table tr,
+        table.shop_table.order_details tr {
+            display: table-row !important;
+        }
+        
+        .woocommerce-table--order-details th,
+        .woocommerce-table--order-details td,
+        .woocommerce-order-details table th,
+        .woocommerce-order-details table td,
+        table.shop_table.order_details th,
+        table.shop_table.order_details td {
+            display: table-cell !important;
+            white-space: nowrap !important;
+            padding: 10px 12px !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Coloana produs - permite wrap */
+        .woocommerce-table--order-details td.product-name,
+        table.shop_table.order_details td.product-name {
+            white-space: normal !important;
+            min-width: 200px !important;
+            max-width: 250px !important;
+        }
+        
+        /* Adrese comanda - stack vertical */
+        .woocommerce-columns--addresses {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 15px !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column {
+            width: 100% !important;
+            padding: 15px !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            border: 1px solid #e5e7eb !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column h2 {
+            font-size: 14px !important;
+            margin-bottom: 10px !important;
+        }
+        
+        /* Order overview - info comanda */
+        .woocommerce-order-overview {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 10px !important;
+            padding: 0 !important;
+            margin: 0 0 20px 0 !important;
+            list-style: none !important;
+        }
+        
+        .woocommerce-order-overview li {
+            flex: 1 1 calc(50% - 10px) !important;
+            background: #f8fafc !important;
+            padding: 10px 12px !important;
+            border-radius: 6px !important;
+            border: 1px solid #e5e7eb !important;
+            margin: 0 !important;
+        }
+        
+        .woocommerce-order-overview li strong {
+            display: block !important;
+            font-size: 11px !important;
+            color: #6b7280 !important;
+            font-weight: 500 !important;
+            margin-bottom: 2px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .woocommerce-table--order-details tbody,
+        .woocommerce-table--order-details thead,
+        table.shop_table.order_details tbody,
+        table.shop_table.order_details thead {
+            min-width: 450px !important;
+        }
+        
+        .woocommerce-table--order-details th,
+        .woocommerce-table--order-details td,
+        table.shop_table.order_details th,
+        table.shop_table.order_details td {
+            padding: 8px 10px !important;
+            font-size: 12px !important;
+        }
+        
+        .woocommerce-table--order-details td.product-name,
+        table.shop_table.order_details td.product-name {
+            min-width: 180px !important;
+            font-size: 11px !important;
+        }
+        
+        /* Order overview - 1 coloana pe telefoane mici */
+        .woocommerce-order-overview li {
+            flex: 1 1 100% !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column {
+            padding: 12px !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column address {
+            font-size: 12px !important;
+            line-height: 1.5 !important;
+        }
+    }
+    
+    /* Buton descarcare factura in pagina detalii comanda - identic cu "Comanda din nou" */
+    .woocommerce-order-details a[href*="download_factura"],
+    .woocommerce-order-details a[href*="download_storno"],
+    table.shop_table.order_details a[href*="download_factura"],
+    table.shop_table.order_details a[href*="download_storno"],
+    .woocommerce-order-details tfoot a[href*="download"],
+    table.shop_table tfoot a[href*="download"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: 1px solid #667eea !important;
+        color: #ffffff !important;
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+        display: inline-block !important;
+        text-decoration: none !important;
+        border-radius: 6px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2) !important;
+    }
+    
+    .woocommerce-order-details a[href*="download_factura"]:hover,
+    .woocommerce-order-details a[href*="download_storno"]:hover,
+    table.shop_table.order_details a[href*="download_factura"]:hover,
+    table.shop_table.order_details a[href*="download_storno"]:hover,
+    .woocommerce-order-details tfoot a[href*="download"]:hover,
+    table.shop_table tfoot a[href*="download"]:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%) !important;
+        border-color: #764ba2 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3) !important;
+        transform: translateY(-2px) !important;
+    }
+    
+    @media (max-width: 768px) {
+        .woocommerce-order-details a[href*="download_factura"],
+        .woocommerce-order-details a[href*="download_storno"],
+        table.shop_table.order_details a[href*="download_factura"],
+        table.shop_table.order_details a[href*="download_storno"],
+        .woocommerce-order-details tfoot a[href*="download"],
+        table.shop_table tfoot a[href*="download"] {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+        }
+    }
+    
     </style>
     <?php
 });
+
+// Adaugă adresa de livrare sub adresa de facturare
+add_action('woocommerce_order_details_after_customer_details', function($order) {
+    if (!$order) return;
+    
+    $shipping_address = $order->get_shipping_address_1();
+    if (empty($shipping_address)) return;
+    
+    // Preia datele de livrare din order meta
+    $shipping_label = get_post_meta($order->get_id(), '_shipping_address_label', true);
+    $shipping_name = trim(get_post_meta($order->get_id(), '_shipping_first_name', true) . ' ' . get_post_meta($order->get_id(), '_shipping_last_name', true));
+    $shipping_phone = get_post_meta($order->get_id(), '_shipping_phone', true);
+    $shipping_city = $order->get_shipping_city();
+    $shipping_state = $order->get_shipping_state();
+    $shipping_postcode = $order->get_shipping_postcode();
+    
+    ?>
+    <section class="woocommerce-customer-details" style="margin-top: 20px;">
+        <section class="woocommerce-column woocommerce-column--shipping-address col-1">
+            <h2 class="woocommerce-column__title">Adresa de livrare</h2>
+            <address>
+                <?php if ($shipping_label): ?>
+                    <strong><?php echo esc_html($shipping_label); ?></strong><br>
+                <?php endif; ?>
+                <?php if ($shipping_name): ?>
+                    <?php echo esc_html($shipping_name); ?><br>
+                <?php endif; ?>
+                <?php if ($shipping_phone): ?>
+                    Tel: <?php echo esc_html($shipping_phone); ?><br>
+                <?php endif; ?>
+                <?php echo esc_html($shipping_address); ?><br>
+                <?php echo esc_html($shipping_city); ?>, <?php echo esc_html($shipping_state); ?> <?php echo esc_html($shipping_postcode); ?>
+            </address>
+        </section>
+    </section>
+    <?php
+}, 10, 1);
 
 // Forțează formatul datei scurt
 add_filter('woocommerce_my_account_my_orders_query', function($args) {
@@ -1269,13 +1798,12 @@ add_action('wp_footer', function() {
             return $(this).closest('.woocommerce-MyAccount-navigation').length === 0;
         }).closest('li');
         
-        if(orderLi.length) {
-            var newLinks = '<li><a href="<?php echo wc_get_account_endpoint_url("retururi"); ?>">↩️ Retururi</a></li>' +
-                '<li><a href="<?php echo wc_get_account_endpoint_url("garantie"); ?>">🛡️ Garanție</a></li>' +
-                '<li><a href="<?php echo wc_get_account_endpoint_url("date-facturare"); ?>">🏢 Date Facturare</a></li>';
-            
-            orderLi.after(newLinks);
-        }
+        // Adaugă SVG logout icon la linkul existent generat de Martfury
+        var $accountMenu = $('.topbar-menu .extra-menu-item.account-item');
+        var iconLogout = '<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>';
+        
+        // Adaugă icon la Logout (tema generează automat acest link)
+        $accountMenu.find('li.logout a').prepend(iconLogout);
     });
     </script>
     
@@ -1371,8 +1899,6 @@ add_action('wp_footer', function() {
         border: 1px solid #e5e7eb;
         overflow: hidden;
         position: relative;
-        /* Required for absolute positioned modals */
-        min-height: 300px;
     }
     
     /* Header secțiune cu titlu + buton + */
@@ -1407,37 +1933,59 @@ add_action('wp_footer', function() {
         background-repeat: no-repeat;
     }
     
-    /* Buton + rotund */
+    /* Buton + rotund - line art style */
     .btn-add-new {
-        width: 36px;
-        height: 20px;
-        border-radius: 5px;
-        background: #2563eb;
-        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1.5px solid #94a3b8;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
         padding: 0;
+        position: relative;
     }
     
     .btn-add-new:hover {
-        background: #1d4ed8;
-        transform: scale(1.06);
-        box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
+        background: #e0f2fe;
+        border-color: #3b82f6;
+        transform: scale(1.05);
+    }
+    
+    .btn-add-new::before,
+    .btn-add-new::after {
+        content: '';
+        position: absolute;
+        background: #94a3b8;
+        transition: background 0.2s ease;
+    }
+    
+    .btn-add-new::before {
+        width: 12px;
+        height: 2px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .btn-add-new::after {
+        width: 2px;
+        height: 12px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .btn-add-new:hover::before,
+    .btn-add-new:hover::after {
+        background: #3b82f6;
     }
     
     .btn-add-new .plus-icon {
-        color: #fff;
-        width: 16px;
-        height: 16px;
-        line-height: 1;
-        flex-shrink: 0;
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: inline-block !important;
+        display: none !important;
     }
     
     /* Conținut secțiune */
@@ -1684,6 +2232,243 @@ add_action('wp_footer', function() {
             padding: 28px 14px;
         }
     }
+
+    /* =============================================
+       MODAL POPUP - CENTRARE ȘI STILIZARE
+       ============================================= */
+    .webgsm-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    
+    .webgsm-popup .popup-content {
+        background: #fff;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        animation: popupSlideIn 0.2s ease-out;
+    }
+    
+    @keyframes popupSlideIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+    
+    /* Label obligatoriu - asterisk rosu */
+    .webgsm-popup label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #1e293b;
+        margin-bottom: 6px;
+    }
+    
+    .webgsm-popup .popup-body label {
+        font-size: 13px;
+        color: #475569;
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+    
+    /* Input fields styling */
+    .webgsm-popup input[type="text"],
+    .webgsm-popup input[type="tel"],
+    .webgsm-popup input[type="email"],
+    .webgsm-popup select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 13px;
+        transition: border-color 0.2s;
+    }
+    
+    .webgsm-popup input[type="text"]:focus,
+    .webgsm-popup input[type="tel"]:focus,
+    .webgsm-popup input[type="email"]:focus,
+    .webgsm-popup select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    /* Buton X - mic și compact */
+    .webgsm-popup .popup-close {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: #64748b;
+        line-height: 1;
+        transition: all 0.15s ease;
+        padding: 0;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+    
+    .webgsm-popup .popup-close:hover {
+        background: #fee2e2;
+        border-color: #fca5a5;
+        color: #dc2626;
+    }
+    
+    .webgsm-popup .popup-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    
+    .webgsm-popup .popup-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+        flex: 1;
+    }
+    
+    .webgsm-popup .popup-body {
+        padding: 24px;
+    }
+    
+    /* Overlay pentru închidere */
+    .webgsm-popup .popup-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+    }
+    
+    /* Popup Footer - Butoane */
+    .webgsm-popup .popup-footer {
+        padding: 8px 16px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 6px;
+        justify-content: flex-end;
+        background: #f8fafc;
+        align-items: center;
+    }
+    
+    /* Reset și override pentru btn-primary în modal */
+    .webgsm-popup .btn-primary {
+        padding: 2px 14px !important;
+        border-radius: 16px !important;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        border: none !important;
+        min-height: 20px !important;
+        line-height: 1 !important;
+        background: #3b82f6 !important;
+        color: #fff !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+    }
+    
+    .webgsm-popup .btn-primary:hover {
+        background: #2563eb !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    
+    /* Reset și override pentru btn-secondary în modal */
+    .webgsm-popup .btn-secondary {
+        padding: 2px 14px !important;
+        border-radius: 16px !important;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        border: 1px solid #e2e8f0 !important;
+        min-height: 20px !important;
+        line-height: 1 !important;
+        background: #fff !important;
+        color: #64748b !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+    }
+    
+    .webgsm-popup .btn-secondary:hover {
+        background: #fef2f2 !important;
+        border-color: #fca5a5 !important;
+        color: #dc2626 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+    }
+    
+    /* Butoane Modal - Selectori specifici pentru My Account */
+    .webgsm-popup .btn-secondary.modal-cancel-btn,
+    .webgsm-popup #save_address_modal_btn,
+    .webgsm-popup #save_company_modal_btn,
+    .webgsm-popup #save_person_modal_btn {
+        padding: 2px 14px !important;
+        min-height: 20px !important;
+        font-size: 11px !important;
+        border-radius: 16px !important;
+        font-weight: 500 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+    
+    /* Specific pentru butonul Salveaza - ID selector */
+    #save_address_modal_btn,
+    #save_company_modal_btn,
+    #save_person_modal_btn {
+        padding: 2px 14px !important;
+        min-height: 20px !important;
+        font-size: 11px !important;
+        border-radius: 16px !important;
+        font-weight: 500 !important;
+        background: #3b82f6 !important;
+        color: #fff !important;
+        border: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+    
+    #save_address_modal_btn:hover,
+    #save_company_modal_btn:hover,
+    #save_person_modal_btn:hover {
+        background: #2563eb !important;
+    }
+
     </style>
     
     <?php

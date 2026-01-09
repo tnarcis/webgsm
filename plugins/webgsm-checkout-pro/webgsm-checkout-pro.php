@@ -704,6 +704,27 @@ class WebGSM_Checkout_Pro {
             return;
         }
         
+        // CSS inline pentru butoane My Account
+        echo '<style>
+        #save_address_modal_btn,
+        #save_company_modal_btn,
+        #save_person_modal_btn {
+            padding: 2px 14px !important;
+            min-height: 20px !important;
+            height: auto !important;
+            line-height: 1 !important;
+            font-size: 11px !important;
+            border-radius: 16px !important;
+            font-weight: 500 !important;
+            background: #3b82f6 !important;
+            color: #fff !important;
+            border: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        </style>';
+        
         $user_id = get_current_user_id();
         $addresses = get_user_meta($user_id, 'webgsm_addresses', true) ?: [];
         $companies = get_user_meta($user_id, 'webgsm_companies', true) ?: [];
@@ -716,7 +737,7 @@ class WebGSM_Checkout_Pro {
         
         $icon_user = '<svg class="section-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>';
         
-        $icon_plus = '<svg class="plus-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>';
+        $icon_plus = '<svg class="plus-icon" viewBox="0 0 24 24" stroke="#ffffff" stroke-width="2.5" fill="none"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>';
         
         $icon_phone = '<svg class="icon-small" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>';
         
@@ -810,8 +831,8 @@ class WebGSM_Checkout_Pro {
                             </div>
                         </div>
                         <div class="popup-footer">
-                            <button type="button" class="btn-secondary modal-cancel-btn">Anulează</button>
-                            <button type="button" class="btn-primary" id="save_address_modal_btn">Salvează</button>
+                            <button type="button" class="btn-secondary modal-cancel-btn">Anuleaza</button>
+                            <button type="button" class="btn-primary" id="save_address_modal_btn">Salveaza</button>
                         </div>
                     </div>
                 </div>
@@ -904,8 +925,8 @@ class WebGSM_Checkout_Pro {
                             </div>
                         </div>
                         <div class="popup-footer">
-                            <button type="button" class="btn-secondary modal-cancel-btn">Anulează</button>
-                            <button type="button" class="btn-primary" id="save_company_modal_btn">Salvează</button>
+                            <button type="button" class="btn-secondary modal-cancel-btn">Anuleaza</button>
+                            <button type="button" class="btn-primary" id="save_company_modal_btn">Salveaza</button>
                         </div>
                     </div>
                 </div>
@@ -995,8 +1016,8 @@ class WebGSM_Checkout_Pro {
                             <div class="form-row"><div class="form-col"><label>Cod poștal</label><input type="text" id="person_postcode_modal" maxlength="6"></div></div>
                         </div>
                         <div class="popup-footer">
-                            <button type="button" class="btn-secondary modal-cancel-btn">Anulează</button>
-                            <button type="button" class="btn-primary" id="save_person_modal_btn">Salvează</button>
+                            <button type="button" class="btn-secondary modal-cancel-btn">Anuleaza</button>
+                            <button type="button" class="btn-primary" id="save_person_modal_btn">Salveaza</button>
                         </div>
                     </div>
                 </div>
