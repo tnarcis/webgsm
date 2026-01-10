@@ -801,19 +801,28 @@ add_action('wp_head', function() {
     content: 'Detalii';
     font-size: 11px;
 }
-/* Buton factură - evidențiat */
+/* Buton factură - gradient verde-albastru */
 .woocommerce-orders-table .button.factura,
 .woocommerce-orders-table a[href*="download_factura"],
 .woocommerce-orders-table a[href*="download_storno"] {
-    background: #f0f7ff !important;
-    border-color: #cce0ff !important;
-    color: #1a73e8 !important;
+    background: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%) !important;
+    background-color: #22c55e !important;
+    border: 1px solid #22c55e !important;
+    color: #ffffff !important;
+    padding: 4px 10px !important;
+    font-size: 10px !important;
+    border-radius: 4px !important;
+    line-height: 1.2 !important;
+    display: inline-block !important;
+    min-height: unset !important;
+    height: auto !important;
 }
 
 .woocommerce-orders-table a[href*="download_factura"]:hover,
 .woocommerce-orders-table a[href*="download_storno"]:hover {
-    background: #e0efff !important;
-    border-color: #99c9ff !important;
+    background: linear-gradient(135deg, #16a34a 0%, #2563eb 100%) !important;
+    background-color: #16a34a !important;
+    border-color: #16a34a !important;
 }
 /* Butoane tabel - înălțime redusă */
 .woocommerce-orders-table .button,
@@ -1687,49 +1696,352 @@ add_filter('woocommerce_order_date_format', function() {
         }
     }
     
-    /* Buton descarcare factura in pagina detalii comanda - identic cu "Comanda din nou" */
-    .woocommerce-order-details a[href*="download_factura"],
-    .woocommerce-order-details a[href*="download_storno"],
-    table.shop_table.order_details a[href*="download_factura"],
-    table.shop_table.order_details a[href*="download_storno"],
+    /* Buton descarcare factura in pagina detalii comanda - DOAR in footer - chip albastru */
     .woocommerce-order-details tfoot a[href*="download"],
-    table.shop_table tfoot a[href*="download"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        border: 1px solid #667eea !important;
+    table.shop_table tfoot a[href*="download"],
+    .woocommerce-order-details tfoot .button[href*="download"],
+    table.shop_table tfoot .button[href*="download"],
+    .woocommerce-order-details tfoot a.button[href*="factura"],
+    table.shop_table tfoot a.button[href*="factura"] {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+        background-color: #3b82f6 !important;
+        border: 1px solid #3b82f6 !important;
         color: #ffffff !important;
-        padding: 8px 16px !important;
-        font-size: 13px !important;
+        padding: 6px 14px !important;
+        font-size: 12px !important;
         line-height: 1.4 !important;
         display: inline-block !important;
+        text-decoration: none !important;
+        border-radius: 20px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
+        text-transform: none !important;
+    }
+    
+    .woocommerce-order-details tfoot a[href*="download"]:hover,
+    table.shop_table tfoot a[href*="download"]:hover,
+    .woocommerce-order-details tfoot .button[href*="download"]:hover,
+    table.shop_table tfoot .button[href*="download"]:hover,
+    .woocommerce-order-details tfoot a.button[href*="factura"]:hover,
+    table.shop_table tfoot a.button[href*="factura"]:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4) !important;
+        transform: translateY(-2px) !important;
+    }
+    
+    /* Buton factura in tabel produse (coloana Detalii) - gri si insesizabil */
+    .woocommerce-order-details tbody a[href*="download_factura"],
+    .woocommerce-order-details tbody a[href*="download_storno"],
+    table.shop_table.order_details tbody a[href*="download_factura"],
+    table.shop_table.order_details tbody a[href*="download_storno"] {
+        background: transparent !important;
+        border: none !important;
+        color: #9ca3af !important;
+        padding: 1px 3px !important;
+        font-size: 7px !important;
+        line-height: 1.2 !important;
+        display: inline !important;
+        text-decoration: none !important;
+        border-radius: 0 !important;
+        font-weight: 400 !important;
+        transition: all 0.2s ease !important;
+        opacity: 0.7 !important;
+        cursor: default !important;
+    }
+    
+    .woocommerce-order-details tbody a[href*="download_factura"]:hover,
+    .woocommerce-order-details tbody a[href*="download_storno"]:hover,
+    table.shop_table.order_details tbody a[href*="download_factura"]:hover,
+    table.shop_table.order_details tbody a[href*="download_storno"]:hover {
+        background: transparent !important;
+        border: none !important;
+        color: #9ca3af !important;
+        opacity: 0.7 !important;
+    }
+    
+    /* Buton Factura din coloana Actiuni (view-order) - gri discret */
+    .woocommerce-order-details .woocommerce-order-actions a.factura,
+    .woocommerce-order-details .woocommerce-order-actions .button.factura,
+    .woocommerce-order-details .woocommerce-order-actions a[href*="download_factura"],
+    .order-actions a.factura,
+    .order-actions .button.factura,
+    .order-actions a[href*="download_factura"] {
+        background: transparent !important;
+        border: none !important;
+        color: #9ca3af !important;
+        padding: 2px 4px !important;
+        font-size: 9px !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 0 !important;
+        font-weight: 400 !important;
+        box-shadow: none !important;
+        min-height: unset !important;
+        height: auto !important;
+        text-decoration: none !important;
+        vertical-align: baseline !important;
+        opacity: 0.8 !important;
+    }
+
+    /* Varianta specifica butonului din tabelul view-order (class order-actions-button factura) */
+    table.shop_table.order_details a.order-actions-button.factura,
+    .woocommerce-table--order-details a.order-actions-button.factura {
+        background: transparent !important;
+        border: none !important;
+        color: #9ca3af !important;
+        padding: 2px 4px !important;
+        font-size: 9px !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 0 !important;
+        font-weight: 400 !important;
+        box-shadow: none !important;
+        min-height: unset !important;
+        height: auto !important;
+        text-decoration: none !important;
+        vertical-align: baseline !important;
+        opacity: 0.8 !important;
+    }
+
+    /* Butoane "Comanda din nou" si "Factura X" - gradient verde-albastru (buton principal) */
+    .woocommerce-order-details > p a.button[href*="download_factura"],
+    .woocommerce-order-details > p a[href*="download_factura_pdf"],
+    .woocommerce-order-details > p a.button-download-invoice,
+    p a.button[href*="download_factura_pdf"],
+    a.button-download-invoice {
+        background: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%) !important;
+        background-color: #22c55e !important;
+        border: 1px solid #22c55e !important;
+        color: #ffffff !important;
+        padding: 6px 8px !important;
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         text-decoration: none !important;
         border-radius: 6px !important;
         font-weight: 600 !important;
         transition: all 0.3s ease !important;
-        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2) !important;
+        box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2) !important;
+        text-transform: none !important;
+        vertical-align: middle !important;
+        min-height: 36px !important;
     }
     
-    .woocommerce-order-details a[href*="download_factura"]:hover,
-    .woocommerce-order-details a[href*="download_storno"]:hover,
-    table.shop_table.order_details a[href*="download_factura"]:hover,
-    table.shop_table.order_details a[href*="download_storno"]:hover,
-    .woocommerce-order-details tfoot a[href*="download"]:hover,
-    table.shop_table tfoot a[href*="download"]:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%) !important;
-        border-color: #764ba2 !important;
+    /* SVG icon alignment */
+    a.button-download-invoice svg {
+        vertical-align: middle !important;
+        margin-right: 6px !important;
+        display: inline-block !important;
+    }
+    
+    .woocommerce-order-details .woocommerce-order-actions a[href*="download"]:hover,
+    .woocommerce-order-details .woocommerce-order-actions .button[href*="download"]:hover,
+    .woocommerce-order-details .woocommerce-order-actions a[href*="factura"]:hover,
+    .order-actions a[href*="download"]:hover,
+    .order-actions .button[href*="download"]:hover,
+    .woocommerce-order-details > p a.button[href*="download_factura"]:hover,
+    .woocommerce-order-details > p a[href*="download_factura_pdf"]:hover,
+    .woocommerce-order-details > p a.button-download-invoice:hover,
+    p a.button[href*="download_factura_pdf"]:hover,
+    a.button-download-invoice:hover {
+        background: linear-gradient(135deg, #16a34a 0%, #2563eb 100%) !important;
+        background-color: #16a34a !important;
+        border-color: #16a34a !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3) !important;
+        box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3) !important;
         transform: translateY(-2px) !important;
     }
     
     @media (max-width: 768px) {
+        .woocommerce-order-details .woocommerce-order-actions a[href*="download"],
+        .woocommerce-order-details .woocommerce-order-actions .button[href*="download"],
+        .woocommerce-order-details .woocommerce-order-actions a[href*="factura"],
+        .order-actions a[href*="download"],
+        .order-actions .button[href*="download"] {
+            padding: 5px 12px !important;
+            font-size: 11px !important;
+        }
+        
+        .woocommerce-order-details tbody a[href*="download_factura"],
+        .woocommerce-order-details tbody a[href*="download_storno"],
+        table.shop_table.order_details tbody a[href*="download_factura"],
+        table.shop_table.order_details tbody a[href*="download_storno"],
         .woocommerce-order-details a[href*="download_factura"],
         .woocommerce-order-details a[href*="download_storno"],
         table.shop_table.order_details a[href*="download_factura"],
-        table.shop_table.order_details a[href*="download_storno"],
-        .woocommerce-order-details tfoot a[href*="download"],
-        table.shop_table tfoot a[href*="download"] {
-            padding: 6px 12px !important;
+        table.shop_table.order_details a[href*="download_storno"] {
+            padding: 2px 5px !important;
+            font-size: 8px !important;
+        }
+    }
+    
+    /* =============================================
+       DETALII COMANDĂ - SCROLL ORIZONTAL MOBILE
+       ============================================= */
+    
+    /* Container wrapper pentru scroll */
+    .woocommerce-order-details,
+    .woocommerce-customer-details,
+    .woocommerce-order-overview,
+    .order-details-wrapper {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    @media (max-width: 768px) {
+        /* Parent wrapper - ascunde overflow */
+        .woocommerce-MyAccount-content .woocommerce-order-details,
+        .woocommerce-order-details {
+            overflow-x: hidden !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        /* Wrapper tabel detalii comandă - scroll intern */
+        .woocommerce-table--order-details,
+        .woocommerce-order-details table,
+        .order_details,
+        table.shop_table.order_details {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            max-width: calc(100vw - 20px) !important;
+        }
+        
+        /* Tabelul intern păstrează lățimea */
+        .woocommerce-table--order-details tbody,
+        .woocommerce-table--order-details thead,
+        .woocommerce-order-details table tbody,
+        .woocommerce-order-details table thead,
+        table.shop_table.order_details tbody,
+        table.shop_table.order_details thead {
+            display: table !important;
+            width: 100% !important;
+            min-width: 580px !important;
+        }
+        
+        .woocommerce-table--order-details tr,
+        .woocommerce-order-details table tr,
+        table.shop_table.order_details tr {
+            display: table-row !important;
+        }
+        
+        .woocommerce-table--order-details th,
+        .woocommerce-table--order-details td,
+        .woocommerce-order-details table th,
+        .woocommerce-order-details table td,
+        table.shop_table.order_details th,
+        table.shop_table.order_details td {
+            display: table-cell !important;
+            white-space: nowrap !important;
+            padding: 10px 8px !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Coloana produs - permite wrap */
+        .woocommerce-table--order-details td.product-name,
+        table.shop_table.order_details td.product-name {
+            white-space: normal !important;
+            min-width: 150px !important;
+            max-width: 200px !important;
+        }
+        
+        /* Adrese comandă - stack vertical */
+        .woocommerce-columns--addresses {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 15px !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column {
+            width: 100% !important;
+            padding: 15px !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            border: 1px solid #e5e7eb !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column h2 {
+            font-size: 14px !important;
+            margin-bottom: 10px !important;
+        }
+        
+        /* Order overview - info comandă */
+        .woocommerce-order-overview {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 10px !important;
+            padding: 0 !important;
+            margin: 0 0 20px 0 !important;
+            list-style: none !important;
+        }
+        
+        .woocommerce-order-overview li {
+            flex: 1 1 calc(50% - 10px) !important;
+            background: #f8fafc !important;
+            padding: 10px 12px !important;
+            border-radius: 6px !important;
+            border: 1px solid #e5e7eb !important;
+            margin: 0 !important;
+        }
+        
+        .woocommerce-order-overview li strong {
+            display: block !important;
+            font-size: 11px !important;
+            color: #6b7280 !important;
+            font-weight: 500 !important;
+            margin-bottom: 2px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .woocommerce-table--order-details tbody,
+        .woocommerce-table--order-details thead,
+        table.shop_table.order_details tbody,
+        table.shop_table.order_details thead {
+            min-width: 650px !important;
+        }
+        
+        .woocommerce-table--order-details th,
+        .woocommerce-table--order-details td,
+        table.shop_table.order_details th,
+        table.shop_table.order_details td {
+            padding: 8px 10px !important;
             font-size: 12px !important;
+        }
+        
+        .woocommerce-table--order-details td.product-name,
+        table.shop_table.order_details td.product-name {
+            min-width: 180px !important;
+            font-size: 11px !important;
+        }
+        
+        /* Order overview - 1 coloană pe telefoane mici */
+        .woocommerce-order-overview li {
+            flex: 1 1 100% !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column {
+            padding: 12px !important;
+        }
+        
+        .woocommerce-columns--addresses .woocommerce-column address {
+            font-size: 12px !important;
+            line-height: 1.5 !important;
         }
     }
     
@@ -2467,6 +2779,124 @@ add_action('wp_footer', function() {
     #save_company_modal_btn:hover,
     #save_person_modal_btn:hover {
         background: #2563eb !important;
+    }
+
+    /* =============================================
+       POPUP MOBILE - FIX BARA TEMĂ
+       ============================================= */
+    
+    @media (max-width: 768px) {
+        /* Popup fullscreen pe mobile */
+        .webgsm-popup {
+            padding: 0 !important;
+            align-items: flex-end !important;
+        }
+        
+        .webgsm-popup .popup-content {
+            max-width: 100% !important;
+            width: 100% !important;
+            max-height: 100vh !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        /* Header popup - fix top */
+        .webgsm-popup .popup-header {
+            flex-shrink: 0 !important;
+            padding: 15px 20px !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            background: #fff !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+        }
+        
+        .webgsm-popup .popup-header h3 {
+            font-size: 16px !important;
+            margin: 0 !important;
+        }
+        
+        /* Body popup - scrollabil */
+        .webgsm-popup .popup-body {
+            flex: 1 !important;
+            overflow-y: auto !important;
+            padding: 20px !important;
+            padding-bottom: 30px !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Footer popup - fix bottom cu spațiu pentru bara temei */
+        .webgsm-popup .popup-footer {
+            flex-shrink: 0 !important;
+            padding: 15px 20px !important;
+            padding-bottom: calc(15px + 70px + env(safe-area-inset-bottom, 0px)) !important;
+            border-top: 1px solid #e5e7eb !important;
+            background: #fff !important;
+            position: sticky !important;
+            bottom: 0 !important;
+            z-index: 10 !important;
+            display: flex !important;
+            gap: 10px !important;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+        }
+        
+        /* Butoane footer - full width pe mobile */
+        .webgsm-popup .popup-footer button {
+            flex: 1 !important;
+            padding: 12px 20px !important;
+            font-size: 14px !important;
+            border-radius: 8px !important;
+        }
+        
+        .webgsm-popup .popup-footer .btn-primary {
+            background: #2563eb !important;
+            color: #fff !important;
+            border: none !important;
+        }
+        
+        .webgsm-popup .popup-footer .btn-secondary {
+            background: #f1f5f9 !important;
+            color: #475569 !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        
+        /* Form fields pe mobile */
+        .webgsm-popup .form-row {
+            flex-direction: column !important;
+            gap: 15px !important;
+            margin-bottom: 15px !important;
+        }
+        
+        .webgsm-popup .form-col {
+            width: 100% !important;
+        }
+        
+        .webgsm-popup input,
+        .webgsm-popup select,
+        .webgsm-popup textarea {
+            padding: 12px !important;
+            font-size: 16px !important; /* Previne zoom pe iOS */
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .webgsm-popup .popup-footer {
+            padding-bottom: calc(15px + 60px + env(safe-area-inset-bottom, 0px)) !important;
+        }
+        
+        .webgsm-popup .popup-body {
+            padding: 15px !important;
+        }
+        
+        .webgsm-popup .popup-header {
+            padding: 12px 15px !important;
+        }
+        
+        .webgsm-popup .popup-header h3 {
+            font-size: 15px !important;
+        }
     }
 
     </style>
