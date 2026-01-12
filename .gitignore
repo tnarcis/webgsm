@@ -7,6 +7,12 @@
 /logs/
 *.log
 
+# Fișiere temporare publice
+/app/public/.htaccess_old
+/app/public/error_log
+/app/public/local-xdebuginfo.php
+/app/public/verificare-cui.php
+
 # WordPress core
 /app/public/wp-admin/
 /app/public/wp-includes/
