@@ -1,0 +1,57 @@
+# ====================================
+# WEBGSM - WordPress Site .gitignore
+# ====================================
+
+# Local by Flywheel / Local WP
+/conf/
+/logs/
+*.log
+
+# WordPress core
+/app/public/wp-admin/
+/app/public/wp-includes/
+/app/public/index.php
+/app/public/license.txt
+/app/public/readme.html
+/app/public/wp-*.php
+/app/public/xmlrpc.php
+
+# WordPress uploads (opțional - scoate comentariul dacă vrei să ignori)
+# /app/public/wp-content/uploads/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.sql
+*.sql.gz
+*.zip
+*.tar.gz
+
+# Temporary files
+*.tmp
+.cache/

@@ -1,0 +1,21 @@
+# IGNORA TOT
+/*
+
+# EXCEPTII - CE PASTRAM:
+
+# Plugin-urile noastre
+!plugins/
+plugins/*
+!plugins/webgsm-checkout-pro/
+!plugins/webgsm-b2b-pricing/
+
+# Child theme-ul nostru
+!themes/
+themes/*
+!themes/martfury-child/
+
+# Documentatie
+PROJECT_STATUS.md
+AI_CONTEXT.md
+.gitignore
+.DS_Store
