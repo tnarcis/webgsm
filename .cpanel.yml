@@ -47,36 +47,20 @@ deployment:
     - echo "✅ Theme deployed!"
     
     # ========================================
-    # TASK 4: Cleanup (șterge fișiere temporare)
+    # TASK 4: Cleanup (minimal - fără find)
     # ========================================
-    - echo "🧹 Cleaning up..."
-    
-    # Șterge documentație din plugins/themes (dacă s-a copiat accidental)
-    - find $HOME/public_html/test/wp-content/plugins/ -name "*.md" -type f -delete 2>/dev/null || true
-    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -name "*.md" -type f -delete 2>/dev/null || true
-    
-    # Șterge .git metadata (dacă există)
-    - find $HOME/public_html/test/wp-content/plugins/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
-    - find $HOME/public_html/test/wp-content/themes/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
-    
-    # Șterge node_modules (dacă există)
-    - find $HOME/public_html/test/wp-content/plugins/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
-    - find $HOME/public_html/test/wp-content/themes/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
-    
-    - echo "✅ Cleanup done!"
+    - echo "🧹 Cleanup skipped (manual if needed)"
     
     # ========================================
-    # TASK 5: Set permissions (SIGUR pentru WordPress)
+    # TASK 5: Set permissions (doar pe foldere noi)
     # ========================================
     - echo "🔒 Setting permissions..."
     
-    # Folders: 755 (rwxr-xr-x)
-    - find $HOME/public_html/test/wp-content/plugins/ -type d -exec chmod 755 {} \;
-    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -type d -exec chmod 755 {} \;
-    
-    # Files: 644 (rw-r--r--)
-    - find $HOME/public_html/test/wp-content/plugins/ -type f -exec chmod 644 {} \;
-    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -type f -exec chmod 644 {} \;
+    # Doar pe plugin-urile custom (fără recursiv find)
+    - chmod -R 755 $HOME/public_html/test/wp-content/plugins/webgsm-b2b-pricing 2>/dev/null || true
+    - chmod -R 755 $HOME/public_html/test/wp-content/plugins/webgsm-checkout-pro 2>/dev/null || true
+    - chmod -R 755 $HOME/public_html/test/wp-content/plugins/webgsm-customer-tiers 2>/dev/null || true
+    - chmod -R 755 $HOME/public_html/test/wp-content/themes/martfury-child 2>/dev/null || true
     
     - echo "✅ Permissions set!"
     
