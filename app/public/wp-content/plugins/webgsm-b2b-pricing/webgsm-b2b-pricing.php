@@ -1184,6 +1184,59 @@ class WebGSM_B2B_Pricing {
     // =========================================
     
     public function modify_price_html($price_html, $product) {
+        // În admin, afișează ÎNTOTDEAUNA (nu doar pentru PJ)
+        $is_admin = is_admin();
+        
+        // Frontend: doar pentru PJ
+        if (!$is_admin && !$this->is_user_pj()) {
+            return $price_html;
+        }
+        
+        // ADMIN: Afișare pe 3 linii în coloana Price
+        if ($is_admin) {
+            $product_id = $product->get_id();
+            $original_price = get_post_meta($product_id, '_regular_price', true);
+            $b2b_price = $product->get_price();
+            $pret_minim = get_post_meta($product_id, '_pret_minim_vanzare', true);
+            
+            $output = '<div style="line-height:1.8; font-size:13px;">';
+            
+            // Linia 1: Preț setat (NEGRU)
+            if ($original_price > 0) {
+                $output .= '<div style="color:#000; font-weight:500; display:flex; align-items:center; gap:5px;">';
+                $output .= '<span style="color:#000; font-size:10px; line-height:1;">●</span>';
+                $output .= wc_price($original_price);
+                $output .= '</div>';
+            }
+            
+            // Linia 2: Preț B2B (ALBASTRU)
+            if ($b2b_price > 0) {
+                if ((float)$b2b_price < (float)$original_price) {
+                    $output .= '<div style="color:#2196F3; font-weight:600; display:flex; align-items:center; gap:5px;">';
+                    $output .= '<span style="color:#2196F3; font-size:10px; line-height:1;">●</span>';
+                    $output .= wc_price($b2b_price);
+                    $output .= '</div>';
+                } elseif ((float)$b2b_price == (float)$original_price) {
+                    $output .= '<div style="color:#999; font-size:12px; display:flex; align-items:center; gap:5px;">';
+                    $output .= '<span style="color:#999; font-size:10px; line-height:1;">●</span>';
+                    $output .= 'Fără discount B2B';
+                    $output .= '</div>';
+                }
+            }
+            
+            // Linia 3: Preț minim (ROȘU)
+            if ($pret_minim > 0) {
+                $output .= '<div style="color:#f44336; font-size:11px; display:flex; align-items:center; gap:5px;">';
+                $output .= '<span style="color:#f44336; font-size:10px; line-height:1;">●</span>';
+                $output .= wc_price($pret_minim);
+                $output .= '</div>';
+            }
+            
+            $output .= '</div>';
+            return $output;
+        }
+        
+        // FRONTEND: Badge tier
         if (!$this->is_user_pj()) return $price_html;
         
         $show_badge = get_option('webgsm_b2b_show_badge', 'yes');
