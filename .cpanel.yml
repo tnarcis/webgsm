@@ -20,7 +20,7 @@ deployment:
     - export BACKUP_DIR=$HOME/backups
     - mkdir -p $BACKUP_DIR
     - echo "💾 Creating backup..."
-    - tar -czf $BACKUP_DIR/wp-content-backup-$TIMESTAMP.tar.gz $HOME/public_html/wp-content 2>/dev/null || true
+    - tar -czf $BACKUP_DIR/wp-content-backup-$TIMESTAMP.tar.gz $HOME/public_html/test/wp-content 2>/dev/null || true
     - echo "✅ Backup saved: wp-content-backup-$TIMESTAMP.tar.gz"
     
     # ========================================
@@ -29,13 +29,13 @@ deployment:
     - echo "🔄 Deploying plugins from deep path..."
     
     # Plugin 1: webgsm-b2b-pricing
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-b2b-pricing $HOME/public_html/wp-content/plugins/
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-b2b-pricing $HOME/public_html/test/wp-content/plugins/
     
     # Plugin 2: webgsm-checkout-pro
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-checkout-pro $HOME/public_html/wp-content/plugins/
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-checkout-pro $HOME/public_html/test/wp-content/plugins/
     
-    # Plugin 3: webgsm-customer-tiers (dacă există)
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-customer-tiers $HOME/public_html/wp-content/plugins/ 2>/dev/null || true
+    # Plugin 3: webgsm-customer-tiers
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-customer-tiers $HOME/public_html/test/wp-content/plugins/
     
     - echo "✅ Plugins deployed!"
     
@@ -43,7 +43,7 @@ deployment:
     # TASK 3: Deploy THEME (Sursă adâncă: app/public/wp-content/)
     # ========================================
     - echo "🔄 Deploying theme from deep path..."
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/themes/martfury-child $HOME/public_html/wp-content/themes/
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/themes/martfury-child $HOME/public_html/test/wp-content/themes/
     - echo "✅ Theme deployed!"
     
     # ========================================
@@ -52,16 +52,16 @@ deployment:
     - echo "🧹 Cleaning up..."
     
     # Șterge documentație din plugins/themes (dacă s-a copiat accidental)
-    - find $HOME/public_html/wp-content/plugins/ -name "*.md" -type f -delete 2>/dev/null || true
-    - find $HOME/public_html/wp-content/themes/martfury-child/ -name "*.md" -type f -delete 2>/dev/null || true
+    - find $HOME/public_html/test/wp-content/plugins/ -name "*.md" -type f -delete 2>/dev/null || true
+    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -name "*.md" -type f -delete 2>/dev/null || true
     
     # Șterge .git metadata (dacă există)
-    - find $HOME/public_html/wp-content/plugins/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
-    - find $HOME/public_html/wp-content/themes/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    - find $HOME/public_html/test/wp-content/plugins/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    - find $HOME/public_html/test/wp-content/themes/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
     
     # Șterge node_modules (dacă există)
-    - find $HOME/public_html/wp-content/plugins/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
-    - find $HOME/public_html/wp-content/themes/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
+    - find $HOME/public_html/test/wp-content/plugins/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
+    - find $HOME/public_html/test/wp-content/themes/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
     
     - echo "✅ Cleanup done!"
     
@@ -71,12 +71,12 @@ deployment:
     - echo "🔒 Setting permissions..."
     
     # Folders: 755 (rwxr-xr-x)
-    - find $HOME/public_html/wp-content/plugins/ -type d -exec chmod 755 {} \;
-    - find $HOME/public_html/wp-content/themes/martfury-child/ -type d -exec chmod 755 {} \;
+    - find $HOME/public_html/test/wp-content/plugins/ -type d -exec chmod 755 {} \;
+    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -type d -exec chmod 755 {} \;
     
     # Files: 644 (rw-r--r--)
-    - find $HOME/public_html/wp-content/plugins/ -type f -exec chmod 644 {} \;
-    - find $HOME/public_html/wp-content/themes/martfury-child/ -type f -exec chmod 644 {} \;
+    - find $HOME/public_html/test/wp-content/plugins/ -type f -exec chmod 644 {} \;
+    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -type f -exec chmod 644 {} \;
     
     - echo "✅ Permissions set!"
     
@@ -86,13 +86,13 @@ deployment:
     - echo "🗑️ Clearing cache & forcing plugin reload..."
     
     # Șterge cache-ul de transients/object cache
-    - rm -rf $HOME/public_html/wp-content/cache/* 2>/dev/null || true
+    - rm -rf $HOME/public_html/test/wp-content/cache/* 2>/dev/null || true
     
     # Touch plugin file pentru a forța reload
-    - touch $HOME/public_html/wp-content/plugins/webgsm-b2b-pricing/webgsm-b2b-pricing.php
+    - touch $HOME/public_html/test/wp-content/plugins/webgsm-b2b-pricing/webgsm-b2b-pricing.php
     
     # WP-CLI cache flush (dacă ai WP-CLI instalat)
-    - cd $HOME/public_html && wp cache flush 2>/dev/null || echo "⚠️ WP-CLI not available (manual cache clear needed)"
+    - cd $HOME/public_html/test && wp cache flush 2>/dev/null || echo "⚠️ WP-CLI not available (manual cache clear needed)"
     
     # ========================================
     # FINAL: Success message
