@@ -206,8 +206,8 @@
 
 /* Coloană Price mai lată în lista produse */
 .wp-list-table .column-price {
-    min-width: 140px !important;
-    width: 140px !important;
+    min-width: 180px !important;
+    width: 180px !important;
 }
 
 /* Responsive */
