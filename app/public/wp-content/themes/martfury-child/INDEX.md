@@ -43,6 +43,8 @@ martfury-child/
 ├── 🔍 INDEX.md                     ← CITEȘTI ACUM (găsire rapidă)
 ├── 🤖 AI_ONBOARDING_PROMPTS.md    ← Prompturi detaliate scenarii specifice
 ├── ✅ AI_TEST_ANSWERS.md          ← Test verificare AI (cu răspunsuri corecte)
+├── 📊 SUMMARY.md                   ← Rezumat complet sistem
+├── 🔒 SECURITY.md                  ← Audit securitate (9.2/10)
 │
 ├── functions.php                   ← Include-uri (NU logică!)
 ├── style.css                       ← Stiluri override simple
