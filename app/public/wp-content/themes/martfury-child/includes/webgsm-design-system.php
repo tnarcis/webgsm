@@ -31,6 +31,21 @@ function webgsm_minimal_css() {
     background-color: #2563eb !important;
 }
 
+/* ============================================
+   ASCUNDE BUTOANELE "Vezi Cos" DOAR din POPUP
+   ============================================ */
+/* Ascunde DOAR butoanele din popup-ul "Produs adăugat" */
+.message-box .btn-button,
+.message-box a.btn-button,
+.message-box .button.wc-forward,
+.message-box a.button[href*="cart"],
+.mf-product-notification .btn-button,
+.mf-product-notification .button.wc-forward {
+    display: none !important;
+}
+
+/* NU ascunde butoanele din mini-cart (hover pe icon coș) */
+
 /* Adaugă în coș - jumătate + rotunjit */
 .woocommerce ul.products li.product .button,
 .woocommerce ul.products li.product .add_to_cart_button,

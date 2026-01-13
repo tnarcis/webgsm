@@ -28,6 +28,7 @@ function render_smartbill_settings_page() {
         update_option('smartbill_token', sanitize_text_field($_POST['smartbill_token']));
         update_option('smartbill_cif', sanitize_text_field($_POST['smartbill_cif']));
         update_option('smartbill_serie', sanitize_text_field($_POST['smartbill_serie']));
+        update_option('smartbill_tva', floatval($_POST['smartbill_tva']));
         echo '<div class="notice notice-success"><p>Setarile au fost salvate!</p></div>';
     }
     
@@ -36,6 +37,7 @@ function render_smartbill_settings_page() {
     $token = get_option('smartbill_token', '003|5088be0e0850155eaa7713f3d324a63a');
     $cif = get_option('smartbill_cif', 'RO31902941');
     $serie = get_option('smartbill_serie', 'WEB');
+    $tva = get_option('smartbill_tva', 19);
     ?>
     <div class="wrap">
         <h1>⚙️ Setări SmartBill</h1>
@@ -76,6 +78,17 @@ function render_smartbill_settings_page() {
                     <th>Serie Factură</th>
                     <td><input type="text" name="smartbill_serie" value="<?php echo esc_attr($serie); ?>" class="regular-text"></td>
                 </tr>
+                <tr>
+                    <th>Cotă TVA Fallback (%)</th>
+                    <td>
+                        <input type="number" name="smartbill_tva" value="<?php echo esc_attr($tva); ?>" class="small-text" step="1" min="0" max="100">
+                        <p class="description">
+                            TVA implicit: 19% (România)<br>
+                            <strong>Notă:</strong> TVA-ul se ia automat din <a href="<?php echo admin_url('admin.php?page=wc-settings&tab=tax'); ?>">WooCommerce → Setări → Taxe</a>. 
+                            Această valoare e folosită doar dacă WooCommerce nu are taxe configurate.
+                        </p>
+                    </td>
+                </tr>
             </table>
             
             <p class="submit">
@@ -90,9 +103,103 @@ function render_smartbill_settings_page() {
             <li><strong>Factura PJ:</strong> Se genereaza pe firma clientului (din Date Facturare)</li>
             <li><strong>Plata online:</strong> Factura se genereaza la plata reusita</li>
             <li><strong>Plata ramburs:</strong> Factura se genereaza la livrare (status Completed)</li>
+            <li><strong>SKU:</strong> Produsele fără SKU primesc automat cod WEBGSM-{ID}</li>
         </ul>
+        
+        <div style="background:#fff3cd; padding:15px; border-left:4px solid #ffc107; margin:20px 0;">
+            <h4 style="margin-top:0;">⚙️ Setări SmartBill necesare:</h4>
+            
+            <p><strong>1. Pentru afișare SKU în facturi:</strong></p>
+            <ol style="margin:10px 0; padding-left:20px;">
+                <li>Loghează-te în <strong>SmartBill.ro</strong></li>
+                <li>Mergi la <strong>Setări → Setări Generale → Setări Facturi</strong></li>
+                <li>Secțiunea <strong>"Produse/Servicii"</strong></li>
+                <li>Bifează: <strong>☑ Afișează codul produsului în facturi</strong></li>
+                <li>Salvează setările</li>
+            </ol>
+            
+            <p><strong>2. Pentru cotă TVA corectă:</strong></p>
+            <ol style="margin:10px 0; padding-left:20px;">
+                <li>Mergi la <strong><a href="<?php echo admin_url('admin.php?page=wc-settings&tab=tax'); ?>">WooCommerce → Setări → Taxe</a></strong></li>
+                <li>Activează: <strong>☑ Activează taxele</strong></li>
+                <li>Click pe <strong>"Taxe standard"</strong></li>
+                <li>Adaugă rând: Țară <strong>RO</strong>, Cotă <strong>19.0000%</strong></li>
+                <li>Salvează modificările</li>
+            </ol>
+            
+            <p style="margin:5px 0 0 0; font-size:13px; color:#856404;">
+                💡 <strong>Notă:</strong> TVA-ul se calculează automat din prețurile WooCommerce. Cota "Fallback" de mai sus e folosită doar dacă WooCommerce nu are taxe configurate.
+            </p>
+        </div>
+        
+        <hr>
+        <h3>🔧 Instrumente</h3>
+        <p>
+            <a href="<?php echo admin_url('admin.php?page=smartbill-settings&action=generate_skus'); ?>" 
+               class="button button-secondary"
+               onclick="return confirm('Generează SKU pentru toate produsele fără SKU?');">
+                🏷️ Generează SKU pentru toate produsele
+            </a>
+        </p>
+        
+        <?php
+        // Procesare generare SKU-uri
+        if (isset($_GET['action']) && $_GET['action'] === 'generate_skus') {
+            $generated = webgsm_bulk_generate_skus();
+            echo '<div class="notice notice-success"><p>✓ Au fost generate ' . $generated . ' SKU-uri!</p></div>';
+        }
+        ?>
     </div>
     <?php
+}
+
+// Funcție bulk pentru generare SKU-uri
+function webgsm_bulk_generate_skus() {
+    $args = array(
+        'post_type' => 'product',
+        'posts_per_page' => -1,
+        'post_status' => 'publish'
+    );
+    
+    $products = get_posts($args);
+    $generated = 0;
+    
+    foreach ($products as $post) {
+        $product = wc_get_product($post->ID);
+        if (!$product) continue;
+        
+        $current_sku = $product->get_sku();
+        
+        if (empty($current_sku)) {
+            $auto_sku = 'WEBGSM-' . $product->get_id();
+            $product->set_sku($auto_sku);
+            $product->save();
+            $generated++;
+        }
+    }
+    
+    return $generated;
+}
+
+// =============================================
+// AUTO-GENERARE SKU pentru produse fără SKU
+// =============================================
+add_action('save_post_product', 'webgsm_auto_generate_sku', 10, 1);
+function webgsm_auto_generate_sku($product_id) {
+    $product = wc_get_product($product_id);
+    if (!$product) return;
+    
+    // Verifică dacă produsul are SKU
+    $current_sku = $product->get_sku();
+    
+    if (empty($current_sku)) {
+        // Generează SKU automat: WEBGSM-{ID}
+        $auto_sku = 'WEBGSM-' . $product_id;
+        $product->set_sku($auto_sku);
+        $product->save();
+        
+        error_log('Auto-generated SKU for product #' . $product_id . ': ' . $auto_sku);
+    }
 }
 
 // =============================================
@@ -118,16 +225,33 @@ function smartbill_request($endpoint, $data = null, $method = 'POST') {
     
     if($data && $method === 'POST') {
         $args['body'] = json_encode($data);
+        
+        // Log SKU-uri trimise (pentru debugging)
+        if (isset($data['products'])) {
+            error_log('=== SmartBill API Request ===');
+            error_log('Endpoint: ' . $endpoint);
+            foreach ($data['products'] as $product) {
+                error_log('Product: ' . $product['name'] . ' | Code/SKU: ' . $product['code']);
+            }
+        }
     }
     
     $response = wp_remote_request($url, $args);
     
     if(is_wp_error($response)) {
+        error_log('SmartBill API Error: ' . $response->get_error_message());
         return array('error' => $response->get_error_message());
     }
     
     $body = wp_remote_retrieve_body($response);
-    return json_decode($body, true);
+    $result = json_decode($body, true);
+    
+    // Log răspuns (pentru debugging)
+    if (isset($result['errorText'])) {
+        error_log('SmartBill Error Response: ' . $result['errorText']);
+    }
+    
+    return $result;
 }
 
 // Funcție pentru a genera factura în SmartBill
@@ -152,6 +276,7 @@ function genereaza_factura_smartbill($order_id) {
     
     $cif = get_option('smartbill_cif', 'RO31902941');
     $serie = get_option('smartbill_serie', 'WEB');
+    $tva = get_option('smartbill_tva', 19);
     
     // Verifică dacă e factură PJ
     $tip_facturare = get_post_meta($order_id, '_tip_facturare', true);
@@ -182,21 +307,47 @@ function genereaza_factura_smartbill($order_id) {
         'isTaxPayer' => !empty($billing_cif)
     );
     
-    // Pregătește produsele
+    // Pregătește produsele cu SKU
     $products = array();
     foreach($order->get_items() as $item) {
         $product = $item->get_product();
+        
+        // Obține SKU - cu fallback la product ID dacă nu există
+        $sku = '';
+        if ($product) {
+            $sku = $product->get_sku();
+            // Dacă nu are SKU, folosește Product ID
+            if (empty($sku)) {
+                $sku = 'PROD-' . $product->get_id();
+            }
+        }
+        
+        // Calculează TVA din prețurile WooCommerce (mai precis)
+        $item_total = $item->get_total(); // Preț fără taxe
+        $item_total_tax = $item->get_total_tax(); // Taxe
+        $item_quantity = $item->get_quantity();
+        
+        // Calculează cota TVA efectivă
+        $item_tva_percentage = $tva; // Default din setări
+        if ($item_total > 0 && $item_total_tax > 0) {
+            // Calculează TVA efectiv: (tax / total_fara_tax) * 100
+            $item_tva_percentage = round(($item_total_tax / $item_total) * 100, 2);
+        }
+        
         $products[] = array(
             'name' => $item->get_name(),
-            'code' => $product ? $product->get_sku() : '',
+            'code' => $sku, // SKU sau PROD-{ID}
             'measuringUnitName' => 'buc',
             'currency' => $order->get_currency(),
-            'quantity' => $item->get_quantity(),
-            'price' => $item->get_total() / $item->get_quantity(),
-            'isTaxIncluded' => true,
-            'taxPercentage' => 19,
+            'quantity' => $item_quantity,
+            'price' => $item_total / $item_quantity,
+            'isTaxIncluded' => false, // Preț FĂRĂ TVA
+            'taxPercentage' => $item_tva_percentage,
             'saveToDb' => false
         );
+        
+        // Log pentru debugging
+        error_log('SmartBill Product: ' . $item->get_name() . ' | SKU: ' . $sku . ' | TVA: ' . $item_tva_percentage . '%');
     }
     
     // Adaugă transport dacă există
@@ -210,7 +361,7 @@ function genereaza_factura_smartbill($order_id) {
             'quantity' => 1,
             'price' => $shipping_total,
             'isTaxIncluded' => true,
-            'taxPercentage' => 19,
+            'taxPercentage' => $tva,
             'saveToDb' => false
         );
     }
