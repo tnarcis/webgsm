@@ -204,6 +204,12 @@
     background: #fef2f2 !important;
 }
 
+/* Coloană Price mai lată în lista produse */
+.wp-list-table .column-price {
+    min-width: 140px !important;
+    width: 140px !important;
+}
+
 /* Responsive */
 @media (max-width: 782px) {
     .webgsm-b2b-cards {
