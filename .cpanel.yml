@@ -24,25 +24,25 @@ deployment:
     - echo "✅ Backup saved: wp-content-backup-$TIMESTAMP.tar.gz"
     
     # ========================================
-    # TASK 2: Deploy PLUGINS
+    # TASK 2: Deploy PLUGINS (Sursă adâncă: app/public/wp-content/)
     # ========================================
-    - echo "🔄 Deploying plugins..."
+    - echo "🔄 Deploying plugins from deep path..."
     
-    # Plugin: webgsm-b2b-pricing
+    # Plugin 1: webgsm-b2b-pricing
     - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-b2b-pricing $HOME/public_html/wp-content/plugins/
     
-    # Plugin: webgsm-checkout-pro
+    # Plugin 2: webgsm-checkout-pro
     - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-checkout-pro $HOME/public_html/wp-content/plugins/
     
-    # Plugin: webgsm-customer-tiers (dacă există)
+    # Plugin 3: webgsm-customer-tiers (dacă există)
     - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-customer-tiers $HOME/public_html/wp-content/plugins/ 2>/dev/null || true
     
     - echo "✅ Plugins deployed!"
     
     # ========================================
-    # TASK 3: Deploy THEME (martfury-child)
+    # TASK 3: Deploy THEME (Sursă adâncă: app/public/wp-content/)
     # ========================================
-    - echo "🔄 Deploying theme..."
+    - echo "🔄 Deploying theme from deep path..."
     - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/themes/martfury-child $HOME/public_html/wp-content/themes/
     - echo "✅ Theme deployed!"
     
