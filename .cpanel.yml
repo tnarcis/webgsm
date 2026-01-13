@@ -1,0 +1,111 @@
+---
+# ========================================
+# cPanel Git Deployment Configuration
+# ========================================
+# 
+# Acest fișier instruiește cPanel CE să:
+# 1. Clone/Pull din GitHub
+# 2. Copieze DOAR wp-content/ în locația corectă
+# 3. Ignore tot restul (WordPress core, documentație, etc.)
+#
+# Deployment automat: cPanel → Git Version Control → Pull/Deploy
+# ========================================
+
+deployment:
+  tasks:
+    # ========================================
+    # TASK 1: Backup înainte de deploy (SAFETY)
+    # ========================================
+    - export TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    - export BACKUP_DIR=$HOME/backups
+    - mkdir -p $BACKUP_DIR
+    - echo "💾 Creating backup..."
+    - tar -czf $BACKUP_DIR/wp-content-backup-$TIMESTAMP.tar.gz $HOME/public_html/wp-content 2>/dev/null || true
+    - echo "✅ Backup saved: wp-content-backup-$TIMESTAMP.tar.gz"
+    
+    # ========================================
+    # TASK 2: Deploy PLUGINS
+    # ========================================
+    - echo "🔄 Deploying plugins..."
+    
+    # Plugin: webgsm-b2b-pricing
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-b2b-pricing $HOME/public_html/wp-content/plugins/
+    
+    # Plugin: webgsm-checkout-pro
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-checkout-pro $HOME/public_html/wp-content/plugins/
+    
+    # Plugin: webgsm-customer-tiers (dacă există)
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-customer-tiers $HOME/public_html/wp-content/plugins/ 2>/dev/null || true
+    
+    - echo "✅ Plugins deployed!"
+    
+    # ========================================
+    # TASK 3: Deploy THEME (martfury-child)
+    # ========================================
+    - echo "🔄 Deploying theme..."
+    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/themes/martfury-child $HOME/public_html/wp-content/themes/
+    - echo "✅ Theme deployed!"
+    
+    # ========================================
+    # TASK 4: Cleanup (șterge fișiere temporare)
+    # ========================================
+    - echo "🧹 Cleaning up..."
+    
+    # Șterge documentație din plugins/themes (dacă s-a copiat accidental)
+    - find $HOME/public_html/wp-content/plugins/ -name "*.md" -type f -delete 2>/dev/null || true
+    - find $HOME/public_html/wp-content/themes/martfury-child/ -name "*.md" -type f -delete 2>/dev/null || true
+    
+    # Șterge .git metadata (dacă există)
+    - find $HOME/public_html/wp-content/plugins/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    - find $HOME/public_html/wp-content/themes/ -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    
+    # Șterge node_modules (dacă există)
+    - find $HOME/public_html/wp-content/plugins/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
+    - find $HOME/public_html/wp-content/themes/ -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
+    
+    - echo "✅ Cleanup done!"
+    
+    # ========================================
+    # TASK 5: Set permissions (SIGUR pentru WordPress)
+    # ========================================
+    - echo "🔒 Setting permissions..."
+    
+    # Folders: 755 (rwxr-xr-x)
+    - find $HOME/public_html/wp-content/plugins/ -type d -exec chmod 755 {} \;
+    - find $HOME/public_html/wp-content/themes/martfury-child/ -type d -exec chmod 755 {} \;
+    
+    # Files: 644 (rw-r--r--)
+    - find $HOME/public_html/wp-content/plugins/ -type f -exec chmod 644 {} \;
+    - find $HOME/public_html/wp-content/themes/martfury-child/ -type f -exec chmod 644 {} \;
+    
+    - echo "✅ Permissions set!"
+    
+    # ========================================
+    # TASK 6: Clear WordPress cache (opțional)
+    # ========================================
+    - echo "🗑️ Clearing cache..."
+    
+    # WP-CLI cache flush (dacă ai WP-CLI instalat)
+    - cd $HOME/public_html && wp cache flush 2>/dev/null || echo "⚠️ WP-CLI not available (skip cache flush)"
+    
+    # ========================================
+    # FINAL: Success message
+    # ========================================
+    - echo ""
+    - echo "========================================="
+    - echo "✅ DEPLOYMENT COMPLETE!"
+    - echo "========================================="
+    - echo "📦 Plugins deployed:"
+    - echo "   - webgsm-b2b-pricing"
+    - echo "   - webgsm-checkout-pro"
+    - echo "   - webgsm-customer-tiers"
+    - echo ""
+    - echo "🎨 Theme deployed:"
+    - echo "   - martfury-child"
+    - echo ""
+    - echo "💾 Backup location:"
+    - echo "   $BACKUP_DIR/wp-content-backup-$TIMESTAMP.tar.gz"
+    - echo ""
+    - echo "🌐 Check your site:"
+    - echo "   https://your-domain.com"
+    - echo "========================================="
