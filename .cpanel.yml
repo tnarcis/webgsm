@@ -1,69 +1,65 @@
 ---
 # ========================================
-# cPanel Git Deployment Configuration (SUBFOLDER TEST)
-# ========================================
-# Deploy automat din: app/public/wp-content/
-# Către destinație: public_html/test/wp-content/
+# cPanel Git Deployment Configuration - VERSIUNE COMPLETĂ
 # ========================================
 
 deployment:
   tasks:
-    # ========================================
-    # TASK 1: Backup înainte de deploy (SAFETY - folderul test)
-    # ========================================
+    # ----------------------------------------
+    # 1. Definire variabile de mediu pentru siguranță
+    # ----------------------------------------
+    - export REPOPATH=$HOME/repositories/webgsm/app/public/wp-content
+    - export SITEPATH=$HOME/public_html/test/wp-content
     - export TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-    - export BACKUP_DIR=$HOME/backups/test_site
-    - mkdir -p $BACKUP_DIR
-    - echo "💾 Creating backup for /public_html/test/..."
-    - tar -czf $BACKUP_DIR/wp-content-test-backup-$TIMESTAMP.tar.gz $HOME/public_html/test/wp-content 2>/dev/null || true
-    - echo "✅ Backup saved: wp-content-test-backup-$TIMESTAMP.tar.gz"
     
-    # ========================================
-    # TASK 2: Deploy PLUGINS (Sursă: app/public/wp-content/)
-    # ========================================
-    - echo "🔄 Deploying plugins from app/public/ path to /test/..."
+    # ----------------------------------------
+    # 2. Backup de siguranță (Complet)
+    # ----------------------------------------
+    - echo "💾 Backup-ing /test/ site content..."
+    - mkdir -p $HOME/backups/test_site
+    - tar -czf $HOME/backups/test_site/full-backup-$TIMESTAMP.tar.gz $SITEPATH 2>/dev/null || true
+
+    # ----------------------------------------
+    # 3. Asigurare directoare destinație (Prevenire erori cp)
+    # ----------------------------------------
+    - mkdir -p $SITEPATH/plugins
+    - mkdir -p $SITEPATH/themes
+
+    # ----------------------------------------
+    # 4. Deploy PLUGINS (Cale completă din repo)
+    # ----------------------------------------
+    - echo "🔄 Deploying custom plugins..."
     
-    # Plugin 1: webgsm-b2b-pricing
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-b2b-pricing $HOME/public_html/test/wp-content/plugins/
+    # Folosim rsync sau cp -rf. cp -rf este mai simplu în cPanel.
+    - /bin/cp -rf $REPOPATH/plugins/webgsm-b2b-pricing $SITEPATH/plugins/
+    - /bin/cp -rf $REPOPATH/plugins/webgsm-checkout-pro $SITEPATH/plugins/
+    - /bin/cp -rf $REPOPATH/plugins/webgsm-customer-tiers $SITEPATH/plugins/ 2>/dev/null || true
     
-    # Plugin 2: webgsm-checkout-pro
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-checkout-pro $HOME/public_html/test/wp-content/plugins/
+    # ----------------------------------------
+    # 5. Deploy THEME (Cale completă din repo)
+    # ----------------------------------------
+    - echo "🔄 Deploying child theme..."
+    - /bin/cp -rf $REPOPATH/themes/martfury-child $SITEPATH/themes/
+
+    # ----------------------------------------
+    # 6. Permisiuni și Curățenie (Vital pentru WordPress)
+    # ----------------------------------------
+    - echo "🔒 Setting permissions and cleaning..."
+    - find $SITEPATH/plugins/webgsm-* -type d -exec chmod 755 {} \;
+    - find $SITEPATH/plugins/webgsm-* -type f -exec chmod 644 {} \;
+    - find $SITEPATH/themes/martfury-child -type d -exec chmod 755 {} \;
+    - find $SITEPATH/themes/martfury-child -type f -exec chmod 644 {} \;
     
-    # Plugin 3: webgsm-customer-tiers
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-customer-tiers $HOME/public_html/test/wp-content/plugins/ 2>/dev/null || true
+    # Șterge fișierele de sistem Git/IDE care pot apărea din greșeală
+    - find $SITEPATH -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    - find $SITEPATH -name ".DS_Store" -type f -delete 2>/dev/null || true
+
+    # ----------------------------------------
+    # 7. Finalizare: Cache & Trigger
+    # ----------------------------------------
+    - echo "🗑️ Flushing cache..."
+    - rm -rf $SITEPATH/cache/* 2>/dev/null || true
+    # Trigger pentru WordPress să vadă schimbarea plugin-ului
+    - touch $SITEPATH/plugins/webgsm-b2b-pricing/webgsm-b2b-pricing.php
     
-    - echo "✅ Plugins deployed to /test/!"
-    
-    # ========================================
-    # TASK 3: Deploy THEME (Sursă: app/public/wp-content/)
-    # ========================================
-    - echo "🔄 Deploying theme to /test/..."
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/themes/martfury-child $HOME/public_html/test/wp-content/themes/
-    - echo "✅ Theme deployed to /test/!"
-    
-    # ========================================
-    # TASK 4: Cleanup & Permissions (In /test/)
-    # ========================================
-    - echo "🧹 Cleaning up /test/ files..."
-    - find $HOME/public_html/test/wp-content/plugins/ -name "*.md" -type f -delete 2>/dev/null || true
-    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -name "*.md" -type f -delete 2>/dev/null || true
-    
-    # Set permissions
-    - find $HOME/public_html/test/wp-content/plugins/ -type d -exec chmod 755 {} \;
-    - find $HOME/public_html/test/wp-content/plugins/ -type f -exec chmod 644 {} \;
-    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -type d -exec chmod 755 {} \;
-    - find $HOME/public_html/test/wp-content/themes/martfury-child/ -type f -exec chmod 644 {} \;
-    
-    # ========================================
-    # TASK 5: Clear Cache & Force Reload (In /test/)
-    # ========================================
-    - echo "🗑️ Clearing cache for /test/..."
-    - rm -rf $HOME/public_html/test/wp-content/cache/* 2>/dev/null || true
-    - touch $HOME/public_html/test/wp-content/plugins/webgsm-b2b-pricing/webgsm-b2b-pricing.php
-    
-    # WP-CLI pentru subfolderul /test/
-    - cd $HOME/public_html/test && wp cache flush 2>/dev/null || echo "⚠️ WP-CLI not available in /test/"
-    
-    - echo "========================================="
-    - echo "✅ DEPLOYMENT TO /TEST/ COMPLETE!"
-    - echo "========================================="
+    - echo "🚀 [SUCCESS] Deployment to /public_html/test/ finished!"
