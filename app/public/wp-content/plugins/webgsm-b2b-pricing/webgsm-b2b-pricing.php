@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WebGSM B2B Pricing
  * Description: Sistem de prețuri diferențiate pentru clienți B2B (Persoane Juridice) cu discount pe produs/categorie, tiers și protecție preț minim.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: WebGSM
  * Requires at least: 5.8
  * Requires PHP: 7.4
@@ -21,7 +21,7 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 }
 
 // Constante
-define('WEBGSM_B2B_VERSION', '1.0.0');
+define('WEBGSM_B2B_VERSION', '1.1.0');
 define('WEBGSM_B2B_PATH', plugin_dir_path(__FILE__));
 define('WEBGSM_B2B_URL', plugin_dir_url(__FILE__));
 

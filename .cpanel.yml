@@ -81,12 +81,18 @@ deployment:
     - echo "✅ Permissions set!"
     
     # ========================================
-    # TASK 6: Clear WordPress cache (opțional)
+    # TASK 6: Clear WordPress cache & Force plugin reload
     # ========================================
-    - echo "🗑️ Clearing cache..."
+    - echo "🗑️ Clearing cache & forcing plugin reload..."
+    
+    # Șterge cache-ul de transients/object cache
+    - rm -rf $HOME/public_html/wp-content/cache/* 2>/dev/null || true
+    
+    # Touch plugin file pentru a forța reload
+    - touch $HOME/public_html/wp-content/plugins/webgsm-b2b-pricing/webgsm-b2b-pricing.php
     
     # WP-CLI cache flush (dacă ai WP-CLI instalat)
-    - cd $HOME/public_html && wp cache flush 2>/dev/null || echo "⚠️ WP-CLI not available (skip cache flush)"
+    - cd $HOME/public_html && wp cache flush 2>/dev/null || echo "⚠️ WP-CLI not available (manual cache clear needed)"
     
     # ========================================
     # FINAL: Success message
