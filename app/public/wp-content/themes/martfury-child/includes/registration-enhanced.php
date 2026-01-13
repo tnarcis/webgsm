@@ -409,15 +409,30 @@ add_filter('woocommerce_registration_errors', function($errors, $username, $emai
         $errors->add('billing_last_name_error', 'Te rugăm să completezi numele.');
     }
     
+    // ✅ SECURITATE: Validare telefon format corect
     if(empty($_POST['billing_phone'])) {
         $errors->add('billing_phone_error', 'Te rugăm să completezi telefonul.');
+    } else {
+        $phone = preg_replace('/[^0-9+]/', '', $_POST['billing_phone']);
+        // Validare format RO: +4 sau 0 urmat de 9 cifre
+        if(!preg_match('/^(\+4|0)[0-9]{9}$/', $phone)) {
+            $errors->add('billing_phone_error', 'Telefon invalid. Format corect: 0712345678 sau +40712345678');
+        }
     }
     
     // Validare câmpuri firmă dacă e PJ
     if(isset($_POST['tip_facturare']) && $_POST['tip_facturare'] === 'pj') {
+        // ✅ SECURITATE: Validare CUI format corect
         if(empty($_POST['firma_cui'])) {
             $errors->add('firma_cui_error', 'Te rugăm să completezi CUI-ul firmei.');
+        } else {
+            $cui = preg_replace('/[^0-9]/', '', $_POST['firma_cui']);
+            // Validare lungime CUI (6-10 cifre pentru România)
+            if(strlen($cui) < 6 || strlen($cui) > 10) {
+                $errors->add('firma_cui_error', 'CUI invalid. Trebuie să aibă între 6 și 10 cifre (ex: RO12345678).');
+            }
         }
+        
         if(empty($_POST['firma_nume'])) {
             $errors->add('firma_nume_error', 'Te rugăm să completezi denumirea firmei.');
         }

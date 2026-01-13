@@ -545,10 +545,28 @@ add_action('wp_ajax_cauta_cui_anaf', 'cauta_cui_anaf_callback');
 add_action('wp_ajax_nopriv_cauta_cui_anaf', 'cauta_cui_anaf_callback');
 
 function cauta_cui_anaf_callback() {
+    // ✅ SECURITATE: Rate limiting ANAF API (10 requests/min per IP)
+    $user_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $transient_key = 'anaf_rate_limit_' . md5($user_ip);
+    $request_count = get_transient($transient_key) ?: 0;
+    
+    if ($request_count >= 10) {
+        wp_send_json_error('Prea multe cereri. Te rugăm să aștepți 1 minut.');
+    }
+    
+    // Incrementează counter
+    set_transient($transient_key, $request_count + 1, 60); // 60 secunde
+    
+    // ✅ SECURITATE: Validare CUI format corect
     $cui = preg_replace('/[^0-9]/', '', $_POST['cui']);
     
     if(empty($cui)) {
         wp_send_json_error('CUI invalid');
+    }
+    
+    // Validare lungime CUI (6-10 cifre pentru România)
+    if(strlen($cui) < 6 || strlen($cui) > 10) {
+        wp_send_json_error('CUI invalid. Trebuie să aibă între 6 și 10 cifre.');
     }
     
     // Pas 1: Trimite cererea la ANAF

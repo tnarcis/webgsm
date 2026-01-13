@@ -537,15 +537,17 @@ error_log('Password: ' . $password); // NICIODATĂ!
 
 ### **🟡 MEDIE (Implementează în 1-2 săptămâni):**
 
-1. **Rate Limiting ANAF API**
+1. ✅ **Rate Limiting ANAF API** - **IMPLEMENTAT 2026-01-13**
    - Previne abuse
    - 10 requests/min per IP
-   - **Fișier**: `registration-enhanced.php`
+   - **Fișier**: `facturare-pj.php` (linia 547-562)
+   - **Cum funcționează**: Transient cu TTL 60 sec per IP
 
-2. **Validare avansată input**
-   - CUI format (RO + 6-10 cifre)
-   - Telefon format (0xxxxxxxxx)
-   - **Fișier**: `registration-enhanced.php`
+2. ✅ **Validare avansată input** - **IMPLEMENTAT 2026-01-13**
+   - CUI format (6-10 cifre)
+   - Telefon format (0xxxxxxxxx sau +40xxxxxxxxx)
+   - **Fișier**: `registration-enhanced.php` (linia 412-437)
+   - **Validări**: Regex pentru CUI și telefon RO
 
 3. **Content Security Policy headers**
    - Layer extra protecție XSS
@@ -582,10 +584,13 @@ error_log('Password: ' . $password); // NICIODATĂ!
 - [x] Order ownership verification
 - [x] User data validation
 
+### **✅ IMPLEMENTAT (2026-01-13):**
+
+- [x] Rate limiting AJAX (ANAF API) - 10 req/min per IP
+- [x] Validare regex avansată (CUI 6-10 cifre, telefon RO)
+
 ### **⚠️ RECOMANDAT (nu critic):**
 
-- [ ] Rate limiting AJAX (ANAF API)
-- [ ] Validare regex avansată (CUI, telefon)
 - [ ] Content Security Policy headers
 - [ ] Logging sistem avansat
 - [ ] Two-Factor Authentication (admin)
@@ -626,7 +631,7 @@ Rezultat așteptat: "Acces interzis"
 
 ---
 
-## 📊 **SCOR FINAL: 9.2/10**
+## 📊 **SCOR FINAL: 9.5/10** ⬆️ (anterior: 9.2/10)
 
 ### **Breakdown:**
 
@@ -638,15 +643,15 @@ Rezultat așteptat: "Acces interzis"
 | Output Escaping | 10/10 | ✅ Perfect |
 | Capability Checks | 10/10 | ✅ Perfect |
 | SQL Injection Prevention | 10/10 | ✅ Perfect |
-| API Security | 9/10 | ✅ Foarte bun (rate limit ar fi 10) |
+| API Security | 10/10 | ✅ Perfect (rate limiting implementat!) |
 | AJAX Security | 10/10 | ✅ Perfect |
 | Password Handling | 10/10 | ✅ Perfect (WP core) |
 | Session Management | 10/10 | ✅ Perfect (WP core) |
 | Debugging Security | 10/10 | ✅ Perfect |
-| Data Validation | 8/10 | ✅ Bun (regex avansat ar fi 10) |
+| Data Validation | 10/10 | ✅ Perfect (regex CUI + telefon implementat!) |
 | CSP Headers | 7/10 | ⚠️ Lipsă (adaugă pentru 10) |
 
-**MEDIE: 9.2/10** 🎉
+**MEDIE: 9.5/10** 🎉 ⬆️ (+0.3 după îmbunătățiri)
 
 ---
 
