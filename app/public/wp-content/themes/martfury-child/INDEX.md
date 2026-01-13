@@ -4,6 +4,14 @@
 
 ---
 
+## ⚡ **START RAPID - AI NOU?**
+
+**→ Deschide `QUICK_START.md` ACUM! Copy/paste prompt-ul și începe.**
+
+**Apoi revino aici pentru căutări rapide.** 👇
+
+---
+
 ## 🎯 **CĂUTĂRI RAPIDE**
 
 ### **Vreau să modific...**
@@ -29,11 +37,12 @@
 ```
 martfury-child/
 │
-├── 📖 README.md                    ← START HERE (overview complet)
+├── ⚡ QUICK_START.md               ← AI NOU? START AICI! (copy/paste prompt)
+├── 📖 README.md                    ← Overview complet proiect
 ├── 📝 CHANGELOG.md                 ← Istoric modificări (cu date!)
 ├── 🔍 INDEX.md                     ← CITEȘTI ACUM (găsire rapidă)
-├── 🤖 AI_ONBOARDING_PROMPTS.md    ← Prompturi pentru alt AI
-├── ✅ AI_TEST_ANSWERS.md          ← Test verificare AI (cu răspunsuri)
+├── 🤖 AI_ONBOARDING_PROMPTS.md    ← Prompturi detaliate scenarii specifice
+├── ✅ AI_TEST_ANSWERS.md          ← Test verificare AI (cu răspunsuri corecte)
 │
 ├── functions.php                   ← Include-uri (NU logică!)
 ├── style.css                       ← Stiluri override simple

@@ -21,12 +21,13 @@ Format: `[Data] - Modul - Descriere - Fișiere modificate`
 - **Status**: ✅ Complet documentat și testat
 
 ### 🤖 **AI Onboarding System**
-- **Prompt principal**: Copy/paste pentru orice AI nou
-- **5 întrebări test**: Verificare că AI a citit documentația
-- **Răspunsuri corecte**: Cu scoring (0-50 puncte)
-- **Scenarii specifice**: Design, Bug fix, Feature nou, Refactoring
+- **QUICK_START.md**: Copy/paste prompt ONE-LINER pentru start rapid
+- **AI_ONBOARDING_PROMPTS.md**: Prompturi detaliate pentru scenarii specifice
+- **AI_TEST_ANSWERS.md**: 5 întrebări test + răspunsuri corecte cu scoring
+- **Test verificare**: Scoring 0-50 (minim 35 pentru a începe)
+- **Scenarii**: Design, Bug fix, Feature nou, Refactoring
 - **Red flags**: Semnale de alarmă când AI greșește
-- **Checklist commit**: Verificare înainte de commit
+- **Checklist commit**: Verificare obligatorie înainte de commit
 
 ### 📊 **Beneficii AI Onboarding**
 - ⏱️ **Timp onboarding**: 15-20 min (vs. 2-3 ore înainte)

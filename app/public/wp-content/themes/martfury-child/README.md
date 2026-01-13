@@ -133,13 +133,22 @@ WP Admin → WooCommerce → Status → Tools → Clear transients
 
 ## 👥 **PENTRU ALT AGENT / DEZVOLTATOR**
 
+### **🚀 START RAPID (AI NOU):**
+
+**→ Deschide `QUICK_START.md` și copy/paste prompt-ul!** ⚡
+
 ### **Pași rapizi:**
-1. **Citește acest README.md** (3 min)
-2. **Citește CHANGELOG.md** (vezi ce s-a modificat când)
-3. **Identifică modulul** relevant (vezi tabel MODULE ACTIVE)
-4. **Citește README.md** al modulului specific
-5. **Modifică** DOAR în locul indicat
-6. **Update CHANGELOG.md** cu ce ai făcut
+1. **`QUICK_START.md`** - Copy/paste prompt pentru AI nou (2 min)
+2. **Test 5 întrebări** - Verifică AI e pregătit (3 min)
+3. **Citește README.md** (acest fișier) - Overview (5 min)
+4. **Citește INDEX.md** - Găsire rapidă orice (2 min)
+5. **CHANGELOG.md** - Vezi modificări recente (3 min)
+6. **Identifică modulul** - Tabel MODULE ACTIVE mai jos
+7. **Citește README.md** al modulului specific (5-10 min)
+8. **Modifică** DOAR în locul indicat
+9. **Update CHANGELOG.md** - OBLIGATORIU!
+
+**Total timp onboarding: 15-20 minute** ✨
 
 ### **Golden Rule:**
 > **"Un fișier = O responsabilitate"**
