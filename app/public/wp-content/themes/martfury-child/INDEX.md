@@ -29,12 +29,14 @@
 ```
 martfury-child/
 │
-├── 📖 README.md              ← START HERE (overview complet)
-├── 📝 CHANGELOG.md           ← Istoric modificări (cu date!)
-├── 🔍 INDEX.md               ← CITEȘTI ACUM (găsire rapidă)
+├── 📖 README.md                    ← START HERE (overview complet)
+├── 📝 CHANGELOG.md                 ← Istoric modificări (cu date!)
+├── 🔍 INDEX.md                     ← CITEȘTI ACUM (găsire rapidă)
+├── 🤖 AI_ONBOARDING_PROMPTS.md    ← Prompturi pentru alt AI
+├── ✅ AI_TEST_ANSWERS.md          ← Test verificare AI (cu răspunsuri)
 │
-├── functions.php             ← Include-uri (NU logică!)
-├── style.css                 ← Stiluri override simple
+├── functions.php                   ← Include-uri (NU logică!)
+├── style.css                       ← Stiluri override simple
 │
 ├── assets/                   ← CSS + JavaScript SEPARAT
 │   ├── css/
