@@ -24,27 +24,14 @@ deployment:
     - echo "✅ Backup saved: wp-content-backup-$TIMESTAMP.tar.gz"
     
     # ========================================
-    # TASK 2: Deploy PLUGINS
+    # TASK 2: Deploy - MANUAL COPY REQUIRED
     # ========================================
-    - echo "🔄 Deploying plugins..."
-    
-    # Plugin: webgsm-b2b-pricing
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-b2b-pricing $HOME/public_html/wp-content/plugins/
-    
-    # Plugin: webgsm-checkout-pro
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-checkout-pro $HOME/public_html/wp-content/plugins/
-    
-    # Plugin: webgsm-customer-tiers (dacă există)
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/plugins/webgsm-customer-tiers $HOME/public_html/wp-content/plugins/ 2>/dev/null || true
-    
-    - echo "✅ Plugins deployed!"
-    
-    # ========================================
-    # TASK 3: Deploy THEME (martfury-child)
-    # ========================================
-    - echo "🔄 Deploying theme..."
-    - /bin/cp -rf $HOME/repositories/webgsm/app/public/wp-content/themes/martfury-child $HOME/public_html/wp-content/themes/
-    - echo "✅ Theme deployed!"
+    - echo "⚠️ DEPLOYMENT SKIPPED"
+    - echo "📝 Pentru deploy, copiază manual în File Manager:"
+    - echo "   Sursă: /home2/webgsm/repositories/webgsm/app/public/wp-content/"
+    - echo "   Dest: /home2/webgsm/public_html/wp-content/"
+    - echo ""
+    - echo "✅ Git pull completed successfully!"
     
     # ========================================
     # TASK 4: Cleanup (șterge fișiere temporare)
